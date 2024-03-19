@@ -9,7 +9,7 @@ const menu = [
   },
   {
     id: 2,
-    title: "Profile Management",
+    title: "Profiles",
     icon: list,
     link: "/profile",
   },
