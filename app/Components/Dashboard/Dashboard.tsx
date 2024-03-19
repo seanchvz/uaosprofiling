@@ -2,12 +2,13 @@
 import { useGlobalState } from '@/app/context/globalProvider';
 import React from 'react'
 import styled from 'styled-components';
+import CreateContent from '../Modals/CreateContent';
 
 function Dashboard() {
     const {theme} = useGlobalState();
   return (
     <DashboardStyled theme={theme}>
-        Dashboard
+        <CreateContent />
     </DashboardStyled>
     
   )

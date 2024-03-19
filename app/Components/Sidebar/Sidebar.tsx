@@ -222,7 +222,7 @@ const SidebarStyled = styled.nav<{ collapsed: boolean }>`
       color: #ffffff;
       transition: all 0.3s ease-in-out;
       z-index: 2;
-      line-height: 3;
+      line-height: 1;
     }
 
     i {
