@@ -64,7 +64,7 @@ function CreateContent() {
       }
 
       if (!res.data.error) {
-        toast.success("Task created successfully.");
+        toast.success("Event created successfully.");
       }
     } catch (error) {
       toast.error("Something went wrong.");
@@ -85,7 +85,7 @@ function CreateContent() {
           value={name}
           name="name"
           onChange={handleChange("name")}
-          placeholder="Enter event name"
+          placeholder=" Enter event name: "
         />
       </div>
       <div className="input-control">
@@ -116,7 +116,7 @@ function CreateContent() {
           value={Sport}
           name="Sport"
           onChange={handleChange("Sport")}
-          placeholder="Enter sport "
+          placeholder=" Enter sport: "
         />
       </div>
       <div className="input-control">
@@ -126,7 +126,7 @@ function CreateContent() {
           value={eventDetails}
           name="eventDetails"
           onChange={handleChange("eventDetails")}
-          placeholder="Enter event details"
+          placeholder="Enter event details: "
         ></textarea>
       </div>
       <div className="input-control">
