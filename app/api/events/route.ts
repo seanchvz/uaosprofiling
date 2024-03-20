@@ -1,6 +1,7 @@
 import prisma from "@/app/utils/connect";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
+import events from "events";
 
 export async function POST(req: Request) {
     try {
@@ -27,8 +28,7 @@ export async function POST(req: Request) {
        // console.log(name, startDate, endDate, SportId, eventDetails);
         const formattedStartDate = new Date().toISOString();
         const formattedEndDate = new Date().toISOString();
-        const external = isExternal === "true"; // Assuming isExternal is a string "true" or "false"
-        const internal = isInternal === "true";
+
 
         const event = await prisma.events.create({
             data: {
@@ -37,8 +37,8 @@ export async function POST(req: Request) {
                 endDate: formattedEndDate,
                 Sport: Sport,
                 eventDetails: eventDetails,
-                isExternal: external, 
-                isInternal:internal,
+                isExternal: isExternal, 
+                isInternal: isInternal,
                 userId: userId,
             },
         });
@@ -62,9 +62,10 @@ export async function GET(req: Request){
               userId,
             },
           });
+          console.log("EVENTS: ", events);
           return NextResponse.json(event);
   } catch (error) {
-    console.log("ERROR GETTING TASKS: ", error);
+    console.log("ERROR GETTING EVENTS: ", error);
     return NextResponse.json({ error: "Error updating event", status: 500 });
   }
 }
