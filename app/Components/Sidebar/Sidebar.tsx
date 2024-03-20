@@ -6,11 +6,15 @@ import Image from "next/image";
 import menu from "@/app/utils/menu";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Button from "../Button/Button";
+import { logout } from "@/app/utils/Icons";
+import { useClerk } from "@clerk/nextjs";
 
 function Sidebar() {
   const { theme } = useGlobalState();
   const router = useRouter();
   const pathname = usePathname();
+  const {signOut}=useClerk();
   const handleClick = (link: string) => {
     router.push(link);
   };
@@ -56,6 +60,23 @@ function Sidebar() {
         </h1>
         
       </div>
+      <button>
+        <div className="sign-out relative mb-6 ml-6 ">
+          <Button 
+           name={"Logout"}
+           type={"submit"}
+           padding={"0.4rem 0.8rem"}
+           borderRad={"0.8rem"}
+           fw={"500"}
+           fs={"1rem"}
+           icon={logout}
+           click={()=>{
+            signOut(()=> router.push("/signin"));
+           }}
+          />
+
+        </div>
+      </button>
     </SidebarStyled>
   );
 }

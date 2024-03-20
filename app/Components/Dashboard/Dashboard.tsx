@@ -6,19 +6,22 @@ import EventItem from '../EventItem/EventItem';
 import { plus } from '@/app/utils/Icons';
 
 
+
 interface Props {
   name: string;
-  events: any;
+  events: any[];
 }
 
 function Dashboard({name, events}:Props) {
-    const {theme} = useGlobalState();
+    const {theme, isLoading} = useGlobalState();
   return (
     <DashboardStyled theme={theme}>
       <h1>{name}</h1>
+
       <div className="events grid">
         {events && events.map((event) => (
-          <EventItem key={event.id} 
+          <EventItem 
+          key={event.id} 
             name={event.name}
             startDate={event.startDate}
             endDate={event.endDate}

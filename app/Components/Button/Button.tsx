@@ -1,5 +1,6 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
+import { useClerk } from "@clerk/nextjs";
 
 import React from "react";
 import styled from "styled-components";
@@ -32,7 +33,7 @@ function Button({
   color,
 }: Props) {
   const { theme } = useGlobalState();
-
+  const { signOut } = useClerk();
   return (
     <ButtonStyled
       type={type}
@@ -40,7 +41,7 @@ function Button({
         background: background,
         padding: padding || "0.5rem 1rem",
         borderRadius: borderRad || "0.5rem",
-        fontWeight: fw || "500",
+        fontWeight: fw || "200",
         fontSize: fs,
         border: border || "none",
         color: color || theme.colorGrey0,
@@ -58,7 +59,7 @@ const ButtonStyled = styled.button`
   position: relative;
   display: flex;
   align-items: center;
-  color: ${(props) => props.theme.colorGrey2};
+  color: #ffffff;
   z-index: 5;
   cursor: pointer;
 
@@ -66,7 +67,7 @@ const ButtonStyled = styled.button`
 
   i {
     margin-right: 1rem;
-    color: ${(props) => props.theme.colorGrey2};
+    color: #ffffff;
     font-size: 1.5rem;
     transition: all 0.55s ease-in-out;
   }

@@ -14,7 +14,7 @@ interface Props{
 }
 
 function EventItem({name, startDate, endDate, Sport, isExternal, id}:Props) {
-    const {theme} = useGlobalState();
+    const {theme, deleteEvent} = useGlobalState();
 
     // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
 
@@ -32,7 +32,12 @@ function EventItem({name, startDate, endDate, Sport, isExternal, id}:Props) {
         )}
          
         <button className="edit">{edit}</button>
-        <button className="delete">{trash}</button>
+        <button 
+        className="delete" 
+        onClick={()=>{
+          deleteEvent(id);
+        }}>
+          {trash}</button>
             {/* <button className="completed">External</button> */}
         </div>
        
@@ -92,7 +97,7 @@ const EventItemStyled = styled.div`
       display: inline-block;
       padding: 0.4rem 1rem;
       background: ${(props) => props.theme.colorDanger};
-      border-radius: 30px;
+      border-radius: 0.8rem;
     }
 
     .isInternal {

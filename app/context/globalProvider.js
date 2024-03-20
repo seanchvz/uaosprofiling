@@ -3,11 +3,15 @@
 import React, {createContext, useState, useContext} from "react"
 import themes from "./themes";
 import axios from 'axios';
+import {useUser} from "@clerk/nextjs"
+import { toast } from 'react-hot-toast';
+
 
 export const GlobalContext = createContext()
 export const GlobalUpdateContext = createContext()
 
 export const GlobalProvider = ({children}) => {
+  const {user}= useUser();
     const [selectedTheme, setSelectedTheme] = useState(0);
     const theme =themes[selectedTheme];
     const [isLoading, setIsLoading] = useState(false);
@@ -28,9 +32,21 @@ export const GlobalProvider = ({children}) => {
       }
     };
 
+    const deleteEvent = async (id) => {
+      try {
+        const res = await axios.delete(`/api/events/${id}`); // delete lang according kung unsay naa sa ID
+        toast.success("Event Deleted");
+
+        allEvents();
+      } catch (error) {
+        console.log(error)
+        toast.error("Something Went Wrong");
+      }
+    }
+
     React.useEffect(() => {
-      allEvents();
-    },[]);
+      if (user) allEvents();
+    },[user]); // para mag pakita ang content sa user
 
 
     return (
@@ -38,6 +54,8 @@ export const GlobalProvider = ({children}) => {
         value={{
             theme,
             events, // send the events data here
+            deleteEvent,
+            isLoading,
         }}>
             
           <GlobalUpdateContext.Provider value={{}}>
