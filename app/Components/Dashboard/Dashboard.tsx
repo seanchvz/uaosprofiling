@@ -13,6 +13,7 @@ interface Props {
 
 function Dashboard({name, events}:Props) {
     const {theme, isLoading} = useGlobalState();
+    // const isLoading = true;
   return (
     <DashboardStyled theme={theme}>
       <h1>{name}</h1>
@@ -38,6 +39,7 @@ function Dashboard({name, events}:Props) {
           Add New Event
         </button>
       </div>
+          
         {/* <CreateContent /> */}
     </DashboardStyled>
     
