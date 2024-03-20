@@ -9,7 +9,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { name, startDate, endDate, SportId, eventDetails, isExternal, isInternal } = await req.json();
+        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = await req.json();
 
         if (!name || !startDate || !endDate ) {
             return NextResponse.json({
@@ -24,17 +24,22 @@ export async function POST(req: Request) {
                 status: 400,
             });
         }
+       // console.log(name, startDate, endDate, SportId, eventDetails);
+        const formattedStartDate = new Date().toISOString();
+        const formattedEndDate = new Date().toISOString();
+        const external = isExternal === "true"; // Assuming isExternal is a string "true" or "false"
+        const internal = isInternal === "true";
 
         const event = await prisma.events.create({
             data: {
-                name,
-                startDate,
-                endDate,
-                SportId,
-                eventDetails,
-                isExternal: isExternal, 
-                isInternal:isInternal,
-                userId,
+                name: name,
+                startDate: formattedStartDate,
+                endDate: formattedEndDate,
+                Sport: Sport,
+                eventDetails: eventDetails,
+                isExternal: external, 
+                isInternal:internal,
+                userId: userId,
             },
         });
 
@@ -44,8 +49,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Error creating event", status: 500 });
     }
 }
-
-
 
 export async function GET(req: Request){
     try {

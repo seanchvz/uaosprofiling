@@ -18,7 +18,7 @@ model events {
   name         String
   startDate    DateTime
   endDate      DateTime
-  SportId      Int
+  Sport        String
   CreatedAt    DateTime @default(now())
   UpdatedAt    DateTime @updatedAt
   eventDetails String?

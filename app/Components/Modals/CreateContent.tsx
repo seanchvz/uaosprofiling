@@ -9,7 +9,7 @@ function CreateContent() {
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [SportId, setSportId] = useState(0);
+  const [Sport, setSport] = useState("");
   const [eventDetails, setEventDetails] = useState("");
   const [isExternal, setIsExternal] = useState(false);
   const [isInternal, setIsInternal] = useState(false);
@@ -27,16 +27,16 @@ function CreateContent() {
       case "endDate":
         setEndDate(e.target.value);
         break;
-      case "SportId":
-        setSportId(e.target.value); // Convert to number if necessary
+      case "Sport":
+        setSport(e.target.value); // Convert to number if necessary
         break;
       case "eventDetails":
         setEventDetails(e.target.value);
         break;
-      case "External":
+      case "isExternal":
         setIsExternal(e.target.checked); // Convert to boolean if necessary
         break;
-      case "Internal":
+      case "isInternal":
         setIsInternal(e.target.checked); // Convert to boolean if necessary
         break;
       default:
@@ -50,7 +50,7 @@ function CreateContent() {
       name,
       startDate,
         endDate,
-        SportId,
+        Sport,
         eventDetails,
         isExternal,
         isInternal,
@@ -109,14 +109,14 @@ function CreateContent() {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="SportId">Sport ID</label>
+        <label htmlFor="Sport">Sport</label>
         <input
-          type="number"
-          id="SportId"
-          value={SportId}
-          name="SportId"
-          onChange={handleChange("SportId")}
-          placeholder="Enter sport ID"
+          type="text"
+          id="Sport"
+          value={Sport}
+          name="Sport"
+          onChange={handleChange("Sport")}
+          placeholder="Enter sport "
         />
       </div>
       <div className="input-control">

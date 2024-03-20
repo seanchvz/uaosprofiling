@@ -18,7 +18,7 @@ function Sidebar() {
   return (
     <SidebarStyled theme={theme} >
       <div className="profile">
-        <div className="profile-overlay"></div>
+        
         <div className="imageaddu">
           <Image width={100} height={100} src="/addu.jpg" alt="profile" />
         </div>
@@ -264,7 +264,7 @@ const SidebarStyled = styled.nav<{ collapsed: boolean }>`
     overflow: hidden;
     transition: all 0.5s ease;
     border-radius: 100%;
-
+    
     width: 100px;
     height: 100px;
 
