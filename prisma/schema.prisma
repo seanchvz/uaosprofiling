@@ -15,17 +15,40 @@ datasource db {
 
 model events {
   id           Int      @id @default(autoincrement())
-  name         String
+  name         String   
   startDate    DateTime
   endDate      DateTime
   Sport        String
   CreatedAt    DateTime @default(now())
   UpdatedAt    DateTime @updatedAt
   eventDetails String?
-  isExternal   Boolean  @default(false)
-  isInternal   Boolean  @default(false)
+  isExternal   Boolean  @unique @default(false)
+  isInternal   Boolean  @unique @default(false)
   userId       String
 }
 
+model StudentProfile {
+  id Int @id @default(autoincrement())
+  firstName String @unique
+  middleName String
+  lastName String
+  birthDate String
+  age Int
+  nationality String
+  civilStatus String
+  isMale Boolean @unique @default(false)
+  isFemale Boolean @unique @default(false)
+  yrStartedPlaying Int
+  mothersName String
+  fathersName String
+  courseAndYear String
+  contactNumber Int
+  email String @unique
+  homeAddress String
+  weight Int
+  height Int
+  bloodType String
+  userId String
+}
 
 
