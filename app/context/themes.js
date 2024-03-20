@@ -2,7 +2,7 @@ const themes = [
     {
       name: "default",
       colorBg: "#252525",
-      colorBg2: "#212121",
+      colorBg2: "#101010",
       colorBg3: "#181818",
       colorBg4: "#1A1A1A",
       colorButton: "#3A3B3C",
@@ -114,7 +114,7 @@ const themes = [
       shadow5: "0px 4px 0px rgba(249,249,249, 0.35)",
       shadow6:
         "0px 6px 20px rgba(0, 0, 0, 0.15), 0px -3px 20px rgba(0, 0, 0, 0.1)",
-      sidebarWidth: "20rem",
+      sidebarWidth: "10rem",
       sidebarCollapsed: "5.4rem",
       fH4: "19px",
       fontSmall: "14px",
