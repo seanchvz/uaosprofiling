@@ -37,6 +37,7 @@ export default function RootLayout({
         height={2}
         color="blue"
         easing="cubic-bezier(.17,.67,0.1)"
+        showSpinner={false}
         />
       <ContextProvider>
       <GlobalStylesProvider>

@@ -6,7 +6,6 @@ import EventItem from '../EventItem/EventItem';
 import { plus } from '@/app/utils/Icons';
 
 
-
 interface Props {
   name: string;
   events: any[];
@@ -17,7 +16,7 @@ function Dashboard({name, events}:Props) {
   return (
     <DashboardStyled theme={theme}>
       <h1>{name}</h1>
-
+      
       <div className="events grid">
         {events && events.map((event) => (
           <EventItem 

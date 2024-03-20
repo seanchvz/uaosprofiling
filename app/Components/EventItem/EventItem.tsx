@@ -51,7 +51,7 @@ const EventItemStyled = styled.div`
   background-color: ${(props) => props.theme.borderColor2};
   box-shadow: ${(props) => props.theme.shadow7};
   border: 1px solid ${(props) => props.theme.borderColor2};
-  height: 20rem;
+  height: 25rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
