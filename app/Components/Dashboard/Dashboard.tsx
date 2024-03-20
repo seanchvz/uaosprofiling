@@ -3,6 +3,7 @@ import { useGlobalState } from '@/app/context/globalProvider';
 import React from 'react'
 import styled from 'styled-components';
 import EventItem from '../EventItem/EventItem';
+import { plus } from '@/app/utils/Icons';
 
 
 interface Props {
@@ -29,6 +30,11 @@ function Dashboard({name, events}:Props) {
 
 
         ))}
+
+        <button className="create-event">
+          {plus}
+          Add New Event
+        </button>
       </div>
         {/* <CreateContent /> */}
     </DashboardStyled>
@@ -65,6 +71,31 @@ overflow-y:auto;
       border-radius: 0.5rem;
     }
   }
+
+  .create-event {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 10rem; /* Adjust the height as desired */
+    color: ${(props) => props.theme.colorGrey2};
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 1rem;
+    border: 3px dashed ${(props) => props.theme.colorGrey5};
+    transition: all 0.3s cubic-bezier(0.53, 0.21, 0, 1);
+  
+    i {
+      font-size: 1.5rem;
+      margin-right: 0.2rem;
+    }
+  
+    &:hover {
+      background-color: ${(props) => props.theme.colorGrey5};
+      color: ${(props) => props.theme.colorGrey0};
+    }
+  }
+  
 
 `;
 

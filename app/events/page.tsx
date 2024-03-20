@@ -21,7 +21,7 @@ function page({name, events}:Props) {
 
         ))}
       </div>
-        {/* <CreateContent /> */}
+        <CreateContent />
     </DashboardStyled>
     
   )
