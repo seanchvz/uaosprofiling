@@ -19,10 +19,17 @@ function Dashboard({name, events}:Props) {
   return (
     <DashboardStyled theme={theme}>
  {modal && <EventModal content={<CreateContent />} />}
-      <h1>{name}</h1>
+ <h1 className="mb-4">{name}</h1>
+
      
       
       <div className="events grid">
+        
+      <button className="create-event" onClick={openModal}>
+          {plus}
+          Add New Event
+        </button>
+
         {events && events.map((event) => (
           <EventItem 
           key={event.id} 
@@ -38,10 +45,6 @@ function Dashboard({name, events}:Props) {
 
         ))}
 
-        <button className="create-event" onClick={openModal}>
-          {plus}
-          Add New Event
-        </button>
       </div>
           
         {/* <CreateContent /> */}
@@ -85,7 +88,7 @@ overflow-y:auto;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 10rem; /* Adjust the height as desired */
+    height: 25rem; 
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
     cursor: pointer;

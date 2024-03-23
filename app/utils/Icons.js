@@ -1,6 +1,12 @@
 export const bars = <i className="fa-solid fa-bars fa-beat"></i>;
 export const arrowLeft = <i className="fa-solid fa-arrow-left fa-beat"></i>;
 
+export const student = <i className="fa-solid fa-user-graduate"></i>;
+export const coach = <i className="fas fa-user-tie"></i>;
+export const CalendarIcon = <i className="fas fa-calendar"></i>
+export const inventory = <i className="fas fa-boxes"></i>;
+export const borrowing = <i className="fas fa-hand-holding"></i>;
+
 export const add = <i className="fa-solid fa-plus"></i>;
 export const moon = <i className="fa-solid fa-moon"></i>;
 export const search = <i className="fa-solid fa-magnifying-glass"></i>;
