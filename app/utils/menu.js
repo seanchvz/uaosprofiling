@@ -1,29 +1,42 @@
-import { list, check, todo, home } from "./Icons";
+import { list, check, todo, home,student, coach, CalendarIcon, inventory, borrowing } from "./Icons";
 
 const menu = [
   {
-    id: 1,
+    id: 3,
     title: "Dashboard",
     icon: home,
+    link: "/events",
+  },
+  {
+    id: 1,
+    title: "Events",
+    icon: CalendarIcon,
     link: "/",
   },
   {
     id: 2,
-    title: "Profiles",
-    icon: list,
+    title: "Student Profile",
+    icon: student,
     link: "/profile",
   },
   {
-    id: 3,
-    title: "Events",
-    icon: check,
-    link: "/events",
+    id: 5,
+    title: "Coach Profile",
+    icon: coach,
+    link: "/coachprofile",
   },
+ 
   {
     id: 4,
     title: "Inventory",
-    icon: todo,
+    icon: inventory,
     link: "/inventory",
+  },
+  {
+    id: 4,
+    title: "Borrowing",
+    icon: borrowing,
+    link: "/borrowing",
   },
 ];
 

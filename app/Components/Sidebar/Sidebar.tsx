@@ -14,27 +14,26 @@ function Sidebar() {
   const { theme } = useGlobalState();
   const router = useRouter();
   const pathname = usePathname();
-  const {signOut}=useClerk();
-  const {user} = useUser();
-  const { firstName, lastName, imageUrl } = user || {firstName: "",lastName: "",imageUrl: "",};
+  const { signOut } = useClerk();
+  const { user } = useUser();
+  const { firstName, lastName, imageUrl } = user || {
+    firstName: "",
+    lastName: "",
+    imageUrl: "",
+  };
   const handleClick = (link: string) => {
     router.push(link);
   };
 
   return (
-    <SidebarStyled theme={theme} >
-      <div className="profile">
-        
-        <div className="imageaddu">
+    <SidebarStyled theme={theme}>
+      <div className="flex flex-col items-center justify-center mt-10">
+        <div className="imageaddu mb-4">
           <Image width={100} height={100} src="/addu.jpg" alt="profile" />
         </div>
-        <div className="user-btn">
-          <UserButton />
-        </div>
-        {/* <h1>
-          University Athletics Office
-        </h1> */}
+        <p className="text-center text-white">University Athletics Office</p>
       </div>
+
       <ul className="nav-items">
         {menu.map((item) => {
           const link = item.link;
@@ -55,35 +54,33 @@ function Sidebar() {
       <button></button>
       <div className="profile">
         <div className="profile-overlay"></div>
-        
+
         <div className="image">
           <Image width={70} height={70} src={imageUrl} alt="profile" />
         </div>
         <div className="user-btn absolute z-20 top-0 w-full h-full">
           <UserButton />
         </div>
-      
+
         <h1>
-          {firstName} 
+          {firstName}
           {/* {lastName} */}
         </h1>
-        
       </div>
       <button>
         <div className="sign-out relative mb-6 ml-6 ">
-          <Button 
-           name={"Logout"}
-           type={"submit"}
-           padding={"0.4rem 0.8rem"}
-           borderRad={"0.8rem"}
-           fw={"500"}
-           fs={"1rem"}
-           icon={logout}
-           click={()=>{
-            signOut(()=> router.push("/signin"));
-           }}
+          <Button
+            name={"Logout"}
+            type={"submit"}
+            padding={"0.4rem 0.8rem"}
+            borderRad={"0.8rem"}
+            fw={"500"}
+            fs={"1rem"}
+            icon={logout}
+            click={() => {
+              signOut(() => router.push("/signin"));
+            }}
           />
-
         </div>
       </button>
     </SidebarStyled>
@@ -109,29 +106,13 @@ const SidebarStyled = styled.nav`
     z-index: 100;
 
     transition: all 0.3s cubic-bezier(0.53, 0.21, 0, 1);
-    transform: ${(props) =>
-      props.collapsed ? "translateX(-107%)" : "translateX(0)"}
+   
 
     .toggle-nav {
       display: block !important;
     }
   }
 
-  .toggle-nav {
-    display: none;
-    padding: 0.8rem 0.9rem;
-    position: absolute;
-    right: -69px;
-    top: 1.8rem;
-
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-
-    background-color: ${(props) => props.theme.colorBg2};
-    border-right: 2px solid ${(props) => props.theme.borderColor2};
-    border-top: 2px solid ${(props) => props.theme.borderColor2};
-    border-bottom: 2px solid ${(props) => props.theme.borderColor2};
-  }
 
   .user-btn {
     .cl-rootBox {
@@ -213,7 +194,7 @@ const SidebarStyled = styled.nav`
 
     > h1 {
       margin-left: 0.8rem;
-      font-size: clamp(1.2rem, 4vw, 1.4rem);
+      font-size: 1rem;
       line-height: 100%;
     }
 
@@ -223,6 +204,17 @@ const SidebarStyled = styled.nav`
       }
     }
   }
+  .imageaddu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Or using Tailwind CSS */
+  .imageaddu {
+    @apply flex justify-center items-center;
+  }
+  
 
   .nav-item {
     position: relative;

@@ -22,8 +22,8 @@ model events {
   CreatedAt    DateTime @default(now())
   UpdatedAt    DateTime @updatedAt
   eventDetails String?
-  isExternal   Boolean  @unique @default(false)
-  isInternal   Boolean  @unique @default(false)
+  isExternal   Boolean  @default(false)
+  isInternal   Boolean  @default(false)
   userId       String
 }
 
@@ -50,5 +50,15 @@ model StudentProfile {
   bloodType String
   userId String
 }
+
+model InventoryItem {
+  id           Int      @id @default(autoincrement())
+  item         String
+  quantity     Int
+  supplier     String
+  stockinDate  DateTime
+  userId       Int
+}
+
 
 
