@@ -42,7 +42,8 @@ export async function POST(req: Request) {
                 userId: userId,
             },
         });
-
+        
+        console.log(event);
         return NextResponse.json(event);
     } catch (error) {
         console.log("Error Creating Event: ", error);
