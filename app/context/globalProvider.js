@@ -15,15 +15,28 @@ export const GlobalProvider = ({children}) => {
     const [selectedTheme, setSelectedTheme] = useState(0);
     const theme =themes[selectedTheme];
     const [isLoading, setIsLoading] = useState(false);
+    const [modal, setModal]= useState(false); //Events
     const [events, setEvents] = useState([]);
 
+    const openModal = () => { //events, put key inside the parenthesis para di ma affect ang other modals
+      setModal(true);
+    };
+
+    const closeModal = () => { //events
+      setModal(false);
+    };
 
     const allEvents = async () => {
       setIsLoading(true);
       try {
         const res = await axios.get("/api/events");
         // console.log(res.data);
-        setEvents(res.data);
+        const sorted = res.data.sort((a, b) => {
+          return (
+            new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime() // after creating an event, the content will add at the top
+          );
+        });
+        setEvents(sorted);
         setIsLoading(false);
 
       } catch (error) {
@@ -42,8 +55,10 @@ export const GlobalProvider = ({children}) => {
         console.log(error)
         toast.error("Something Went Wrong");
       }
-    }
-
+    };
+    //Filtering
+    // const isExternalEvents = events.filter((event) => event.isExternal === true);
+// console.log(isExternalEvents);
     React.useEffect(() => {
       if (user) allEvents();
     },[user]); // para mag pakita ang content sa user
@@ -56,6 +71,11 @@ export const GlobalProvider = ({children}) => {
             events, // send the events data here
             deleteEvent,
             isLoading,
+            modal,
+            openModal,
+            closeModal,
+            allEvents,
+            // isExternalEvents,
         }}>
             
           <GlobalUpdateContext.Provider value={{}}>

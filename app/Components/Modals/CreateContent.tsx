@@ -4,6 +4,7 @@ import { add } from '@/app/utils/Icons'; // Assuming Icons are imported
 import Button from "../Button/Button";
 import axios from 'axios';
 import toast from "react-hot-toast";
+import { useGlobalState } from '@/app/context/globalProvider';
 
 function CreateContent() {
   const [name, setName] = useState("");
@@ -14,6 +15,8 @@ function CreateContent() {
   const [isExternal, setIsExternal] = useState(false);
   const [isInternal, setIsInternal] = useState(false);
   const [userId, setUserId] = useState(""); // Assuming userId is obtained from authentication
+
+  const {allEvents, closeModal}= useGlobalState();
 
   const handleChange = (name: string) => (e: any)=>{
 
@@ -65,6 +68,8 @@ function CreateContent() {
 
       if (!res.data.error) {
         toast.success("Event created successfully.");
+        allEvents();
+        closeModal();
       }
     } catch (error) {
       toast.error("Something went wrong.");
@@ -77,93 +82,113 @@ function CreateContent() {
 
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Create an Event</h1>
-      <div className="input-control">
-        <label htmlFor="name">Name</label>
+<form onSubmit={handleSubmit} className="mx-auto max-w-lg"> {/* Center the form and set max width */}
+  <div className="mb-8"> {/* Add margin-bottom */}
+    <h1 className="text-4xl font-bold mb-4">Create an Event</h1> {/* Add margin-bottom */}
+  </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="input-control">
+      <label htmlFor="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        value={name}
+        name="name"
+        onChange={handleChange("name")}
+        placeholder="Enter event name"
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+      />
+    </div>
+
+    <div className="input-control">
+      <label htmlFor="startDate" className="block">Start Date</label>
+      <input
+        type="date"
+        id="startDate"
+        value={startDate}
+        name="startDate"
+        onChange={handleChange("startDate")}
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+      />
+    </div>
+    <div className="input-control">
+      <label htmlFor="endDate" className="block">End Date</label>
+      <input
+        type="date"
+        id="endDate"
+        value={endDate}
+        name="endDate"
+        onChange={handleChange("endDate")}
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+      />
+    </div>
+    <div className="input-control">
+      <label htmlFor="Sport" className="block">Sport</label>
+      <input
+        type="text"
+        id="Sport"
+        value={Sport}
+        name="Sport"
+        onChange={handleChange("Sport")}
+        placeholder="Enter sport"
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+      />
+    </div>
+    <div className="input-control">
+      <label htmlFor="eventDetails" className="block">Event Details</label>
+      <textarea
+        id="eventDetails"
+        value={eventDetails}
+        name="eventDetails"
+        onChange={handleChange("eventDetails")}
+        placeholder="Enter event details"
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+        rows={4}
+      ></textarea>
+    </div>
+    <div className="input-control flex justify-between">
+      <label htmlFor="isExternal" className="flex items-center cursor-pointer">
+        <span className="mr-2">Is External</span>
         <input
-          type="text"
-          id="name"
-          value={name}
-          name="name"
-          onChange={handleChange("name")}
-          placeholder=" Enter event name: "
+          id="isExternal"
+          type="checkbox"
+          checked={isExternal}
+          onChange={handleChange("isExternal")}
+          className="hidden"
         />
-      </div>
-      <div className="input-control">
-        <label htmlFor="startDate">Start Date</label>
+        <span className={`w-10 h-5 bg-red-300 rounded-full shadow-inner flex items-center transition-colors duration-300 ${isExternal ? 'bg-blue-500' : ''}`}>
+          <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${isExternal ? 'translate-x-5' : ''}`} />
+        </span>
+      </label>
+      <label htmlFor="isInternal" className="flex items-center cursor-pointer">
+        <span className="mr-2">Is Internal</span>
         <input
-          type="date"
-          id="startDate"
-          value={startDate}
-          name="startDate"
-          onChange={handleChange("startDate")}
+          id="isInternal"
+          type="checkbox"
+          checked={isInternal}
+          onChange={handleChange("isInternal")}
+          className="hidden"
         />
-      </div>
-      <div className="input-control">
-        <label htmlFor="endDate">End Date</label>
-        <input
-          type="date"
-          id="endDate"
-          value={endDate}
-          name="endDate"
-          onChange={handleChange("endDate")}
-        />
-      </div>
-      <div className="input-control">
-        <label htmlFor="Sport">Sport</label>
-        <input
-          type="text"
-          id="Sport"
-          value={Sport}
-          name="Sport"
-          onChange={handleChange("Sport")}
-          placeholder=" Enter sport: "
-        />
-      </div>
-      <div className="input-control">
-        <label htmlFor="eventDetails">Event Details</label>
-        <textarea
-          id="eventDetails"
-          value={eventDetails}
-          name="eventDetails"
-          onChange={handleChange("eventDetails")}
-          placeholder="Enter event details: "
-        ></textarea>
-      </div>
-      <div className="input-control">
-        <label>
-          <input
-            type="checkbox"
-            checked={isExternal}
-            onChange={handleChange("isExternal")}
-          />
-          Is External
-        </label>
-      </div>
-      <div className="input-control">
-        <label>
-          <input
-            type="checkbox"
-            checked={isInternal}
-            onChange={handleChange("isInternal")}
-          />
-          Is Internal
-        </label>
-      </div>
-      <div className="submit-btn flex justify-end">
-        <Button
-          type="submit"
-          name="Create Event"
-          icon={add}
-          padding={"0.8rem 2rem"}
-          borderRad={"0.8rem"}
-          fw={"500"}
-          fs={"1.2rem"}
-          background={"rgb(0, 163, 255)"}
-        />
-      </div>
-    </form>
+        <span className={`w-10 h-5 bg-green-300 rounded-full shadow-inner flex items-center transition-colors duration-300 ${isInternal ? 'bg-blue-500' : ''}`}>
+          <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${isInternal ? 'translate-x-5' : ''}`} />
+        </span>
+      </label>
+    </div>
+  </div>
+  <div className="submit-btn mt-4 flex justify-center"> 
+  <button
+    type="submit"
+    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
+  >
+    {add}
+    
+    Create Event
+    
+  </button>
+</div>
+
+</form>
+
   );
 }
 

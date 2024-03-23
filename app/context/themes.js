@@ -2,8 +2,8 @@ const themes = [
     {
       name: "default",
       colorBg: "#252525",
-      colorBg2: "#101010",
-      colorBg3: "#181818",
+      colorBg2: "#212121", // bg color for the main cards
+      colorBg3: "#181818", // color for the name insidebar
       colorBg4: "#1A1A1A",
       colorButton: "#3A3B3C",
       colorDanger: "#fe6854",

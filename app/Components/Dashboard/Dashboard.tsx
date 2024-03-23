@@ -4,6 +4,8 @@ import React from 'react'
 import styled from 'styled-components';
 import EventItem from '../EventItem/EventItem';
 import { plus } from '@/app/utils/Icons';
+import CreateContent from '../Modals/CreateContent';
+import EventModal from '../Modals/EventModal';
 
 
 interface Props {
@@ -12,11 +14,13 @@ interface Props {
 }
 
 function Dashboard({name, events}:Props) {
-    const {theme, isLoading} = useGlobalState();
+    const {theme, isLoading, openModal, modal} = useGlobalState();
     // const isLoading = true;
   return (
     <DashboardStyled theme={theme}>
+ {modal && <EventModal content={<CreateContent />} />}
       <h1>{name}</h1>
+     
       
       <div className="events grid">
         {events && events.map((event) => (
@@ -34,7 +38,7 @@ function Dashboard({name, events}:Props) {
 
         ))}
 
-        <button className="create-event">
+        <button className="create-event" onClick={openModal}>
           {plus}
           Add New Event
         </button>

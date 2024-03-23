@@ -72,6 +72,8 @@ export async function GET(req: Request){
 
 
 export async function PUT(req: Request){
+    const {userId}=auth();
+    
     try {
         
     } catch (error) {

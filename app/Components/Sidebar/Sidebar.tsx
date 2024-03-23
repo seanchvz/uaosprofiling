@@ -8,13 +8,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "../Button/Button";
 import { logout } from "@/app/utils/Icons";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 
 function Sidebar() {
   const { theme } = useGlobalState();
   const router = useRouter();
   const pathname = usePathname();
   const {signOut}=useClerk();
+  const {user} = useUser();
+  const { firstName, lastName, imageUrl } = user || {firstName: "",lastName: "",imageUrl: "",};
   const handleClick = (link: string) => {
     router.push(link);
   };
@@ -25,6 +27,9 @@ function Sidebar() {
         
         <div className="imageaddu">
           <Image width={100} height={100} src="/addu.jpg" alt="profile" />
+        </div>
+        <div className="user-btn">
+          <UserButton />
         </div>
         {/* <h1>
           University Athletics Office
@@ -50,13 +55,17 @@ function Sidebar() {
       <button></button>
       <div className="profile">
         <div className="profile-overlay"></div>
+        
         <div className="image">
-          <Image width={70} height={70} src="/sean.jpg" alt="profile" />
+          <Image width={70} height={70} src={imageUrl} alt="profile" />
         </div>
+        <div className="user-btn absolute z-20 top-0 w-full h-full">
+          <UserButton />
+        </div>
+      
         <h1>
-          <span>Sean</span>
-          <span>Chavez</span>
-          
+          {firstName} 
+          {/* {lastName} */}
         </h1>
         
       </div>
@@ -81,7 +90,7 @@ function Sidebar() {
   );
 }
 
-const SidebarStyled = styled.nav<{ collapsed: boolean }>`
+const SidebarStyled = styled.nav`
   position: relative;
   width: ${(props) => props.theme.sidebarWidth};
   background-color: ${(props) => props.theme.colorBg2};
@@ -101,7 +110,7 @@ const SidebarStyled = styled.nav<{ collapsed: boolean }>`
 
     transition: all 0.3s cubic-bezier(0.53, 0.21, 0, 1);
     transform: ${(props) =>
-      props.collapsed ? "translateX(-107%)" : "translateX(0)"};
+      props.collapsed ? "translateX(-107%)" : "translateX(0)"}
 
     .toggle-nav {
       display: block !important;
@@ -173,7 +182,7 @@ const SidebarStyled = styled.nav<{ collapsed: boolean }>`
     }
 
     h1 {
-      font-size: 1.2rem;
+      font-size: 1rem;
       display: flex;
       flex-direction: column;
 
