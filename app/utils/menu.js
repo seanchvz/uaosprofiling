@@ -2,9 +2,15 @@ import { list, check, todo, home,student, coach, CalendarIcon, inventory, borrow
 
 const menu = [
   {
-    id: 1,
+    id: 3,
     title: "Dashboard",
     icon: home,
+    link: "/events",
+  },
+  {
+    id: 1,
+    title: "Events",
+    icon: CalendarIcon,
     link: "/",
   },
   {
@@ -19,13 +25,7 @@ const menu = [
     icon: coach,
     link: "/coachprofile",
   },
-  {
-    id: 3,
-    title: "Events",
-    icon: CalendarIcon,
-    link: "/events",
-  },
-  
+ 
   {
     id: 4,
     title: "Inventory",
