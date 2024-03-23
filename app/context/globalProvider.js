@@ -17,6 +17,7 @@ export const GlobalProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [modal, setModal]= useState(false); //Events
     const [events, setEvents] = useState([]);
+    const [student, setStudent] = useState([]);
 
     const openModal = () => { //events, put key inside the parenthesis para di ma affect ang other modals
       setModal(true);
@@ -45,6 +46,14 @@ export const GlobalProvider = ({children}) => {
       }
     };
 
+    const allStudents = async () => {
+      setIsLoading(true)
+      try {
+        const studResults = await axios.get("api/studentProfiling");
+        console.log(studResults.data)
+      }
+      catch {}
+    }
     const deleteEvent = async (id) => {
       try {
         const res = await axios.delete(`/api/events/${id}`); // delete lang according kung unsay naa sa ID
@@ -63,6 +72,9 @@ export const GlobalProvider = ({children}) => {
       if (user) allEvents();
     },[user]); // para mag pakita ang content sa user
 
+    React.useEffect(() => {
+      if (user) allStudents();
+    },[user]); 
 
     return (
         <GlobalContext.Provider 

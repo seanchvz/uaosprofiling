@@ -2,6 +2,8 @@ import prisma from "@/app/utils/connect";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 
+
+//post function
 export async function POST(req: Request) {
     try {
         const { userId } = auth();
@@ -24,10 +26,11 @@ export async function POST(req: Request) {
                 status: 400,
             });
         }
+        
        // console.log(name, startDate, endDate, SportId, eventDetails);
         // const formattedStartDate = new Date().toISOString();
         const formattedbirthDate = new Date().toISOString();
-        const male = isMale === "true"; // Assuming isExternal is a string "true" or "false"
+        const male = isMale === "true"; // Assuming isMale is a string "true" or "false"
         const female = isFemale === "true";
 
         const student = await prisma.studentProfile.create({
@@ -56,13 +59,18 @@ export async function POST(req: Request) {
             },
         });
 
+
+        console.log("STUDENT CREATED ", student);
+        
         return NextResponse.json(student);
     } catch (error) {
         console.log("Error creating Student Profile: ", error);
         return NextResponse.json({ error: "Error Creating Student Profile:", status: 500 });
     }
 }
+    
 
+//get rfunction
 export async function GET(req: Request){
     try {
         const { userId } = auth();
@@ -70,19 +78,21 @@ export async function GET(req: Request){
             return NextResponse.json({ error: "Unauthorized", status: 401 });
           }
       
-          const event = await prisma.studentProfile.findMany({
+          const student = await prisma.studentProfile.findMany({
             where: {
               userId,
             },
           });
-          return NextResponse.json(event);
+
+          console.log("STUDENT: ", student);
+          return NextResponse.json(student);
   } catch (error) {
     console.log("ERROR GETTING TASKS: ", error);
     return NextResponse.json({ error: "Error updating event", status: 500 });
   }
 }
 
-
+//update function
 export async function PUT(req: Request){
     try {
         
@@ -93,6 +103,7 @@ export async function PUT(req: Request){
     }
 }
 
+//delete function
 export async function Delete(req: Request){
     try {
         

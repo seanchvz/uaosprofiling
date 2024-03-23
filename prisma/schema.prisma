@@ -28,25 +28,43 @@ model events {
 }
 
 model StudentProfile {
-  id Int @id @default(autoincrement())
-  firstName String @unique
+  id Int @id @default(autoincrement()) 
+  firstName String 
   middleName String
   lastName String
   birthDate String
-  age Int
+  age String
   nationality String
   civilStatus String
-  isMale Boolean @unique @default(false)
-  isFemale Boolean @unique @default(false)
-  yrStartedPlaying Int
+  isMale Boolean 
+  isFemale Boolean 
+  yrStartedPlaying String
   mothersName String
   fathersName String
   courseAndYear String
-  contactNumber Int
+  contactNumber String
   email String @unique
   homeAddress String
-  weight Int
-  height Int
+  weight String
+  height String
+  bloodType String
+  userId String
+}
+
+model coachProfile {
+  id Int @id @default(autoincrement()) 
+  firstName String
+  middleName String
+  age String
+  nationality String
+  civilStatus String
+  isMale Boolean
+  isFemale Boolean
+  contactNumber String
+  email String @unique
+  homeAddress String
+  weight String
+  height String
   bloodType String
   userId String
 }

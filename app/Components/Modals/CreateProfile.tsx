@@ -27,9 +27,9 @@ function CreateProfile() {
   const [bloodType, setbloodType] = useState("");
   const [userId, setUserId] = useState(""); // Assuming userId is obtained from authentication
 
-  const handleChange = (name: string) => (e: any)=>{
+  const handleChange = (firstName: string) => (e: any)=>{
 
-    switch (name) {
+    switch (firstName) {
       case "firstName":
         setfirstName(e.target.value);
     break;
