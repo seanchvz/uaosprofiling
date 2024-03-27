@@ -147,32 +147,34 @@ function CreateContent() {
       ></textarea>
     </div>
     <div className="input-control flex justify-between">
-      <label htmlFor="isExternal" className="flex items-center cursor-pointer">
-        <span className="mr-2">Is External</span>
-        <input
-          id="isExternal"
-          type="checkbox"
-          checked={isExternal}
-          onChange={handleChange("isExternal")}
-          className="hidden"
-        />
-        <span className={`w-10 h-5 bg-red-300 rounded-full shadow-inner flex items-center transition-colors duration-300 ${isExternal ? 'bg-blue-500' : ''}`}>
-          <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${isExternal ? 'translate-x-5' : ''}`} />
-        </span>
-      </label>
+    <label htmlFor="isExternal" className="flex items-center cursor-pointer">
+  <span className="mr-2 text-white">Is External</span> {/* Added text-white class */}
+  <input
+    id="isExternal"
+    type="checkbox"
+    checked={isExternal}
+    onChange={handleChange("isExternal")}
+    className="hidden"
+  />
+  <span className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${isExternal ? 'bg-red-500' : ''}`}> {/* Updated classNames */}
+    <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${isExternal ? 'translate-x-5' : ''}`} />
+  </span>
+</label>
+
       <label htmlFor="isInternal" className="flex items-center cursor-pointer">
-        <span className="mr-2">Is Internal</span>
-        <input
-          id="isInternal"
-          type="checkbox"
-          checked={isInternal}
-          onChange={handleChange("isInternal")}
-          className="hidden"
-        />
-        <span className={`w-10 h-5 bg-green-300 rounded-full shadow-inner flex items-center transition-colors duration-300 ${isInternal ? 'bg-blue-500' : ''}`}>
-          <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${isInternal ? 'translate-x-5' : ''}`} />
-        </span>
-      </label>
+  <span className="mr-2 text-white">Is Internal</span> {/* Added text-white class */}
+  <input
+    id="isInternal"
+    type="checkbox"
+    checked={isInternal}
+    onChange={handleChange("isInternal")}
+    className="hidden"
+  />
+  <span className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${isInternal ? 'bg-green-500' : ''}`}> {/* Updated classNames */}
+    <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${isInternal ? 'translate-x-5' : ''}`} />
+  </span>
+</label>
+
     </div>
   </div>
   <div className="submit-btn mt-4 flex justify-center"> 

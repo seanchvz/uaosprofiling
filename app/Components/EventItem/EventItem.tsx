@@ -15,6 +15,7 @@ interface Props{
 
 function EventItem({name, startDate, endDate, Sport, isExternal, id}:Props) {
     const {theme, deleteEvent} = useGlobalState();
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
     // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
 
@@ -22,8 +23,10 @@ function EventItem({name, startDate, endDate, Sport, isExternal, id}:Props) {
     <EventItemStyled theme={theme}>
         <h1> {name}</h1>
         <p className='sport'> {Sport}</p>
-        <p className="date">Start Date: {startDate}</p>
-        <p className='dateend'> End Date: {endDate}</p>
+        <p className="date">Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}</p>
+<p className='dateend'> End Date: {new Date(endDate).toLocaleDateString(undefined, options)}</p>
+
+
         <div className="event-footer">
             {isExternal ? (
             <button className="isExternal">External</button>
@@ -91,19 +94,17 @@ const EventItemStyled = styled.div`
     .edit {
       margin-left: auto;
     }
-
     .isExternal,
     .isInternal {
       display: inline-block;
       padding: 0.4rem 1rem;
-      background: ${(props) => props.theme.colorDanger};
+      border: 2px solid ${(props) => props.theme.colorDanger};
       border-radius: 0.8rem;
     }
-
+    
     .isInternal {
-      background: ${(props) => props.theme.colorGreenDark} !important;
+      border-color: ${(props) => props.theme.colorGreenDark}; 
     }
-  }
 
   .sport {
     background: #002b88 !important;

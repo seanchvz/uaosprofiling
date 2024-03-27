@@ -69,18 +69,22 @@ function Sidebar() {
       </div>
       <button>
         <div className="sign-out relative mb-6 ml-6 ">
-          <Button
-            name={"Logout"}
-            type={"submit"}
-            padding={"0.4rem 0.8rem"}
-            borderRad={"0.8rem"}
-            fw={"500"}
-            fs={"1rem"}
-            icon={logout}
-            click={() => {
-              signOut(() => router.push("/signin"));
-            }}
-          />
+        <div className="flex justify-center items-center">
+  <Button 
+    name={"Logout"}
+    type={"submit"}
+    padding={"0.4rem 0.8rem"}
+    borderRad={"0.8rem"}
+    fw={"500"}
+    fs={"1rem"}
+    icon={logout}
+    click={() => {
+      signOut(() => router.push("/signin"));
+    }}
+    
+  />
+</div>
+
         </div>
       </button>
     </SidebarStyled>
@@ -272,6 +276,7 @@ const SidebarStyled = styled.nav`
 
   > button {
     margin: 1.5rem;
+    
   }
 
   .imageaddu,

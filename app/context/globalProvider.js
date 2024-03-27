@@ -54,6 +54,7 @@ export const GlobalProvider = ({children}) => {
       }
       catch {}
     }
+    
     const deleteEvent = async (id) => {
       try {
         const res = await axios.delete(`/api/events/${id}`); // delete lang according kung unsay naa sa ID

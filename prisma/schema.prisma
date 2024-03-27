@@ -44,3 +44,15 @@ model studentprofile {
   bloodType        String
   userId           String
 }
+
+model InventoryItem {
+  id           Int      @id @default(autoincrement())
+  item         String
+  quantity     Int
+  supplier     String
+  stockinDate  DateTime
+  userId       String
+}
+
+
+

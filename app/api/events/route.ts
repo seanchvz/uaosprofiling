@@ -26,8 +26,9 @@ export async function POST(req: Request) {
             });
         }
        // console.log(name, startDate, endDate, SportId, eventDetails);
-        const formattedStartDate = new Date().toISOString();
-        const formattedEndDate = new Date().toISOString();
+       const formattedStartDate = new Date(startDate).toISOString();
+       const formattedEndDate = new Date(endDate).toISOString();
+
 
 
         const event = await prisma.events.create({
