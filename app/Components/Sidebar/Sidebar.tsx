@@ -51,7 +51,7 @@ function Sidebar() {
           );
         })}
       </ul>
-      <button></button>
+
       <div className="profile">
         <div className="profile-overlay"></div>
 
@@ -67,26 +67,24 @@ function Sidebar() {
           {/* {lastName} */}
         </h1>
       </div>
-      <button>
+      <div>
         <div className="sign-out relative mb-6 ml-6 ">
-        <div className="flex justify-center items-center">
-  <Button 
-    name={"Logout"}
-    type={"submit"}
-    padding={"0.4rem 0.8rem"}
-    borderRad={"0.8rem"}
-    fw={"500"}
-    fs={"1rem"}
-    icon={logout}
-    click={() => {
-      signOut(() => router.push("/signin"));
-    }}
-    
-  />
-</div>
-
+          <div className="flex justify-center items-center">
+            <Button
+              name={"Logout"}
+              type={"submit"}
+              padding={"0.4rem 0.8rem"}
+              borderRad={"0.8rem"}
+              fw={"500"}
+              fs={"1rem"}
+              icon={logout}
+              click={() => {
+                signOut(() => router.push("/signin"));
+              }}
+            />
+          </div>
         </div>
-      </button>
+      </div>
     </SidebarStyled>
   );
 }

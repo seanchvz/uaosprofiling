@@ -78,15 +78,16 @@ export async function GET(req: Request){
             return NextResponse.json({ error: "Unauthorized", status: 401 });
           }
       
-          const student = await prisma.studentProfile.findMany({
-            where: {
-              userId,
-            },
-          });
+        //   const student = await prisma.studentProfile.findMany({
+        //     where: {
+        //       userId,
+        //     },
+        //   });
 
-          console.log("STUDENT: ", student);
-          return NextResponse.json(student);
-  } catch (error) {
+        //   console.log("STUDENT: ", student);
+        //   return NextResponse.json(student);
+          return NextResponse.json([]);
+    } catch (error) {
     console.log("ERROR GETTING TASKS: ", error);
     return NextResponse.json({ error: "Error updating event", status: 500 });
   }

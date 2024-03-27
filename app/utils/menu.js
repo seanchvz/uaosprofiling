@@ -33,7 +33,7 @@ const menu = [
     link: "/inventory",
   },
   {
-    id: 4,
+    id: 6,
     title: "Borrowing",
     icon: borrowing,
     link: "/borrowing",

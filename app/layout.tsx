@@ -5,7 +5,7 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 import GlobalStylesProvider from "./providers/GlobalStylesProvider";
 import ContextProvider from "./providers/ContextProvider";
 import { ClerkProvider, auth } from "@clerk/nextjs";
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,32 +23,31 @@ export default function RootLayout({
 
   return (
     <ClerkProvider>
-    <html lang="en">
-      <head>
-      <link 
-      rel="stylesheet" 
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
-      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
-      crossOrigin="anonymous" 
-      referrerPolicy="no-referrer" />
-      </head>
-      <body className={inter.className}>
-        <NextTopLoader 
-        height={2}
-        color="blue"
-        easing="cubic-bezier(.17,.67,0.1)"
-        showSpinner={false}
-        />
-      <ContextProvider>
-      <GlobalStylesProvider>
-
-        {userId && <Sidebar />}
-
+      <html lang="en">
+        <head>
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
+          />
+        </head>
+        <body className={inter.className}>
+          <NextTopLoader
+            height={2}
+            color="blue"
+            easing="cubic-bezier(.17,.67,0.1)"
+            showSpinner={false}
+          />
+          <ContextProvider>
+            <GlobalStylesProvider>
+              {userId && <Sidebar />}
               <div className="w-full">{children}</div>
-      </GlobalStylesProvider>
-      </ContextProvider>
-      </body>
-    </html>
+            </GlobalStylesProvider>
+          </ContextProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

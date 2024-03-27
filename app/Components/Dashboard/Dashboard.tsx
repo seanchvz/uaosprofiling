@@ -1,68 +1,61 @@
-"use client"
-import { useGlobalState } from '@/app/context/globalProvider';
-import React from 'react'
-import styled from 'styled-components';
-import EventItem from '../EventItem/EventItem';
-import { plus } from '@/app/utils/Icons';
-import CreateContent from '../Modals/CreateContent';
-import EventModal from '../Modals/EventModal';
-
+"use client";
+import { useGlobalState } from "@/app/context/globalProvider";
+import React from "react";
+import styled from "styled-components";
+import EventItem from "../EventItem/EventItem";
+import { plus } from "@/app/utils/Icons";
+import CreateContent from "../Modals/CreateContent";
+import EventModal from "../Modals/EventModal";
 
 interface Props {
   name: string;
   events: any[];
 }
 
-function Dashboard({name, events}:Props) {
-    const {theme, isLoading, openModal, modal} = useGlobalState();
-    // const isLoading = true;
+function Dashboard({ name, events }: Props) {
+  const { theme, isLoading, openModal, modal } = useGlobalState();
+  // const isLoading = true;
+  console.log(events);
   return (
     <DashboardStyled theme={theme}>
- {modal && <EventModal content={<CreateContent />} />}
- <h1 className="mb-4">{name}</h1>
+      {modal && <EventModal content={<CreateContent />} />}
+      <h1 className="mb-4">{name}</h1>
 
-     
-      
       <div className="events grid">
-        
-      <button className="create-event" onClick={openModal}>
+        <button className="create-event" onClick={openModal}>
           {plus}
           Add New Event
         </button>
 
-        {events && events.map((event) => (
-          <EventItem 
-          key={event.id} 
-            name={event.name}
-            startDate={event.startDate}
-            endDate={event.endDate}
-            Sport={event.Sport}
-            isExternal={event.isExternal}
-            id={event.id}
-
-          />
-
-
-        ))}
-
+        {events &&
+          events.map((event) => (
+            <EventItem
+              key={event.id}
+              name={event.name}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              Sport={event.Sport}
+              isExternal={event.isExternal}
+              id={event.id}
+            />
+          ))}
       </div>
-          
-        {/* <CreateContent /> */}
+
+      {/* <CreateContent /> */}
     </DashboardStyled>
-    
-  )
+  );
 }
 
 const DashboardStyled = styled.main`
-padding: 2rem;  
-width:100%;
-background-color: ${(props)=> props.theme.colorBg2};
-border: 2px solid ${(props) => props.theme.borderColor2};
-border-radius: 1rem;
-height: 100%;
-overflow-y:auto;
+  padding: 2rem;
+  width: 100%;
+  background-color: ${(props) => props.theme.colorBg2};
+  border: 2px solid ${(props) => props.theme.borderColor2};
+  border-radius: 1rem;
+  height: 100%;
+  overflow-y: auto;
 
-&::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 0.5rem;
   }
 
@@ -78,7 +71,7 @@ overflow-y:auto;
       left: 0;
       width: 3rem;
       height: 0.2rem;
-     
+
       border-radius: 0.5rem;
     }
   }
@@ -88,26 +81,24 @@ overflow-y:auto;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 25rem; 
+    height: 25rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
     cursor: pointer;
     border-radius: 1rem;
     border: 3px dashed ${(props) => props.theme.colorGrey5};
     transition: all 0.3s cubic-bezier(0.53, 0.21, 0, 1);
-  
+
     i {
       font-size: 1.5rem;
       margin-right: 0.2rem;
     }
-  
+
     &:hover {
       background-color: ${(props) => props.theme.colorGrey5};
       color: ${(props) => props.theme.colorGrey0};
     }
   }
-  
-
 `;
 
-export default Dashboard
+export default Dashboard;
