@@ -1,23 +1,20 @@
 "use client";
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import CreateInventoryItem from "../Components/Modals/CreateInventoryItem";
-import {
-  InventoryGlobalProvider,
-  useInventoryGlobalState,
-} from "@/app/context/InventoryGlobalProvider";
-import { inventory } from "../utils/Icons";
-import InventoryItem from "../InventoryContent/InventoryContent";
+import { inventory, plus } from "../utils/Icons";
+
 import InventoryContent from "../InventoryContent/InventoryContent";
-import { useGlobalState } from "@/app/context/globalProvider";
+import { useGlobalState } from "../context/globalProvider";
+import CreateInventoryItem from "../Components/Modals/CreateInventoryItem";
+import InventoryModal from "../Components/Modals/InventoryModal";
 
 interface Props {
   item: string;
-  inventoryItem: any[];
+  InventoryItem: any[];
 }
-function Page({ item,inventoryItem }: Props) {
-  const { theme, isLoading, fetchAllInventoryItems } = useGlobalState();
-  console.log("Inventory Items", inventoryItem);
+function Page({ item, InventoryItem }: Props) {
+  const { theme, isLoading, fetchAllInventoryItems , openModal, modal} = useGlobalState();
+
 
   useEffect( () => {
     console.log("Fetch all inventory items")
@@ -25,23 +22,32 @@ function Page({ item,inventoryItem }: Props) {
   }, [])
 
   return (
-    <div>
-      {isLoading ? "true" : "false"}
+    // <div>
+    //   {isLoading ? "true" : "false"}
       <InventoryStyled theme={theme}>
+         {modal && <InventoryModal content={<CreateInventoryItem />} />}
         <h1>{item}</h1>
         <div className="inventoryitem grid">
-          
-          {inventoryItem &&
-            inventoryItem.map((inventory) => (
-              <InventoryContent
-                key={inventory.id}
-                inventory={{ ...inventory }}
-                item={""}
-              />
-            ))}
+        <button className="create-event" onClick={openModal}>
+          {plus}
+          Add New Inventory Item
+        </button>
+
+
+        {InventoryItem && Array.isArray(InventoryItem) && InventoryItem.map((inventory) => (
+  <InventoryContent
+    key={inventory.id}
+    item={inventory.item}
+    quantity={inventory.quantity}
+    supplier={inventory.supplier}
+    stockinDate={inventory.stockinDate}
+    id={inventory.id}
+  />
+))}
+
         </div>
       </InventoryStyled>
-    </div>
+    // </div>
   );
 }
 

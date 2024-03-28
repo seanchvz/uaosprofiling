@@ -8,10 +8,10 @@ export function InventoryItemService(options: {
 }) {
   const donothing = () => {};
   const setIsLoading = options.setIsLoading || donothing;
-  const [inventoryItem, setInventoryItem] = useState([]);
+  const [InventoryItem, setInventoryItem] = useState([]);
 
-  const fetchAllItems = async () => {
-    console.log("Fetching all items");
+  const fetchAllInventoryItems = async () => {
+    // console.log("Fetching all items");
     setIsLoading(true);
     try {
       const res = await axios.get("/api/inventory");
@@ -30,7 +30,8 @@ export function InventoryItemService(options: {
   };
 
   return {
-    inventoryItem,
-    fetchAllInventoryItems: fetchAllItems,
+    InventoryItem,
+    fetchAllInventoryItems,
+    // : fetchAllItems,
   };
 }

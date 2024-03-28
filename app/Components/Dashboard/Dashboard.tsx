@@ -1,6 +1,6 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import EventItem from "../EventItem/EventItem";
 import { plus } from "@/app/utils/Icons";
@@ -13,9 +13,15 @@ interface Props {
 }
 
 function Dashboard({ name, events }: Props) {
-  const { theme, isLoading, openModal, modal } = useGlobalState();
+  const { theme, isLoading, openModal, modal, allEvents } = useGlobalState();
   // const isLoading = true;
   console.log(events);
+  
+  useEffect( () => {
+    console.log("Fetch all event items")
+    allEvents()
+  }, [])
+
   return (
     <DashboardStyled theme={theme}>
       {modal && <EventModal content={<CreateContent />} />}

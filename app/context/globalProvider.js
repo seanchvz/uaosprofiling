@@ -17,11 +17,10 @@ export const GlobalProvider = ({ children }) => {
   const theme = themes[selectedTheme];
   const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState(false); //Events
-// /  const [events, setEvents] = useState([]);/
   const [student, setStudent] = useState([]);
 
-  const { inventoryItem, fetchAllInventoryItems } =
-    InventoryItemService({setIsLoading});
+  const { InventoryItem, fetchAllInventoryItems } =
+    InventoryItemService({});
 
     const { events, allEvents } =
     EventsService({ });
@@ -37,24 +36,8 @@ export const GlobalProvider = ({ children }) => {
     setModal(false);
   };
 
-  // const allEvents = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const res = await axios.get("/api/events");
-  //     // console.log(res.data);
-  //     const sorted = res.data.sort((a, b) => {
-  //       return (
-  //         new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime() // after creating an event, the content will add at the top
-  //       );
-  //     });
-  //     setEvents(sorted);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
-  // const allStudents = async () => {
+  // const allStudents = async () => { // transfer this to service
   //   setIsLoading(true);
   //   try {
   //     const studResults = await axios.get("api/studentProfiling");
@@ -73,6 +56,21 @@ export const GlobalProvider = ({ children }) => {
       toast.error("Something Went Wrong");
     }
   };
+
+
+
+  const deleteInventory = async (id) => {
+    try {
+      const res = await axios.delete(`/api/inventory/${id}`); // delete lang according kung unsay naa sa ID
+      toast.success("Inventory Item Deleted");
+
+      fetchAllInventoryItems();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
+
   //Filtering
   // const isExternalEvents = events.filter((event) => event.isExternal === true);
   // console.log(isExternalEvents);
@@ -92,11 +90,13 @@ export const GlobalProvider = ({ children }) => {
         deleteEvent,
         isLoading,
         modal,
-        inventoryItem,
+        InventoryItem,
         fetchAllInventoryItems,
+        deleteInventory,
         openModal,
         closeModal,
         allEvents,
+        
         // isExternalEvents,
       }}
     >

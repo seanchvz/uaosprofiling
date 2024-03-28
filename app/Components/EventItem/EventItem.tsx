@@ -1,52 +1,60 @@
-import { useGlobalState } from '@/app/context/globalProvider';
-import { edit, trash } from '@/app/utils/Icons';
-import React from 'react'
-import styled from 'styled-components';
+import { useGlobalState } from "@/app/context/globalProvider";
+import { edit, trash } from "@/app/utils/Icons";
+import React from "react";
+import styled from "styled-components";
 
-interface Props{
-    // event: any;
-    name:string;
-    startDate: string;
-    endDate: string;
-    Sport:string;
-    isExternal:boolean;
-    id:string;
+interface Props {
+  // event: any;
+  name: string;
+  startDate: string;
+  endDate: string;
+  Sport: string;
+  isExternal: boolean;
+  id: string;
 }
 
-function EventItem({name, startDate, endDate, Sport, isExternal, id}:Props) {
-    const {theme, deleteEvent} = useGlobalState();
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+function EventItem({ name, startDate, endDate, Sport, isExternal, id }: Props) {
+  const { theme, deleteEvent } = useGlobalState();
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
 
-    // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
+  // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
 
   return (
     <EventItemStyled theme={theme}>
-        <h1> {name}</h1>
-        <p className='sport'> {Sport}</p>
-        <p className="date">Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}</p>
-<p className='dateend'> End Date: {new Date(endDate).toLocaleDateString(undefined, options)}</p>
+      <h1> {name}</h1>
+      <p className="sport"> {Sport}</p>
+      <p className="date">
+        Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
+      </p>
+      <p className="dateend">
+        {" "}
+        End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
+      </p>
 
-
-        <div className="event-footer">
-            {isExternal ? (
-            <button className="isExternal">External</button>
-            ) : (
-            <button className="isInternal">Internal</button> 
+      <div className="event-footer">
+        {isExternal ? (
+          <button className="isExternal">External</button>
+        ) : (
+          <button className="isInternal">Internal</button>
         )}
-         
-        <button className="edit">{edit}</button>
-        <button 
-        className="delete" 
-        onClick={()=>{
-          deleteEvent(id);
-        }}>
-          {trash}</button>
-            {/* <button className="completed">External</button> */}
-        </div>
-       
 
+        <button className="edit">{edit}</button>
+        <button
+          className="delete"
+          onClick={() => {
+            deleteEvent(id);
+          }}
+        >
+          {trash}
+        </button>
+        {/* <button className="completed">External</button> */}
+      </div>
     </EventItemStyled>
-  )
+  );
 }
 const EventItemStyled = styled.div`
   padding: 1.2rem 1rem;
@@ -113,4 +121,4 @@ const EventItemStyled = styled.div`
   }
 `;
 
-export default EventItem
+export default EventItem;

@@ -1,7 +1,7 @@
 import prisma from "@/app/utils/connect";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
-import events from "events";
+
 
 export async function POST(req: Request) {
     try {
@@ -64,7 +64,7 @@ export async function GET(req: Request){
               userId,
             },
           });
-          console.log("EVENTS: ", events);
+        //   console.log("EVENTS: ", events);
           return NextResponse.json(event);
   } catch (error) {
     console.log("ERROR GETTING EVENTS: ", error);

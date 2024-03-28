@@ -1,7 +1,8 @@
 import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs";
-import { Console } from "console";
 import { NextResponse } from "next/server";
+
+
 
 
 export async function POST(req:Request) {
@@ -47,29 +48,28 @@ export async function POST(req:Request) {
     
 }
 
-export async function GET(req:Request) {
+export async function GET(req: Request) {
     try {
         const { userId } = auth();
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
-          }
-          const inventoryItem = await prisma.inventoryItem.findMany({
+        }
+      
+        const inventoryItems = await prisma.inventoryItem.findMany({
             where: {
-              userId,
+                userId,
             },
-          });
-          console.log("INVENTORY: ", inventoryItem);
-          return NextResponse.json(inventoryItem);
-        
+        });
+        console.log("INVENTORY ITEMS: ", inventoryItems);
+        return NextResponse.json(inventoryItems);
     } catch (error) {
-        console.log("Error Getting Inventory Item: ", error);
-        return NextResponse.json({error: "Error updating Inventory Item", status:500});
-        
+        console.error("ERROR GETTING INVENTORY ITEMS: ", error);
+        return NextResponse.json({ error: "Error getting inventory items", status: 500 });
     }
-    
 }
 
 export async function PUT(req:Request) {
+    const {userId}=auth();
     try {
         
     } catch (error) {

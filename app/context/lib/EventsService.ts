@@ -1,6 +1,7 @@
 import { user } from '@/app/utils/Icons';
 import axios from 'axios';
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
 
 export function EventsService(options: {
     setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,6 +25,7 @@ export function EventsService(options: {
           setIsLoading(false);
         } catch (error) {
           console.log(error);
+          toast.error("Something Went Wrong");
         }
       };
 
