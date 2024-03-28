@@ -50,6 +50,7 @@ export const GlobalProvider = ({children}) => {
       setIsLoading(true)
       try {
         const studResults = await axios.get("api/studentProfiling");
+        
         console.log(studResults.data)
       }
       catch {}
