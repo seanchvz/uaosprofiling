@@ -26,7 +26,6 @@ function Dashboard({ name, events }: Props) {
     <DashboardStyled theme={theme}>
       {modal && <EventModal content={<CreateContent />} />}
       <h1 className="mb-4">{name}</h1>
-
       <div className="events grid">
         <button className="create-event" onClick={openModal}>
           {plus}

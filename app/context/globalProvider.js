@@ -16,7 +16,7 @@ export const GlobalProvider = ({ children }) => {
   const [selectedTheme, setSelectedTheme] = useState(0);
   const theme = themes[selectedTheme];
   const [isLoading, setIsLoading] = useState(false);
-  const [modal, setModal] = useState(false); //Events
+  const [modal, setModal] = useState(false); 
   const [student, setStudent] = useState([]);
 
   const { InventoryItem, fetchAllInventoryItems } =

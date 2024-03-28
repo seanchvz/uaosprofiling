@@ -18,9 +18,10 @@ export function InventoryItemService(options: {
       console.log(res.data);
       const sorted = res.data.sort((a, b) => {
         return (
-          new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime() // after creating an event, the content will add at the top
+          new Date(b.stockinDate).getTime() - new Date(a.stockinDate).getTime()
         );
       });
+      
       setInventoryItem(sorted);
       setIsLoading(false);
     } catch (error) {

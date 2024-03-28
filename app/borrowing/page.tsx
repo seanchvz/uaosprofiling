@@ -6,8 +6,7 @@ import CreateInventoryItem from '../Components/Modals/CreateInventoryItem'
 function page() {
   return (
     <div>
-
-<CreateInventoryItem />
+Borrowing
     </div>
   )
 }

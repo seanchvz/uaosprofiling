@@ -1,3 +1,4 @@
+import { useGlobalState } from "@/app/context/globalProvider";
 import { useInventoryGlobalState } from "@/app/context/InventoryGlobalProvider";
 import { add } from "@/app/utils/Icons";
 import axios from "axios";
@@ -12,7 +13,7 @@ function CreateInventoryItem() {
   const [stockinDate, setStockinDate] = useState("");
   const [userId, setUserId] = useState("");
 
-  // const {allInventoryItem, closeModal}= useInventoryGlobalState();
+  const {fetchAllInventoryItems, closeModal}= useGlobalState();
 
   const handleChange = (item: string) => (e: any) => {
     switch (item) {
@@ -53,8 +54,8 @@ function CreateInventoryItem() {
 
       if (!res.data.error) {
         toast.success("Item created successfully.");
-        // allInventoryItem();
-        // closeModal();
+        fetchAllInventoryItems();
+        closeModal();
       }
     } catch (error) {
       toast.error("Something went wrong.");

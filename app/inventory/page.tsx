@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { inventory, plus } from "../utils/Icons";
-
+import { plus } from "../utils/Icons";
 import InventoryContent from "../InventoryContent/InventoryContent";
 import { useGlobalState } from "../context/globalProvider";
 import CreateInventoryItem from "../Components/Modals/CreateInventoryItem";
@@ -28,7 +27,7 @@ function Page({ item, InventoryItem }: Props) {
          {modal && <InventoryModal content={<CreateInventoryItem />} />}
         <h1>{item}</h1>
         <div className="inventoryitem grid">
-        <button className="create-event" onClick={openModal}>
+        <button className="create-item" onClick={openModal}>
           {plus}
           Add New Inventory Item
         </button>
@@ -81,12 +80,12 @@ const InventoryStyled = styled.main`
     }
   }
 
-  .create-event {
+  .create-item {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 25rem;
+    height: 20rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
     cursor: pointer;
