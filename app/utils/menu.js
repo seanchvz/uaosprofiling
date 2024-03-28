@@ -30,10 +30,10 @@ const menu = [
     id: 4,
     title: "Inventory",
     icon: inventory,
-    link: "/inventory",
+    link: "/InventoryScreen",
   },
   {
-    id: 4,
+    id: 6,
     title: "Borrowing",
     icon: borrowing,
     link: "/borrowing",

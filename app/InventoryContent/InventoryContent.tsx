@@ -1,68 +1,56 @@
-import { useGlobalState } from "@/app/context/globalProvider";
-import { edit, trash } from "@/app/utils/Icons";
-import React from "react";
-import styled from "styled-components";
+"use client"
+import React from 'react'
+import { useGlobalState } from '../context/globalProvider';
+import styled from 'styled-components';
+import { edit, trash } from '../utils/Icons';
 
 interface Props {
-  // event: any;
-  name: string;
-  startDate: string;
-  endDate: string;
-  Sport: string;
-  isExternal: boolean;
-  id: string;
+  item:string;
+  quantity: number;
+  supplier: string;
+  stockinDate: string;
+  id:string;
+  // inventory:any;
 }
 
-function EventItem({ name, startDate, endDate, Sport, isExternal, id }: Props) {
-  const { theme, deleteEvent } = useGlobalState();
+function InventoryContent({item, quantity, supplier, stockinDate, id}:Props) {
+  // console.log(inventory)
+  const {theme, deleteInventory} = useGlobalState();
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
   };
 
-  // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
-
   return (
-    <EventItemStyled theme={theme}>
-      <h1> {name}</h1>
-      <p className="sport"> {Sport}</p>
-      <p className="date">
-        Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
-      </p>
-      <p className="dateend">
-        {" "}
-        End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
-      </p>
+    <InventoryContentStyled theme={theme}>
+      <h1>{item}</h1>
+      <p className="sport">Quantity: {quantity}</p>
+      <p className='sport'>Supplier: {supplier}</p>
+      <p> Stock-in Date: {new Date(stockinDate).toLocaleDateString(undefined, options)}</p>
 
       <div className="event-footer">
-        {isExternal ? (
-          <button className="isExternal">External</button>
-        ) : (
-          <button className="isInternal">Internal</button>
-        )}
-
-        <button className="edit">{edit}</button>
+      <button className="edit">{edit}</button>
         <button
           className="delete"
           onClick={() => {
-            deleteEvent(id);
+            deleteInventory(id);
           }}
         >
           {trash}
         </button>
-        {/* <button className="completed">External</button> */}
       </div>
-    </EventItemStyled>
-  );
+    </InventoryContentStyled>
+  )
 }
-const EventItemStyled = styled.div`
+
+const InventoryContentStyled = styled.div`
   padding: 1.2rem 1rem;
   border-radius: 1rem;
   background-color: ${(props) => props.theme.borderColor2};
   box-shadow: ${(props) => props.theme.shadow7};
   border: 1px solid ${(props) => props.theme.borderColor2};
-  height: 25rem;
+  height: 20rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -121,4 +109,4 @@ const EventItemStyled = styled.div`
   }
 `;
 
-export default EventItem;
+export default InventoryContent
