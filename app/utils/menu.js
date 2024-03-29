@@ -23,7 +23,7 @@ const menu = [
     id: 5,
     title: "Coach Profile",
     icon: coach,
-    link: "/coachprofile",
+    link: "/CoachScreen",
   },
  
   {

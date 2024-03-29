@@ -36,3 +36,23 @@ export function InventoryItemService(options: {
     // : fetchAllItems,
   };
 }
+
+  // name: string;
+  //   contactNumber : string;
+  //   sport: string;
+  //   permanentTeam: string;
+  //   isMale: boolean;
+  //   isFemale: boolean;
+  //   emergencyContact: string;
+  //   emergencyContactPerson: string;
+  //   birthDate: string;
+  //   nationality: string;
+  //   weight: number; 
+  //   height: number;
+  //   bloodType: string;
+  //   academicYear: string;
+  //   statusIsFulltime: boolean;
+  //   statusIsParttime: boolean;
+  //   resumeUrl: string;
+  //   email: string;
+  //   id:string;
