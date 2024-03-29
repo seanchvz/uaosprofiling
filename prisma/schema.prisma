@@ -54,5 +54,29 @@ model InventoryItem {
   userId       String
 }
 
+model coachprofile {
+  id                         Int      @id @default(autoincrement())
+  name                       String
+  contactNumber              String
+  sport                      String
+  permanentTeam              String
+  isMale                     Boolean  @default(false)
+  isFemale                   Boolean  @default(false)
+  emergencyContact           String
+  emergencyContactPerson     String
+  birthDate                  DateTime
+  nationality                String
+  weight                     Float?
+  height                     Float?
+  bloodType                  String?
+  academicYear               String
+  statusIsFulltime           Boolean  @default(false)
+  statusIsParttime           Boolean  @default(false)     
+  resumeUrl                  String?
+  email                      String
+  CreatedAt                  DateTime @default(now())
+  UpdatedAt                  DateTime @updatedAt
+  userId                     String
+}
 
-
+// mag create na ng route

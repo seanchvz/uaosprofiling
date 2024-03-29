@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
 import { InventoryItemService } from "./lib/InventoryItemService";
 import {EventsService} from "./lib/EventsService";
+import { CoachProfileService } from "./lib/CoachProfileService";
 
 export const GlobalContext = createContext();
 export const GlobalUpdateContext = createContext();
@@ -17,13 +18,15 @@ export const GlobalProvider = ({ children }) => {
   const theme = themes[selectedTheme];
   const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState(false); 
-  const [student, setStudent] = useState([]);
 
   const { InventoryItem, fetchAllInventoryItems } =
     InventoryItemService({});
 
     const { events, allEvents } =
     EventsService({ });
+
+    const {coachprofile, fetchAllCoachProfile}=
+    CoachProfileService({});
 
 
   const openModal = () => {
@@ -88,6 +91,18 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+
+  const deleteCoachProfile = async (id) => {
+    try {
+      const res = await axios.delete(`/api/coachProfiling/${id}`); // delete lang according kung unsay naa sa ID
+      toast.success("Coach Profile Deleted");
+
+      fetchAllCoachProfile();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
   //Filtering
   // const isExternalEvents = events.filter((event) => event.isExternal === true);
   // console.log(isExternalEvents);
@@ -113,6 +128,9 @@ export const GlobalProvider = ({ children }) => {
         openModal,
         closeModal,
         allEvents,
+        coachprofile,
+        fetchAllCoachProfile,
+        deleteCoachProfile,
         
         // isExternalEvents,
       }}
