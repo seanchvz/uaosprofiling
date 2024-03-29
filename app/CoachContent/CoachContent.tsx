@@ -52,7 +52,7 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
           <button className="isInternal">Part Time</button>
         )}
 
-        <button className="edit">{edit}</button>
+        
         <button
           className="delete"
           onClick={() => {
