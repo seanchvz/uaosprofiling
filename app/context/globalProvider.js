@@ -53,27 +53,10 @@ export const GlobalProvider = ({ children }) => {
       const res = await axios.delete(`/api/events/${id}`); // delete lang according kung unsay naa sa ID
       toast.success("Event Deleted");
 
-<<<<<<< HEAD
-      } catch (error) {
-        console.log(error);
-        
-      }
-    };
-
-    const allStudents = async () => {
-      setIsLoading(true)
-      try {
-        const studResults = await axios.get("api/studentProfiling");
-        
-        console.log(studResults.data)
-      }
-      catch {}
-=======
       allEvents();
     } catch (error) {
       console.log(error);
       toast.error("Something Went Wrong");
->>>>>>> 2286fb2b2e2660b9e8e539d721419290d6d1404d
     }
   };
 

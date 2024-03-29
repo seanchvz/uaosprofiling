@@ -43,14 +43,15 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
       <p className='sport'>Permanent Team: {permanentTeam}</p>
       <p className='sport'> Contact Number: {contactNumber}</p>
 
-      <div className="event-footer">
-      <button className="edit">{edit}</button>
+  
+      
       <div className="event-footer">
         {statusIsFulltime ? (
           <button className="isExternal">Full Time</button>
         ) : (
           <button className="isInternal">Part Time</button>
         )}
+        <button className="edit">{edit}</button>
 
         
         <button
@@ -63,7 +64,7 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
         </button>
         {/* <button className="completed">External</button> */}
       </div>
-      </div>
+
     </CoachContentStyled>
   );
 }
