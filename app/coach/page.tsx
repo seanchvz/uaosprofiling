@@ -11,6 +11,14 @@ interface Props {
   name: string;
   coachprofile: any[];
 }
+/**
+ * Renders the page component for displaying coach profiles.
+ *
+ * @param {Props} props - The component props.
+ * @param {string} props.name - The name of the page.
+ * @param {CoachProfile[]} props.coachprofile - The array of coach profiles.
+ * @returns {JSX.Element} The rendered page component.
+ */
 function Page({ name, coachprofile }: Props) {
   const { theme, isLoading, fetchAllCoachProfile, openModal, modal } =
     useGlobalState();
@@ -23,15 +31,20 @@ function Page({ name, coachprofile }: Props) {
   return (
     // <div>
     //   {isLoading ? "true" : "false"}
+
     <CoachStyled theme={theme}>
       {modal && <CoachModal content={<CreateCoachProfile />} />}
-      <h1>{name}</h1>
-      <div className="inventoryitem grid">
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
+          {name}
+        </h1>
         <button className="create-item" onClick={openModal}>
           {plus}
           Add New Coach
         </button>
+      </div>
 
+      <div className="inventoryitem grid mt-5">
         {coachprofile &&
           Array.isArray(coachprofile) &&
           coachprofile.map((coachProfile) => (
@@ -99,7 +112,8 @@ const CoachStyled = styled.main`
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 20rem;
+    width: 21rem;
+    height: 4rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
     cursor: pointer;

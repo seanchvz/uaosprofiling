@@ -136,16 +136,14 @@ function CreateCoachProfile() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-lg">
+<CreateCoachProfileStyled onSubmit={handleSubmit}>
+
       <div className="mb-8">
-        {" "}
-        {/* Add margin-bottom */}
         <h1 className="text-4xl font-bold mb-4">
-          Create an Inventory Item
-        </h1>{" "}
-        {/* Add margin-bottom */}
+          Create a Coach Profile
+        </h1>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+     <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
           <label htmlFor="name">Name</label>
           <input
@@ -158,7 +156,19 @@ function CreateCoachProfile() {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-
+          
+        <div className="input-control">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            name="email"
+            onChange={handleChange("email")}
+            placeholder="Enter Email"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
         <div className="input-control">
           <label htmlFor="contactNumber">Contact Number</label>
           <input
@@ -171,7 +181,7 @@ function CreateCoachProfile() {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-
+    
         <div className="input-control">
           <label htmlFor="sport">Sport</label>
           <input
@@ -198,30 +208,132 @@ function CreateCoachProfile() {
           />
         </div>
 
+        <div className="flex">
+  <div className="input-control">
+    <label htmlFor="isMale" className="text-white">Is Male</label>
+    <input
+      type="checkbox"
+      id="isMale"
+      checked={isMale}
+      onChange={handleChange("isMale")}
+      className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+    />
+  </div>
+
+  <div className="input-control">
+    <label htmlFor="isFemale" className="text-white">Is Female</label>
+    <input
+      type="checkbox"
+      id="isFemale"
+      checked={isFemale}
+      onChange={handleChange("isFemale")}
+      className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+    />
+  </div>
+</div>
+
         <div className="input-control">
-          <label htmlFor="isMale">Is Male</label>
+          <label htmlFor="birthDate">Birth Date</label>
           <input
-            type="checkbox"
-            id="isMale"
-            checked={isMale}
-            onChange={handleChange("isMale")}
+            type="date"
+            id="birthDate"
+            value={birthDate}
+            name="birthDate"
+            onChange={handleChange("birthDate")}
+            placeholder="Enter Birth Date"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
 
         <div className="input-control">
-          <label htmlFor="isFemale">Is Female</label>
+          <label htmlFor="nationality">Nationality</label>
           <input
-            type="checkbox"
-            id="isFemale"
-            checked={isFemale}
-            onChange={handleChange("isFemale")}
+            type="text"
+            id="nationality"
+            value={nationality}
+            name="nationality"
+            onChange={handleChange("nationality")}
+            placeholder="Enter Nationality"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+    
+        <div className='flex'>
+        <div className="input-control mr-4"> 
+  <label htmlFor="weight">Weight in KG</label>
+  <input
+    type="text"
+    id="weight"
+    name="weight"
+    placeholder="eg. 45.7"
+    className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+  />
+</div>
+
+<div className="input-control"> 
+  <label htmlFor="height">Height in CM</label>
+  <input
+    type="text"
+    id="height"
+    name="height"
+    placeholder="eg. 156.3"
+    className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+  />
+</div>
+        </div>
+     
+        <div className="input-control">
+          <label htmlFor="bloodType">Blood Type</label>
+          <input
+            type="text"
+            id="bloodType"
+            value={bloodType}
+            name="bloodType"
+            onChange={handleChange("bloodType")}
+            placeholder="Enter Blood Type"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
 
         <div className="input-control">
-          <label htmlFor="emergencyContact">Emergency Contact</label>
+          <label htmlFor="academicYear">Academic Year</label>
+          <input
+            type="text"
+            id="academicYear"
+            value={academicYear}
+            name="academicYear"
+            onChange={handleChange("academicYear")}
+            placeholder="Enter Academic Year"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+
+        <div className='flex'>
+  <div className="input-control mr-4"> {/* Add right margin */}
+    <label htmlFor="statusIsFulltime">Full-time</label>
+    <input
+      type="checkbox"
+      id="statusIsFulltime"
+      checked={statusIsFulltime}
+      onChange={handleChange("statusIsFulltime")}
+      className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+    />
+  </div>
+
+  <div className="input-control ml-4"> {/* Add left margin */}
+    <label htmlFor="statusIsParttime">Part-time</label>
+    <input
+      type="checkbox"
+      id="statusIsParttime"
+      checked={statusIsParttime}
+      onChange={handleChange("statusIsParttime")}
+      className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+    />
+  </div>
+</div>
+
+        <div className="input-control">
+          <label htmlFor="emergencyContact">Emergency Contact Number</label>
           <input
             type="text"
             id="emergencyContact"
@@ -249,106 +361,6 @@ function CreateCoachProfile() {
         </div>
 
         <div className="input-control">
-          <label htmlFor="birthDate">Birth Date</label>
-          <input
-            type="date"
-            id="birthDate"
-            value={birthDate}
-            name="birthDate"
-            onChange={handleChange("birthDate")}
-            placeholder="Enter Birth Date"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="nationality">Nationality</label>
-          <input
-            type="text"
-            id="nationality"
-            value={nationality}
-            name="nationality"
-            onChange={handleChange("nationality")}
-            placeholder="Enter Nationality"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="weight">Weight</label>
-          <input
-            type="number"
-            id="weight"
-            value={weight}
-            name="weight"
-            onChange={handleChange("weight")}
-            placeholder="Enter Weight"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="height">Height</label>
-          <input
-            type="number"
-            id="height"
-            value={height}
-            name="height"
-            onChange={handleChange("height")}
-            placeholder="Enter Height"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="bloodType">Blood Type</label>
-          <input
-            type="text"
-            id="bloodType"
-            value={bloodType}
-            name="bloodType"
-            onChange={handleChange("bloodType")}
-            placeholder="Enter Blood Type"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="academicYear">Academic Year</label>
-          <input
-            type="text"
-            id="academicYear"
-            value={academicYear}
-            name="academicYear"
-            onChange={handleChange("academicYear")}
-            placeholder="Enter Academic Year"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="statusIsFulltime">Status Is Fulltime</label>
-          <input
-            type="checkbox"
-            id="statusIsFulltime"
-            checked={statusIsFulltime}
-            onChange={handleChange("statusIsFulltime")}
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="statusIsParttime">Status Is Parttime</label>
-          <input
-            type="checkbox"
-            id="statusIsParttime"
-            checked={statusIsParttime}
-            onChange={handleChange("statusIsParttime")}
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-
-        <div className="input-control">
           <label htmlFor="resumeUrl">Resume URL</label>
           <input
             type="text"
@@ -361,18 +373,6 @@ function CreateCoachProfile() {
           />
         </div>
 
-        <div className="input-control">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            name="email"
-            onChange={handleChange("email")}
-            placeholder="Enter Email"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
 
         <div className="submit-btn mt-4 flex justify-center">
           <button
@@ -384,26 +384,37 @@ function CreateCoachProfile() {
           </button>
         </div>
       </div>
-    </form>
+    </CreateCoachProfileStyled>
   );
 }
 
 const CreateCoachProfileStyled = styled.form`
-  > h1 {
-    font-size: clamp(1.2rem, 5vw, 1.6rem);
-    font-weight: 600;
-  }
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: space-around; // Change from 'space-between' to 'space-around' for more even spacing
+width: 100%; 
+height: 100%;
+padding: 20px; 
 
-  color: ${(props) => props.theme.colorGrey1};
+> * {
+  width: 100%; 
+  margin-bottom: 30px; // Increase the bottom margin for more space between elements
+}
 
-  .input-control {
-    position: relative;
-    margin: 1.6rem 0;
-    font-weight: 500;
+> h1 {
+  font-size: clamp(1.2rem, 5vw, 1.6rem);
+  font-weight: 600;
+  margin-bottom: 50px; // Increase the margin-bottom for the title
+}
 
-    @media screen and (max-width: 450px) {
-      margin: 1rem 0;
-    }
+color: ${(props) => props.theme.colorGrey1};
+
+.input-control {
+  position: relative;
+  font-weight: 500;
+  padding: 10px 0; // Add vertical padding to input controls
+}
 
     label {
       margin-bottom: 0.5rem;
@@ -428,25 +439,63 @@ const CreateCoachProfileStyled = styled.form`
   }
 
   .submit-btn button {
-    transition: all 0.35s ease-in-out;
+    background-color: #1a202c;
+    color: #edf2f7;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
 
-    @media screen and (max-width: 500px) {
-      font-size: 0.9rem !important;
-      padding: 0.6rem 1rem !important;
+  .submit-btn button:hover {
+    background-color: #2d3748;
+    color: white;
+  }
 
-      i {
-        font-size: 1.2rem !important;
-        margin-right: 0.5rem !important;
-      }
-    }
+  input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[name="weight"], input[name="height"], textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid #4a4a4a;
+    box-sizing: border-box;
+    border-radius: 15px;
+  }
+
+  input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus, input[name="weight"]:focus, input[name="height"]:focus, textarea:focus {
+    border: 1px solid #718096;
+  }
+  
+  input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+    background-color: #4a4a4a;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid #4a4a4a;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  input[type="checkbox"]:checked {
+    background-color: #ffffff; // Change this to match the border color
+    border: 1px solid #718096;
+  }
 
     i {
       color: ${(props) => props.theme.colorGrey0};
     }
 
     &:hover {
-      background: ${(props) => props.theme.colorPrimaryGreen} !important;
-      color: ${(props) => props.theme.colorWhite} !important;
+      background: ${(props) => props.theme.colorPrimaryGreen};
+      color: ${(props) => props.theme.colorWhite};
     }
   }
 `;

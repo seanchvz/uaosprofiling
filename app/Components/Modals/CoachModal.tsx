@@ -41,10 +41,10 @@ const ModalStyled = styled.div`
 
   .modal-content {
     margin: 0 1rem;
-
+    height: 800px;
     padding: 2rem;
     position: relative;
-    max-width: 630px;
+    max-width: 1500px;
     width: 100%;
     z-index: 100;
 
