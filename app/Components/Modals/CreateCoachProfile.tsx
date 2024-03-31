@@ -209,8 +209,9 @@ function CreateCoachProfile() {
         </div>
 
         <div className="flex">
+          
   <div className="input-control">
-    <label htmlFor="isMale" className="text-white">Is Male</label>
+    <label htmlFor="isMale" className="text-white">Male</label>
     <input
       type="checkbox"
       id="isMale"
@@ -221,7 +222,7 @@ function CreateCoachProfile() {
   </div>
 
   <div className="input-control">
-    <label htmlFor="isFemale" className="text-white">Is Female</label>
+    <label htmlFor="isFemale" className="text-white">Female</label>
     <input
       type="checkbox"
       id="isFemale"
@@ -373,7 +374,7 @@ function CreateCoachProfile() {
           />
         </div>
 
-
+<div>
         <div className="submit-btn mt-4 flex justify-center">
           <button
             type="submit"
@@ -382,6 +383,7 @@ function CreateCoachProfile() {
             {add}
             Create Coach Profile
           </button>
+        </div>
         </div>
       </div>
     </CreateCoachProfileStyled>
@@ -437,23 +439,23 @@ color: ${(props) => props.theme.colorGrey1};
       border-radius: 0.5rem;
     }
   }
-
   .submit-btn button {
-    background-color: #1a202c;
+    background-color: #002b88;
     color: #edf2f7;
     border: none;
-    padding: 10px 20px;
+    border-radius: 1rem;
+    padding: 20px 40px; 
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 20px; 
     margin: 4px 2px;
     transition-duration: 0.4s;
     cursor: pointer;
   }
-
+  
   .submit-btn button:hover {
-    background-color: #2d3748;
+    background-color: #0043d5;
     color: white;
   }
 

@@ -44,25 +44,14 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
   return (
     <CoachContentStyled theme={theme}>
       <h1>{name}</h1>
-      <table>
-        <tr>
-          <td>Sport:</td>
-          <td>{sport}</td>
-        </tr>
-        <tr>
-          <td>Permanent Team:</td>
-          <td>{permanentTeam}</td>
-        </tr>
-        <tr>
-          <td>Contact Number:</td>
-          <td>{contactNumber}</td>
-        </tr>
-        <tr>
-          <td>Academic Year:</td>
-          <td>{academicYear}</td>
-        </tr>
-      </table>
+      <p className="sport">Sport: {sport}</p>
+      <p className='sport'>Permanent Team: {permanentTeam}</p>
+      <p className='sport'> Contact Number: {contactNumber}</p>
+      <p className='sport'> Academic Year: {academicYear}</p>
+
+
   
+      
       <div className="event-footer">
         {statusIsFulltime ? (
           <button className="isExternal">Full Time</button>
@@ -70,7 +59,8 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
           <button className="isInternal">Part Time</button>
         )}
         <button className="edit">{edit}</button>
-  
+
+        
         <button
           className="delete"
           onClick={() => {
@@ -79,18 +69,20 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
         >
           {trash}
         </button>
+        {/* <button className="completed">External</button> */}
       </div>
-    </CoachContentStyled>
 
+    </CoachContentStyled>
   );
 }
+
 const CoachContentStyled = styled.div`
   padding: 1.2rem 1rem;
   border-radius: 1rem;
   background-color: ${(props) => props.theme.borderColor2};
   box-shadow: ${(props) => props.theme.shadow7};
   border: 1px solid ${(props) => props.theme.borderColor2};
-  height: auto; /* Adjust the height to auto to accommodate the table */
+  height: 25rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -98,16 +90,17 @@ const CoachContentStyled = styled.div`
   > h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
   }
 
-  table {
-    width: 100%; /* Make the table take the full width of the parent */
-    margin-bottom: 1rem; /* Add margin to the bottom of the table */
+  .date {
+    margin-top: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
+  }
 
-    td {
-      padding: 0.5rem; /* Add padding to the table data */
-    }
+  .dateend {
+    margin-right: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
   }
 
   .event-footer {
@@ -129,7 +122,6 @@ const CoachContentStyled = styled.div`
     .edit {
       margin-left: auto;
     }
-
     .isExternal,
     .isInternal {
       display: inline-block;
@@ -137,10 +129,15 @@ const CoachContentStyled = styled.div`
       border: 2px solid ${(props) => props.theme.colorDanger};
       border-radius: 0.8rem;
     }
-
+    
     .isInternal {
-      border-color: ${(props) => props.theme.colorGreenDark};
+      border-color: ${(props) => props.theme.colorGreenDark}; 
     }
+
+  .sport {
+    background: #002b88 !important;
+    border-radius: 10px;
+    padding: 0.5rem 1rem; 
   }
 `;
 

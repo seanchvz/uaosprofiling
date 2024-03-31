@@ -9,7 +9,7 @@ interface Props{
 
 function GlobalStylesProvider({children}:Props) {
   return <GlobalStyles>
-    <>{children}</>;
+    <>{children}</>
     </GlobalStyles>
 }
 
