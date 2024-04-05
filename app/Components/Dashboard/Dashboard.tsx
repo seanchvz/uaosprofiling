@@ -90,7 +90,7 @@ const DashboardStyled = styled.main`
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    width: 21rem;
+    width: 22rem;
     height: 4rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
