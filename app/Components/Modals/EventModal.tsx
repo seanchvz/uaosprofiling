@@ -41,21 +41,23 @@ const ModalStyled = styled.div`
 
   .modal-content {
     margin: 0 1rem;
-
     padding: 2rem;
     position: relative;
     max-width: 630px;
     width: 100%;
     z-index: 100;
-
     border-radius: 1rem;
     background-color: ${(props) => props.theme.colorBg2};
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
     border-radius: ${(props) => props.theme.borderRadiusMd2};
-
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+  
     @media screen and (max-width: 450px) {
       font-size: 90%;
     }
+  }
   }
 `;
 

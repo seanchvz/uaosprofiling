@@ -3,6 +3,11 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 
+/**
+ * Handles the POST request for creating a coach profile.
+ * @param req - The request object.
+ * @returns A JSON response containing the created coach profile or an error message.
+ */
 export async function POST(req:Request) {
     try {
         const {userId}=auth();
@@ -60,6 +65,11 @@ export async function POST(req:Request) {
     
 }
 
+/**
+ * Retrieves coach profiles for a specific user.
+ * @param req - The request object.
+ * @returns A JSON response containing the coach profiles.
+ */
 export async function GET(req: Request) {
     try {
         const { userId } = auth();

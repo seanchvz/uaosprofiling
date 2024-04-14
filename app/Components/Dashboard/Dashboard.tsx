@@ -25,13 +25,17 @@ function Dashboard({ name, events }: Props) {
   return (
     <DashboardStyled theme={theme}>
       {modal && <EventModal content={<CreateContent />} />}
-      <h1 className="mb-4">{name}</h1>
-      <div className="events grid">
-        <button className="create-event" onClick={openModal}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
+          {name}
+        </h1>
+        <button className="create-item" onClick={openModal}>
           {plus}
           Add New Event
         </button>
+      </div>
 
+      <div className="inventoryitem grid mt-5">
         {events &&
           events.map((event) => (
             <EventItem
@@ -81,12 +85,13 @@ const DashboardStyled = styled.main`
     }
   }
 
-  .create-event {
+  .create-item {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 25rem;
+    width: 22rem;
+    height: 4rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
     cursor: pointer;

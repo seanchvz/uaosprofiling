@@ -4,27 +4,30 @@ import { useGlobalState } from '../context/globalProvider';
 import styled from 'styled-components';
 import { edit, trash } from '../utils/Icons';
 
+/**
+ * Props for the CoachContent component.
+ */
 interface Props {
-    name: string;
-    contactNumber : string;
-    sport: string;
-    permanentTeam: string;
-    isMale: boolean;
-    isFemale: boolean;
-    emergencyContact: string;
-    emergencyContactPerson: string;
-    birthDate: string;
-    nationality: string;
-    weight: number; 
-    height: number;
-    bloodType: string;
-    academicYear: string;
-    statusIsFulltime: boolean;
-    statusIsParttime: boolean;
-    resumeUrl: string;
-    email: string;
-    id:string;
-  // inventory:any;
+  name: string;
+  contactNumber: string;
+  sport: string;
+  permanentTeam: string;
+  isMale: boolean;
+  isFemale: boolean;
+  emergencyContact: string;
+  emergencyContactPerson: string;
+  birthDate: string;
+  nationality: string;
+  weight: number;
+  height: number;
+  bloodType: string;
+  academicYear: string;
+  statusIsFulltime: boolean;
+  statusIsParttime: boolean;
+  resumeUrl: string;
+  email: string;
+  id: string;
+  // inventory: any;
 }
 
 function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale, isFemale,emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email, id}:Props) {
@@ -36,23 +39,28 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
     day: "numeric",
   };
 
+
+  // Card Contents
   return (
     <CoachContentStyled theme={theme}>
       <h1>{name}</h1>
       <p className="sport">Sport: {sport}</p>
       <p className='sport'>Permanent Team: {permanentTeam}</p>
       <p className='sport'> Contact Number: {contactNumber}</p>
+      <p className='sport'> Academic Year: {academicYear}</p>
 
-      <div className="event-footer">
-      <button className="edit">{edit}</button>
+
+  
+      
       <div className="event-footer">
         {statusIsFulltime ? (
           <button className="isExternal">Full Time</button>
         ) : (
           <button className="isInternal">Part Time</button>
         )}
-
         <button className="edit">{edit}</button>
+
+        
         <button
           className="delete"
           onClick={() => {
@@ -63,7 +71,7 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
         </button>
         {/* <button className="completed">External</button> */}
       </div>
-      </div>
+
     </CoachContentStyled>
   );
 }
@@ -74,7 +82,7 @@ const CoachContentStyled = styled.div`
   background-color: ${(props) => props.theme.borderColor2};
   box-shadow: ${(props) => props.theme.shadow7};
   border: 1px solid ${(props) => props.theme.borderColor2};
-  height: 20rem;
+  height: 25rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;

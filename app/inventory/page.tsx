@@ -25,13 +25,18 @@ function Page({ item, InventoryItem }: Props) {
     //   {isLoading ? "true" : "false"}
       <InventoryStyled theme={theme}>
          {modal && <InventoryModal content={<CreateInventoryItem />} />}
-        <h1>{item}</h1>
-        <div className="inventoryitem grid">
+         <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
+          {item}
+        </h1>
+        
         <button className="create-item" onClick={openModal}>
           {plus}
           Add New Inventory Item
         </button>
+        </div>
 
+        <div className="inventoryitem grid mt-5">
 
         {InventoryItem && Array.isArray(InventoryItem) && InventoryItem.map((inventory) => (
   <InventoryContent
@@ -85,7 +90,8 @@ const InventoryStyled = styled.main`
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 20rem;
+    width: 22rem;
+    height: 4rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
     cursor: pointer;

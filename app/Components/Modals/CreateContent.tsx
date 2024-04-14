@@ -82,7 +82,7 @@ function CreateContent() {
 
 
   return (
-<form onSubmit={handleSubmit} className="mx-auto max-w-lg"> {/* Center the form and set max width */}
+<CreateContentStyled onSubmit={handleSubmit} className="mx-auto max-w-lg"> {/* Center the form and set max width */}
   <div className="mb-8"> {/* Add margin-bottom */}
     <h1 className="text-4xl font-bold mb-4">Create an Event</h1> {/* Add margin-bottom */}
   </div>
@@ -100,6 +100,7 @@ function CreateContent() {
       />
     </div>
 
+<div className="flex">
     <div className="input-control">
       <label htmlFor="startDate" className="block">Start Date</label>
       <input
@@ -122,6 +123,7 @@ function CreateContent() {
         className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
       />
     </div>
+    </div>
     <div className="input-control">
       <label htmlFor="Sport" className="block">Sport</label>
       <input
@@ -143,7 +145,7 @@ function CreateContent() {
         onChange={handleChange("eventDetails")}
         placeholder="Enter event details"
         className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-        rows={4}
+        rows={2}
       ></textarea>
     </div>
     <div className="input-control flex justify-between">
@@ -189,12 +191,13 @@ function CreateContent() {
   </button>
 </div>
 
-</form>
+</CreateContentStyled>
 
   );
 }
 
 const CreateContentStyled = styled.form`
+
 > h1 {
   font-size: clamp(1.2rem, 5vw, 1.6rem);
   font-weight: 600;
@@ -203,36 +206,44 @@ const CreateContentStyled = styled.form`
 color: ${(props) => props.theme.colorGrey1};
 
 .input-control {
-  position: relative;
-  margin: 1.6rem 0;
-  font-weight: 500;
+  margin: 0.5rem 0;
+}
 
-  @media screen and (max-width: 450px) {
-    margin: 1rem 0;
-  }
+label {
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  font-size: clamp(0.9rem, 5vw, 1.2rem);
 
-  label {
-    margin-bottom: 0.5rem;
-    display: inline-block;
-    font-size: clamp(0.9rem, 5vw, 1.2rem);
-
-    span {
-      color: ${(props) => props.theme.colorGrey3};
-    }
-  }
-
-  input,
-  textarea {
-    width: 100%;
-    padding: 1rem;
-
-    resize: none;
-    background-color: ${(props) => props.theme.colorGreyDark};
-    color: ${(props) => props.theme.colorGrey2};
-    border-radius: 0.5rem;
+  span {
+    color: ${(props) => props.theme.colorGrey3};
   }
 }
 
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[name="weight"],
+input[name="height"],
+textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 2px solid #4a4a4a;
+  box-sizing: border-box;
+  border-radius: 15px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+input[name="weight"]:focus,
+input[name="height"]:focus,
+textarea:focus {
+  border: 1px solid #718096;
+}
 .submit-btn button {
   transition: all 0.35s ease-in-out;
 

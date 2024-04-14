@@ -2,6 +2,12 @@ import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
+/**
+ * Deletes a coach profile.
+ * @param req - The request object.
+ * @param params - The parameters object containing the `id` of the coach profile to delete.
+ * @returns A NextResponse object with the deleted coach profile or an error message.
+ */
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
     try {
         const { userId } = await auth();

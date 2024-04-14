@@ -14,6 +14,12 @@ import { student } from "../utils/Icons";
 export const GlobalContext = createContext();
 export const GlobalUpdateContext = createContext();
 
+/**
+ * GlobalProvider component that provides global state and functions to its children.
+ * @param {Object} props - The component props.
+ * @param {React.ReactNode} props.children - The child components.
+ * @returns {React.ReactNode} The rendered component.
+ */
 export const GlobalProvider = ({ children }) => {
   const { user } = useUser();
   const [selectedTheme, setSelectedTheme] = useState(0);
@@ -24,39 +30,44 @@ export const GlobalProvider = ({ children }) => {
   const { InventoryItem, fetchAllInventoryItems } =
     InventoryItemService({});
 
-    const { events, allEvents } =
+  const { events, allEvents } =
     EventsService({ });
 
-    const {coachprofile, fetchAllCoachProfile}=
+  const {coachprofile, fetchAllCoachProfile}=
     CoachProfileService({});
 
+<<<<<<< HEAD
     const {studentprofile, fetchAllStudentProfile} = 
     StudentProfileService({});
 
+=======
+  /**
+   * Opens the modal.
+   */
+>>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
   const openModal = () => {
-    //events, put key inside the parenthesis para di ma affect ang other modals
     setModal(true);
   };
 
+  /**
+   * Closes the modal.
+   */
   const closeModal = () => {
-    //events
     setModal(false);
   };
 
-
-  // const allStudents = async () => { // transfer this to service
-  //   setIsLoading(true);
-  //   try {
-  //     const studResults = await axios.get("api/studentProfiling");
-  //     console.log(studResults.data);
-  //   } catch {}
-  // };
-
+  /**
+   * Deletes an event by its ID.
+   * @param {string} id - The ID of the event to delete.
+   */
   const deleteEvent = async (id) => {
     try {
-      const res = await axios.delete(`/api/events/${id}`); // delete lang according kung unsay naa sa ID
+      const res = await axios.delete(`/api/events/${id}`);
       toast.success("Event Deleted");
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
       allEvents();
     } catch (error) {
       console.log(error);
@@ -64,13 +75,14 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-
-
+  /**
+   * Deletes an inventory item by its ID.
+   * @param {string} id - The ID of the inventory item to delete.
+   */
   const deleteInventory = async (id) => {
     try {
-      const res = await axios.delete(`/api/inventory/${id}`); // delete lang according kung unsay naa sa ID
+      const res = await axios.delete(`/api/inventory/${id}`);
       toast.success("Inventory Item Deleted");
-
       fetchAllInventoryItems();
     } catch (error) {
       console.log(error);
@@ -78,12 +90,14 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-
+  /**
+   * Deletes a coach profile by its ID.
+   * @param {string} id - The ID of the coach profile to delete.
+   */
   const deleteCoachProfile = async (id) => {
     try {
-      const res = await axios.delete(`/api/coachProfiling/${id}`); // delete lang according kung unsay naa sa ID
+      const res = await axios.delete(`/api/coachProfiling/${id}`);
       toast.success("Coach Profile Deleted");
-
       fetchAllCoachProfile();
     } catch (error) {
       console.log(error);
@@ -91,6 +105,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+<<<<<<< HEAD
   
   const deleteStudentProfile = async (id) => {
     try {
@@ -106,19 +121,17 @@ export const GlobalProvider = ({ children }) => {
   //Filtering
   // const isExternalEvents = events.filter((event) => event.isExternal === true);
   // console.log(isExternalEvents);
+=======
+>>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
   React.useEffect(() => {
     if (user) allEvents();
   }, [user]); 
-
-  // React.useEffect(() => {
-  //   if (user) allStudents();
-  // }, [user]);
 
   return (
     <GlobalContext.Provider
       value={{
         theme,
-        events, // send the events data here
+        events,
         deleteEvent,
         isLoading,
         modal,
@@ -132,10 +145,13 @@ export const GlobalProvider = ({ children }) => {
         studentprofile,
         fetchAllCoachProfile,
         deleteCoachProfile,
+<<<<<<< HEAD
         fetchAllStudentProfile,
         deleteStudentProfile,
         
         // isExternalEvents,
+=======
+>>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
       }}
     >
       <GlobalUpdateContext.Provider value={{}}>
