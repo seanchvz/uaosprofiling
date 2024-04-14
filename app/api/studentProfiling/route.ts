@@ -52,9 +52,7 @@ export async function POST(req: Request) {
             });
         }
         
-       // console.log(name, startDate, endDate, SportId, eventDetails);
-        // const formattedStartDate = new Date().toISOString();
-        const formattedbirthDate = new Date().toISOString();
+        const formattedBirthDate = new Date(birthDate).toISOString();
 
         const student = await prisma.studentprofile.create({
             data: {
@@ -62,7 +60,7 @@ export async function POST(req: Request) {
                 middleName: middleName,
                 lastName: lastName,
                 contactNumber: contactNumber,
-                birthDate: formattedbirthDate,
+                birthDate: formattedBirthDate,
                 nationality: nationality,
                 weight: weight,
                 height: height,
