@@ -3,31 +3,61 @@ import { useGlobalState } from '@/app/context/globalProvider';
 import { edit, trash } from '@/app/utils/Icons';
 import React from 'react'
 import styled from 'styled-components';
-
-interface Props{
-    firstName: string,
-    middleName: string
-    lastName: string,
-    birthDate: string,
-    age: string,
-    nationality: string,
-    civilStatus: string,
-    isMale: boolean, 
-    isFemale: boolean,
-    yrStartedPlaying: string,
-    mothersName: string,
-    fathersName: string,
-    courseAndYear: string,
-    contactNumber: string,
-    email: string,
-    homeAddress: string,
-    weight: string,
-    height: string,
-    bloodType: string,
-    id: string,
+interface Props {
+  id: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  contactNumber: string;
+  birthDate: string;
+  nationality: string;
+  weight: string | null;
+  height: string | null;
+  bloodType: string | null;
+  academicYear: string;
+  isMale: boolean;
+  isFemale: boolean;
+  yrStartedPlaying: string;
+  mothersName: string | null;
+  fathersName: string | null;
+  guardiansName: string | null;
+  courseAndYear: string;
+  emergencyContactPerson: string;
+  emergencyContactNumber: string;
+  email: string;
+  homeAddress: string;
+  statusIsActive: boolean;
+  statusIsInactive: boolean;
+  userId: string;
 }
 
-function StudentProfileContent({firstName, middleName, lastName, birthDate, age, isMale, isFemale, yrStartedPlaying, contactNumber, email, homeAddress, weight, height, bloodType, id}:Props) {
+function StudentProfileContent({
+  id,
+  firstName,
+  middleName,
+  lastName,
+  contactNumber,
+  birthDate,
+  nationality,
+  weight,
+  height,
+  bloodType,
+  academicYear,
+  isMale,
+  isFemale,
+  yrStartedPlaying,
+  mothersName,
+  fathersName,
+  guardiansName,
+  courseAndYear,
+  emergencyContactPerson,
+  emergencyContactNumber,
+  email,
+  homeAddress,
+  statusIsActive,
+  statusIsInactive,
+  userId,
+}: Props) {
     const {theme, deleteStudentProfile} = useGlobalState();
 
     // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;

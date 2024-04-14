@@ -34,29 +34,34 @@ function Page({ name, studentprofile }: Props) {
 
         {studentprofile &&
           Array.isArray(studentprofile) &&
-          studentprofile.map((studentprofile) => (
+          studentprofile.map((student) => (
             <StudentProfileContent
-              key={studentprofile.id}
-              firstName={studentprofile.firstName}
-              middleName={studentprofile.middleName}
-              lastName={studentprofile.lastName}
-              birthDate={studentprofile.birthDate}
-              age={studentprofile.age}
-              nationality={studentprofile.nationality}
-              civilStatus={studentprofile.civilStatus}
-              isMale={studentprofile.isMale}
-              isFemale={studentprofile.isFemale}
-              yrStartedPlaying={studentprofile.yrStartedPlaying}
-              mothersName={studentprofile.mothersName}
-              fathersName={studentprofile.fathersName}
-              courseAndYear={studentprofile.courseAndYear}
-              contactNumber={studentprofile.contactNumber}
-              email={studentprofile.email}
-              homeAddress={studentprofile.homeAddress}
-              weights={studentprofile.weight}
-              height={studentprofile.height}
-              bloodType={studentprofile.bloodType}
-              id={studentprofile.id}
+            key={student.id}
+            firstName={student.firstName}
+            middleName={student.middleName}
+            lastName={student.lastName}
+            contactNumber={student.contactNumber}
+            birthDate={student.birthDate}
+            nationality={student.nationality}
+            weight={student.weight}
+            height={student.height}
+            bloodType={student.bloodType}
+            academicYear={student.academicYear}
+            isMale={student.isMale}
+            isFemale={student.isFemale}
+            yrStartedPlaying={student.yrStartedPlaying}
+            mothersName={student.mothersName}
+            fathersName={student.fathersName}
+            guardiansName={student.guardiansName}
+            courseAndYear={student.courseAndYear}
+            emergencyContactPerson={student.emergencyContactPerson}
+            emergencyContactNumber={student.emergencyContactNumber}
+            email={student.email}
+            homeAddress={student.homeAddress}
+            statusIsActive={student.statusIsActive}
+            statusIsInactive={student.statusIsInactive}
+            userId={student.userId}
+            id={student.id}
             />
           ))}
       </div>

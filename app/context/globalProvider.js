@@ -36,15 +36,12 @@ export const GlobalProvider = ({ children }) => {
   const {coachprofile, fetchAllCoachProfile}=
     CoachProfileService({});
 
-<<<<<<< HEAD
     const {studentprofile, fetchAllStudentProfile} = 
     StudentProfileService({});
 
-=======
   /**
    * Opens the modal.
    */
->>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
   const openModal = () => {
     setModal(true);
   };
@@ -64,10 +61,7 @@ export const GlobalProvider = ({ children }) => {
     try {
       const res = await axios.delete(`/api/events/${id}`);
       toast.success("Event Deleted");
-<<<<<<< HEAD
 
-=======
->>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
       allEvents();
     } catch (error) {
       console.log(error);
@@ -105,7 +99,6 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-<<<<<<< HEAD
   
   const deleteStudentProfile = async (id) => {
     try {
@@ -121,8 +114,6 @@ export const GlobalProvider = ({ children }) => {
   //Filtering
   // const isExternalEvents = events.filter((event) => event.isExternal === true);
   // console.log(isExternalEvents);
-=======
->>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
   React.useEffect(() => {
     if (user) allEvents();
   }, [user]); 
@@ -145,13 +136,10 @@ export const GlobalProvider = ({ children }) => {
         studentprofile,
         fetchAllCoachProfile,
         deleteCoachProfile,
-<<<<<<< HEAD
         fetchAllStudentProfile,
         deleteStudentProfile,
         
         // isExternalEvents,
-=======
->>>>>>> 5ef0ee1d08ef6c5854ceed53595354ff3d07c291
       }}
     >
       <GlobalUpdateContext.Provider value={{}}>

@@ -12,7 +12,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
         const id = parseInt(params.id); // Parse id as number
 
-        const Item = await prisma.inventoryItem.delete({
+        const Item = await prisma.inventoryitem.delete({
             where: {
                 id,
             },

@@ -11,7 +11,32 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { firstName, middleName, lastName, birthDate, age, nationality, civilStatus, isMale, isFemale, yrStartedPlaying, mothersName, fathersName, courseAndYear, contactNumber, email, homeAddress, weight, height, bloodType} = await req.json();
+        const { 
+            id,
+            firstName, 
+            middleName, 
+            lastName, 
+            contactNumber, 
+            birthDate, 
+            nationality, 
+            weight, 
+            height, 
+            bloodType, 
+            academicYear, 
+            isMale, 
+            isFemale, 
+            yrStartedPlaying, 
+            mothersName, 
+            fathersName, 
+            guardiansName, 
+            courseAndYear, 
+            emergencyContactPerson, 
+            emergencyContactNumber, 
+            email, 
+            homeAddress, 
+            statusIsActive, 
+            statusIsInactive, 
+        } = await req.json();
 
         if (!firstName || !lastName ) {
             return NextResponse.json({
@@ -30,31 +55,32 @@ export async function POST(req: Request) {
        // console.log(name, startDate, endDate, SportId, eventDetails);
         // const formattedStartDate = new Date().toISOString();
         const formattedbirthDate = new Date().toISOString();
-        const male = isMale === "true"; // Assuming isMale is a string "true" or "false"
-        const female = isFemale === "true";
 
         const student = await prisma.studentprofile.create({
             data: {
-                
                 firstName: firstName,
                 middleName: middleName,
                 lastName: lastName,
-                birthDate: formattedbirthDate,
-                age: age,
-                nationality: nationality, 
-                civilStatus: civilStatus,
-                isMale: male,
-                isFemale: female,
-                yrStartedPlaying: yrStartedPlaying,
-                mothersName: mothersName,
-                fathersName: fathersName,
-                courseAndYear: courseAndYear,
                 contactNumber: contactNumber,
-                email: email,
-                homeAddress: homeAddress,
+                birthDate: formattedbirthDate,
+                nationality: nationality,
                 weight: weight,
                 height: height,
                 bloodType: bloodType,
+                academicYear: academicYear,
+                isMale: isMale,
+                isFemale: isFemale,
+                yrStartedPlaying: yrStartedPlaying,
+                mothersName: mothersName,
+                fathersName: fathersName,
+                guardiansName: guardiansName,
+                courseAndYear: courseAndYear,
+                emergencyContactPerson: emergencyContactPerson,
+                emergencyContactNumber: emergencyContactNumber,
+                email: email,
+                homeAddress: homeAddress,
+                statusIsActive: statusIsActive,
+                statusIsInactive: statusIsInactive,
                 userId: userId,
             },
         });
@@ -78,15 +104,15 @@ export async function GET(req: Request){
             return NextResponse.json({ error: "Unauthorized", status: 401 });
           }
       
-        //   const student = await prisma.studentProfile.findMany({
-        //     where: {
-        //       userId,
-        //     },
-        //   });
+          const student = await prisma.studentprofile.findMany({
+            where: {
+              userId,
+            },
+          });
 
-        //   console.log("STUDENT: ", student);
-        //   return NextResponse.json(student);
-          return NextResponse.json([]);
+          console.log("STUDENT: ", student);
+          return NextResponse.json(student);
+
     } catch (error) {
     console.log("ERROR GETTING TASKS: ", error);
     return NextResponse.json({ error: "Error updating event", status: 500 });

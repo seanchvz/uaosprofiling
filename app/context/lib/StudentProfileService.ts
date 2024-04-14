@@ -11,7 +11,7 @@ export function StudentProfileService(options: {
   const [studentprofile, setStudentProfile] = useState([]);
 
   const fetchAllStudentProfile = async () => {
-    console.log("Fetching all items");
+    // console.log("Fetching all items");
     setIsLoading(true);
     try {
       const res = await axios.get("/api/studentProfiling");
@@ -22,8 +22,6 @@ export function StudentProfileService(options: {
         );
       });
 
- 
-       
       setStudentProfile(sorted);
       setIsLoading(false);
     } catch (error) {

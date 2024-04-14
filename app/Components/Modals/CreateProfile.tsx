@@ -10,86 +10,104 @@ function CreateProfile() {
   const [firstName, setfirstName] = useState("");
   const [middleName, setmiddleName] = useState("");
   const [lastName, setlastName] = useState("");
-  const [birthDate, setBirthdate] = useState("");
-  const [age, setAge] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [civilStatus, setCivilStatus] = useState("");
-  const [isMale, setIsMale] = useState(false);
-  const [isFemale, setIsFemale] = useState(false);
-  const [yrStartedPlaying, setyrStartedPlaying] = useState("");
-  const [mothersName, setmothersName] = useState("");
-  const [fathersName, setfathersName] = useState("");
-  const [courseAndYear, setCourseAndYear] = useState("");
   const [contactNumber, setContactNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [homeAddress, setHomeAddress] = useState("");
+  const [birthDate, setBirthdate] = useState("");
+  const [nationality, setNationality] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [bloodType, setbloodType] = useState("");
+  const [academicYear, setAcademicYear] = useState("");
+  const [isMale, setIsMale] = useState(false);
+  const [isFemale, setIsFemale] = useState(false);
+  const [yrStartedPlaying, setyrStartedPlaying] = useState("");
+  const [mothersName, setMothersName] = useState("");
+  const [fathersName, setFathersName] = useState("");
+  const [guardiansName, setGuardiansName] = useState("");
+  const [courseAndYear, setCourseAndYear] = useState("");
+  const [emergencyContactNumber, setEmergencyContactNumber] = useState("");
+  const [emergencyContactPerson, setEmergencyContactPerson] = useState("");
+  const [email, setEmail] = useState("");
+  const [homeAddress, setHomeAddress] = useState("");
+  const [statusIsActive, setStatusIsActive] = useState(false);
+  const [statusIsInactive, setStatusIsInactive] = useState(false);
   const [userId, setUserId] = useState(""); // Assuming userId is obtained from authentication
 
   const { fetchAllStudentProfile, closeModal} = useGlobalState();
 
-  const handleChange = (firstName: string) => (e: any)=>{
-
-    switch (firstName) {
+  const handleChange = (field: string) => (e: any) => {
+    switch (field) {
       case "firstName":
         setfirstName(e.target.value);
-    break;
-        case "middleName":
+        break;
+      case "middleName":
         setmiddleName(e.target.value);
-    break;
-        case "lastName":
+        break;
+      case "lastName":
         setlastName(e.target.value);
-    break;
-        case "birthDate":
-        setBirthdate(e.target.value);
-    break;
-        case "age":
-        setAge(e.target.value);
-    break;
-        case "nationality":
-        setNationality(e.target.value);
-    break;
-        case "civilStatus":
-        setCivilStatus(e.target.value);
-    break;
-        case "isMale":
-        setIsMale(e.target.value);
-    break;
-        case "isFemale":
-        setIsFemale(e.target.value);
-    break;
-        case "yrStartedPlaying":
-        setyrStartedPlaying(e.target.value);
-    break;
-        case "mothersName":
-        setmothersName(e.target.value);
-    break;
-        case "fathersName":
-        setfathersName(e.target.value);
-    break;
-        case "courseAndYear":
-        setCourseAndYear(e.target.value);
-    break;
-        case "contactNumber":
+        break;
+      case "contactNumber":
         setContactNumber(e.target.value);
-    break;
-        case "email":
-        setEmail(e.target.value);
-    break;
-        case "homeAddress":
-        setHomeAddress(e.target.value);
-    break;
-        case "weight":
+        break;
+      case "birthDate":
+        setBirthdate(e.target.value);
+        break;
+      case "nationality":
+        setNationality(e.target.value);
+        break;
+      case "weight":
         setWeight(e.target.value);
-    break;
-        case "height":
+        break;
+      case "height":
         setHeight(e.target.value);
-    break;
-        case "bloodType":
+        break;
+      case "bloodType":
         setbloodType(e.target.value);
-    break;
+        break;
+      case "academicYear":
+        setAcademicYear(e.target.value);
+        break;
+      case "isMale":
+        setIsMale(e.target.checked);
+        break;
+      case "isFemale":
+        setIsFemale(e.target.checked);
+        break;
+      case "yrStartedPlaying":
+        setyrStartedPlaying(e.target.value);
+        break;
+      case "mothersName":
+        setMothersName(e.target.value);
+        break;
+      case "fathersName":
+        setFathersName(e.target.value);
+        break;
+      case "guardiansName":
+        setGuardiansName(e.target.value);
+        break;
+      case "courseAndYear":
+        setCourseAndYear(e.target.value);
+        break;
+      case "emergencyContactNumber":
+        setEmergencyContactNumber(e.target.value);
+        break;
+      case "emergencyContactPerson":
+        setEmergencyContactPerson(e.target.value);
+        break;
+      case "email":
+        setEmail(e.target.value);
+        break;
+      case "homeAddress":
+        setHomeAddress(e.target.value);
+        break;
+      case "statusIsActive":
+        setStatusIsActive(e.target.checked);
+        break;
+      case "statusIsInactive":
+        setStatusIsInactive(e.target.checked);
+        break;
+      case "userId":
+        setUserId(e.target.value);
+        break;
       default:
         break;
     }
@@ -98,26 +116,30 @@ function CreateProfile() {
     e.preventDefault();
 
     const student = {
-        firstName,
-        middleName,
-        lastName,
-        birthDate,
-        age,
-        nationality,
-        civilStatus,
-        isMale,
-        isFemale,
-        yrStartedPlaying,
-        mothersName,
-        fathersName,
-        courseAndYear,
-        contactNumber,
-        email,
-        homeAddress,
-        weight,
-        height,
-        bloodType,
-        userId
+      firstName,
+      middleName,
+      lastName,
+      contactNumber,
+      birthDate,
+      nationality,
+      weight,
+      height,
+      bloodType,
+      academicYear,
+      isMale,
+      isFemale,
+      yrStartedPlaying,
+      mothersName,
+      fathersName,
+      guardiansName,
+      courseAndYear,
+      emergencyContactNumber,
+      emergencyContactPerson,
+      email,
+      homeAddress,
+      statusIsActive,
+      statusIsInactive,
+      userId,
     };
     try {
       const res = await axios.post("/api/studentProfiling", student);
@@ -140,16 +162,13 @@ function CreateProfile() {
 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <CreateStudentProfileStyled onSubmit={handleSubmit}>
       <div className="mb-8">
-        {" "}
-        {/* Add margin-bottom */}
         <h1 className="text-4xl font-bold mb-4">
           Add a Student 
-        </h1>{" "}
-        {/* Add margin-bottom */}
+        </h1>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
       <div className="input-control">
         <label htmlFor="name"> First Name: </label>
         <input
@@ -186,6 +205,18 @@ function CreateProfile() {
         />
       </div>
       <div className="input-control">
+        <label htmlFor="contactNumber"> Contact Number </label>
+        <input
+          type="text"
+          id="contactNumber"
+          value={contactNumber}
+          name="Contact Number"
+          onChange={handleChange("contactNumber")}
+          placeholder="Contac Number:  "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+        />
+      </div>
+      <div className="input-control">
       <label htmlFor="birthDate"> Birth Date </label>
         <input
           type="date"
@@ -197,17 +228,7 @@ function CreateProfile() {
         />
       </div>
     
-      <div className="input-control">
-        <label htmlFor="age"> Age: </label>
-        <input
-          type="text"
-          id="age"
-          value={age}
-          name="age"
-          onChange={handleChange("age")}
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-        />
-      </div>
+     
       <div className="input-control">
         <label htmlFor="nationality"> Nationality </label>
         <input
@@ -221,17 +242,58 @@ function CreateProfile() {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="civilStatus"> Civil Status </label>
+        <label htmlFor="weight"> Weight in KG </label>
         <input
           type="text"
-          id="civilStatus"
-          value={civilStatus}
-          name="civilStatus: "
-          onChange={handleChange("civilStatus")}
-          placeholder=" Civil Status: "
+          id="weight"
+          value={weight}
+          name="weight"
+          onChange={handleChange("weight")}
+          placeholder="e.g. 50"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
+      <div className="input-control">
+        <label htmlFor="height"> Height in CM </label>
+        <input
+          type="text"
+          id="height"
+          value={height}
+          name="height"
+          onChange={handleChange("height")}
+          placeholder="e.g. 192"
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+        />
+      </div>
+
+      <div className="input-control">
+        <label htmlFor="bloodType"> bloodType </label>
+        <input
+          type="text"
+          id="bloodType"
+          value={bloodType}
+          name="bloodType"
+          onChange={handleChange("bloodType")}
+          placeholder="bloodType: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+        />
+      </div>
+
+      
+      <div className="input-control">
+        <label htmlFor="bloodType"> Academic Year </label>
+        <input
+          type="text"
+          id="academicYear"
+          value={academicYear}
+          name="academicYear"
+          onChange={handleChange("academicYear")}
+          placeholder="e.g. 2021-2022"
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+        />
+      </div>
+
+
       <div className="input-control">
         <label>
           <input
@@ -249,19 +311,21 @@ function CreateProfile() {
             type="checkbox"
             checked={isFemale}
             onChange={handleChange("isFemale")}
+            
           />
           Female
         </label>
       </div>
+
+
       <div className="input-control">
         <label htmlFor="name"> Year started playing: </label>
         <input
           type="text"
           id="yrStartedPlaying"
           value={yrStartedPlaying}
-          // name="First Name: "
           onChange={handleChange("yrStartedPlaying")}
-          // placeholder=" "
+          placeholder="e.g. 2021"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -271,7 +335,7 @@ function CreateProfile() {
           type="text"
           id="mothersName"
           value={mothersName}
-          name="Mother's Name: "
+          name="Mother's Name "
           onChange={handleChange("mothersName")}
           placeholder=" Mother's name: "
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
@@ -285,7 +349,19 @@ function CreateProfile() {
           value={fathersName}
           name="Fathers's Name: "
           onChange={handleChange("fathersName")}
-          placeholder=" Fathers's name: "
+          placeholder=" Fathers's name "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+        />
+      </div>
+      <div className="input-control">
+        <label htmlFor="fathersName">Optional* Guardian's Name </label>
+        <input
+          type="text"
+          id="guardiansName"
+          value={guardiansName}
+          name="Fathers's Name: "
+          onChange={handleChange("guardiansName")}
+          placeholder="Guardian's name"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -301,20 +377,37 @@ function CreateProfile() {
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
+
       <div className="input-control">
-        <label htmlFor="contactNumber"> Contact Number </label>
-        <input
-          type="text"
-          id="contactNumber"
-          value={contactNumber}
-          name="Contact Number"
-          onChange={handleChange("contactNumber")}
-          placeholder="Contac Number:  "
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-        />
-      </div>
+          <label htmlFor="emergencyContact">Emergency Contact Number</label>
+          <input
+            type="text"
+            id="emergencyContactNumber"
+            value={emergencyContactNumber}
+            name="emergencyContactNumber"
+            onChange={handleChange("emergencyContactNumber")}
+            placeholder="Enter Emergency Contact"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+
+        <div className="input-control">
+          <label htmlFor="emergencyContactPerson">
+            Emergency Contact Person
+          </label>
+          <input
+            type="text"
+            id="emergencyContactPerson"
+            value={emergencyContactPerson}
+            name="emergencyContactPerson"
+            onChange={handleChange("emergencyContactPerson")}
+            placeholder="Enter Emergency Contact Person"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+     
       <div className="input-control">
-        <label htmlFor="email"> email </label>
+        <label htmlFor="email"> Email Address </label>
         <input
           type="text"
           id="email"
@@ -326,7 +419,7 @@ function CreateProfile() {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="email"> homeAddress </label>
+        <label htmlFor="email"> Home Address </label>
         <input
           type="text"
           id="homeAddress"
@@ -337,118 +430,156 @@ function CreateProfile() {
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
-      <div className="input-control">
-        <label htmlFor="weight"> weight </label>
-        <input
-          type="text"
-          id="weight"
-          value={weight}
-          name="weight"
-          onChange={handleChange("weight")}
-          placeholder="weight: "
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-        />
+
+      <div className='flex'>
+  <div className="input-control mr-4"> {/* Add right margin */}
+    <label htmlFor="statusIsActive">Is an Active Athlete</label>
+    <input
+      type="checkbox"
+      id="statusIsActive"
+      checked={statusIsActive}
+      onChange={handleChange("statusIsActive")}
+      className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+    />
+  </div>
+
+  <div className="input-control ml-4"> {/* Add left margin */}
+    <label htmlFor="statusIsInactive">Is an Inactive Athlete</label>
+    <input
+      type="checkbox"
+      id="statusIsInactive"
+      checked={statusIsInactive}
+      onChange={handleChange("statusIsInactive")}
+      className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+    />
+  </div>
+</div>
+
+<div className="submit-btn mt-4 flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
+          >
+            {add}
+            Create Student Profile
+          </button>
+        </div>
+     
       </div>
-      <div className="input-control">
-        <label htmlFor="height"> height </label>
-        <input
-          type="text"
-          id="height"
-          value={height}
-          name="height"
-          onChange={handleChange("height")}
-          placeholder="height: "
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-        />
-      </div>
-      <div className="input-control">
-        <label htmlFor="bloodType"> bloodType </label>
-        <input
-          type="text"
-          id="bloodType"
-          value={bloodType}
-          name="bloodType"
-          onChange={handleChange("bloodType")}
-          placeholder="bloodType: "
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-        />
-      </div>
-      <div className="submit-btn flex justify-end">
-        <Button
-          type="submit"
-          name="Add Student"
-          icon={add}
-          padding={"0.8rem 2rem"}
-          borderRad={"0.8rem"}
-          fw={"500"}
-          fs={"1.2rem"}
-          background={"rgb(0, 163, 255)"}
-        />
-      </div>
-    </form>
+    </CreateStudentProfileStyled>
   );
 }
 
-const CreateContentStyled = styled.form`
+const CreateStudentProfileStyled = styled.form`
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: space-around; // Change from 'space-between' to 'space-around' for more even spacing
+width: 100%; 
+height: 100%;
+padding: 20px; 
+
+> * {
+  width: 100%; 
+  margin-bottom: 30px; // Increase the bottom margin for more space between elements
+}
+
 > h1 {
   font-size: clamp(1.2rem, 5vw, 1.6rem);
   font-weight: 600;
+  margin-bottom: 50px; // Increase the margin-bottom for the title
 }
 
 color: ${(props) => props.theme.colorGrey1};
 
 .input-control {
   position: relative;
-  margin: 1.6rem 0;
   font-weight: 500;
-
-  @media screen and (max-width: 450px) {
-    margin: 1rem 0;
-  }
-
-  label {
-    margin-bottom: 0.5rem;
-    display: inline-block;
-    font-size: clamp(0.9rem, 5vw, 1.2rem);
-
-    span {
-      color: ${(props) => props.theme.colorGrey3};
-    }
-  }
-
-  input,
-  textarea {
-    width: 100%;
-    padding: 1rem;
-
-    resize: none;
-    background-color: ${(props) => props.theme.colorGreyDark};
-    color: ${(props) => props.theme.colorGrey2};
-    border-radius: 0.5rem;
-  }
+  padding: 10px 0; // Add vertical padding to input controls
 }
 
-.submit-btn button {
-  transition: all 0.35s ease-in-out;
+    label {
+      margin-bottom: 0.5rem;
+      display: inline-block;
+      font-size: clamp(0.9rem, 5vw, 1.2rem);
 
-  @media screen and (max-width: 500px) {
-    font-size: 0.9rem !important;
-    padding: 0.6rem 1rem !important;
+      span {
+        color: ${(props) => props.theme.colorGrey3};
+      }
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 1rem;
+
+      resize: none;
+      background-color: ${(props) => props.theme.colorGreyDark};
+      color: ${(props) => props.theme.colorGrey2};
+      border-radius: 0.5rem;
+    }
+  }
+  .submit-btn button {
+    background-color: #002b88;
+    color: #edf2f7;
+    border: none;
+    border-radius: 1rem;
+    padding: 20px 40px; 
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px; 
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
+  
+  
+  .submit-btn button:hover {
+    background-color: #0043d5;
+    color: white;
+  }
+
+  input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[name="weight"], input[name="height"], textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid #4a4a4a;
+    box-sizing: border-box;
+    border-radius: 15px;
+  }
+
+  input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus, input[name="weight"]:focus, input[name="height"]:focus, textarea:focus {
+    border: 1px solid #718096;
+  }
+  
+  input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+    background-color: #4a4a4a;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid #4a4a4a;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  input[type="checkbox"]:checked {
+    background-color: #ffffff; // Change this to match the border color
+    border: 1px solid #718096;
+  }
 
     i {
-      font-size: 1.2rem !important;
-      margin-right: 0.5rem !important;
+      color: ${(props) => props.theme.colorGrey0};
+    }
+
+    &:hover {
+      background: ${(props) => props.theme.colorPrimaryGreen};
+      color: ${(props) => props.theme.colorWhite};
     }
   }
-
-  i {
-    color: ${(props) => props.theme.colorGrey0};
-  }
-
-  &:hover {
-    background: ${(props) => props.theme.colorPrimaryGreen} !important;
-    color: ${(props) => props.theme.colorWhite} !important;
-  }
-}
 `;
 export default CreateProfile;

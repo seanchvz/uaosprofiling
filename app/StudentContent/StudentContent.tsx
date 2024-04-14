@@ -1,36 +1,65 @@
-"use client"
-import React from 'react'
-import { useGlobalState } from '../context/globalProvider';
-import styled from 'styled-components';
-import { edit, trash } from '../utils/Icons';
+"use client";
+import React from "react";
+import { useGlobalState } from "../context/globalProvider";
+import styled from "styled-components";
+import { edit, trash } from "../utils/Icons";
 
 interface Props {
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    birthDate: string;
-    age: string;
-    nationality: string;
-    civilStatus: string;
-    isMale: boolean;
-    isFemale: boolean;
-    yrStartedPlaying: string;
-    mothersName: string;
-    fathersName: string;
-    courseAndYear: string;
-    contactNumber: string;
-    email: string;
-    homeAddress: string;
-    weights: string
-    height: string;
-    bloodType: string;
-    id:string;
-  // inventory:any;
+  id: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  contactNumber: string;
+  birthDate: string;
+  nationality: string;
+  weight: string | null;
+  height: string | null;
+  bloodType: string | null;
+  academicYear: string;
+  isMale: boolean;
+  isFemale: boolean;
+  yrStartedPlaying: string;
+  mothersName: string | null;
+  fathersName: string | null;
+  guardiansName: string | null;
+  courseAndYear: string;
+  emergencyContactPerson: string;
+  emergencyContactNumber: string;
+  email: string;
+  homeAddress: string;
+  statusIsActive: boolean;
+  statusIsInactive: boolean;
+  userId: string;
 }
-
-function StudentProfileContent({firstName, middleName,lastName, birthDate, age, nationality, civilStatus, isMale, isFemale, yrStartedPlaying, mothersName, fathersName, courseAndYear, contactNumber, email, homeAddress, weights, height, bloodType, id}:Props) {
-  console.log(StudentProfileContent)
-  const {theme, deleteStudentProfile} = useGlobalState();
+function StudentProfileContent({
+  id,
+  firstName,
+  middleName,
+  lastName,
+  contactNumber,
+  birthDate,
+  nationality,
+  weight,
+  height,
+  bloodType,
+  academicYear,
+  isMale,
+  isFemale,
+  yrStartedPlaying,
+  mothersName,
+  fathersName,
+  guardiansName,
+  courseAndYear,
+  emergencyContactPerson,
+  emergencyContactNumber,
+  email,
+  homeAddress,
+  statusIsActive,
+  statusIsInactive,
+  userId,
+}: Props) {
+  console.log(StudentProfileContent);
+  const { theme, deleteStudentProfile } = useGlobalState();
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
@@ -43,11 +72,13 @@ function StudentProfileContent({firstName, middleName,lastName, birthDate, age, 
       <h2>{firstName}</h2>
       <h2>{middleName}</h2>
       <p className="sport">Birth Date: {birthDate}</p>
-      <p className='YearStartedPlaying'>Year Started Playing: {yrStartedPlaying}</p>
-      <p className='ContactNumber'> Contact Number: {contactNumber}</p>
+      <p className="YearStartedPlaying">
+        Year Started Playing: {yrStartedPlaying}
+      </p>
+      <p className="ContactNumber"> Contact Number: {contactNumber}</p>
 
       <div className="event-footer">
-      <button className="edit">{edit}</button>
+        <button className="edit">{edit}</button>
         <button className="edit">{edit}</button>
         <button
           className="delete"
@@ -58,7 +89,6 @@ function StudentProfileContent({firstName, middleName,lastName, birthDate, age, 
           {trash}
         </button>
         {/* <button className="completed">External</button> */}
-      
       </div>
     </StudentContentStyled>
   );
@@ -78,7 +108,11 @@ const StudentContentStyled = styled.div`
   > h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
+    margin-bottom: 0.4rem; /* Add margin to the bottom of the heading */
+  }
+
+ h2 {
+    margin-bottom: 0.5rem; // adjust this value to change the spacing
   }
 
   .date {
@@ -129,4 +163,4 @@ const StudentContentStyled = styled.div`
   }
 `;
 
-export default StudentProfileContent
+export default StudentProfileContent;

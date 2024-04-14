@@ -28,7 +28,7 @@ export async function POST(req:Request) {
             });
         }
         const formattedstockinDate = new Date(stockinDate).toISOString(); // Parse the stockinDate value if necessary
-        const InventoryItem = await prisma.inventoryItem.create({
+        const InventoryItem = await prisma.inventoryitem.create({
           data: {
             item: item,
             quantity: quantity,
@@ -55,7 +55,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
       
-        const inventoryItems = await prisma.inventoryItem.findMany({
+        const inventoryItems = await prisma.inventoryitem.findMany({
             where: {
                 userId,
             },

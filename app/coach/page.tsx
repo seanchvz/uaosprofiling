@@ -44,7 +44,7 @@ function Page({ name, coachprofile }: Props) {
         </button>
       </div>
 
-      <div className="inventoryitem grid mt-5">
+      <table className="inventoryitem grid mt-5">
         {coachprofile &&
           Array.isArray(coachprofile) &&
           coachprofile.map((coachProfile) => (
@@ -71,7 +71,7 @@ function Page({ name, coachprofile }: Props) {
               id={coachProfile.id}
             />
           ))}
-      </div>
+      </table>
     </CoachStyled>
     // </div>
   );
