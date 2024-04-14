@@ -17,7 +17,7 @@ const menu = [
     id: 2,
     title: "Student Profile",
     icon: student,
-    link: "/profile",
+    link: "/StudentScreen",
   },
   {
     id: 5,

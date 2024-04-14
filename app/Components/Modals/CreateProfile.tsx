@@ -1,3 +1,4 @@
+import { useGlobalState } from "@/app/context/globalProvider";
 import React, { useState } from 'react';
 import styled from 'styled-components'; // Import styled-components// Assuming Button component exists
 import { add } from '@/app/utils/Icons'; // Assuming Icons are imported
@@ -26,6 +27,8 @@ function CreateProfile() {
   const [height, setHeight] = useState("");
   const [bloodType, setbloodType] = useState("");
   const [userId, setUserId] = useState(""); // Assuming userId is obtained from authentication
+
+  const { fetchAllStudentProfile, closeModal} = useGlobalState();
 
   const handleChange = (firstName: string) => (e: any)=>{
 
@@ -125,6 +128,8 @@ function CreateProfile() {
 
       if (!res.data.error) {
         toast.success("Student profile created successfully.");
+      fetchAllStudentProfile();
+      closeModal();
       }
     } catch (error) {
       toast.error("Something went wrong.");
@@ -136,7 +141,15 @@ function CreateProfile() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Add a Student Athlete</h1>
+      <div className="mb-8">
+        {" "}
+        {/* Add margin-bottom */}
+        <h1 className="text-4xl font-bold mb-4">
+          Add a Student 
+        </h1>{" "}
+        {/* Add margin-bottom */}
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       <div className="input-control">
         <label htmlFor="name"> First Name: </label>
         <input
@@ -146,6 +159,7 @@ function CreateProfile() {
           name="First Name: "
           onChange={handleChange("firstName")}
           placeholder=" First name: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -156,7 +170,8 @@ function CreateProfile() {
           value={middleName}
           name="Middle Name: "
           onChange={handleChange("middleName")}
-          placeholder=" Middle name: "
+          placeholder="Middle Name: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -167,6 +182,7 @@ function CreateProfile() {
           value={lastName}
           name=" Last Name"
           onChange={handleChange("lastName")}
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -177,6 +193,7 @@ function CreateProfile() {
           value={birthDate}
           name="birthDate"
           onChange={handleChange("birthDate")}
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
     
@@ -188,6 +205,7 @@ function CreateProfile() {
           value={age}
           name="age"
           onChange={handleChange("age")}
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -199,6 +217,7 @@ function CreateProfile() {
           name="Nationality: "
           onChange={handleChange("nationality")}
           placeholder=" Nationality: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -210,6 +229,7 @@ function CreateProfile() {
           name="civilStatus: "
           onChange={handleChange("civilStatus")}
           placeholder=" Civil Status: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -218,6 +238,7 @@ function CreateProfile() {
             type="checkbox"
             checked={isMale}
             onChange={handleChange("isMale")}
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
           Male
         </label>
@@ -241,6 +262,7 @@ function CreateProfile() {
           // name="First Name: "
           onChange={handleChange("yrStartedPlaying")}
           // placeholder=" "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -252,6 +274,7 @@ function CreateProfile() {
           name="Mother's Name: "
           onChange={handleChange("mothersName")}
           placeholder=" Mother's name: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -263,6 +286,7 @@ function CreateProfile() {
           name="Fathers's Name: "
           onChange={handleChange("fathersName")}
           placeholder=" Fathers's name: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -274,6 +298,7 @@ function CreateProfile() {
           name="Course and Year "
           onChange={handleChange("courseAndYear")}
           placeholder="Course and Year: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -285,6 +310,7 @@ function CreateProfile() {
           name="Contact Number"
           onChange={handleChange("contactNumber")}
           placeholder="Contac Number:  "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -296,6 +322,7 @@ function CreateProfile() {
           name="email"
           onChange={handleChange("email")}
           placeholder="email: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -307,6 +334,7 @@ function CreateProfile() {
           name="homeAddress"
           onChange={handleChange("homeAddress")}
           placeholder="homeAddress: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -318,6 +346,7 @@ function CreateProfile() {
           name="weight"
           onChange={handleChange("weight")}
           placeholder="weight: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -329,6 +358,7 @@ function CreateProfile() {
           name="height"
           onChange={handleChange("height")}
           placeholder="height: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="input-control">
@@ -340,6 +370,7 @@ function CreateProfile() {
           name="bloodType"
           onChange={handleChange("bloodType")}
           placeholder="bloodType: "
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div className="submit-btn flex justify-end">
@@ -417,22 +448,6 @@ color: ${(props) => props.theme.colorGrey1};
   &:hover {
     background: ${(props) => props.theme.colorPrimaryGreen} !important;
     color: ${(props) => props.theme.colorWhite} !important;
-  }
-}
-
-.toggler {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  cursor: pointer;
-
-  label {
-    flex: 1;
-  }
-
-  input {
-    width: initial;
   }
 }
 `;

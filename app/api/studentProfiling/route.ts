@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         const male = isMale === "true"; // Assuming isMale is a string "true" or "false"
         const female = isFemale === "true";
 
-        const student = await prisma.studentProfile.create({
+        const student = await prisma.studentprofile.create({
             data: {
                 
                 firstName: firstName,

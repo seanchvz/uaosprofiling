@@ -8,6 +8,8 @@ import { toast } from "react-hot-toast";
 import { InventoryItemService } from "./lib/InventoryItemService";
 import {EventsService} from "./lib/EventsService";
 import { CoachProfileService } from "./lib/CoachProfileService";
+import { StudentProfileService } from "./lib/StudentProfileService";
+import { student } from "../utils/Icons";
 
 export const GlobalContext = createContext();
 export const GlobalUpdateContext = createContext();
@@ -28,6 +30,8 @@ export const GlobalProvider = ({ children }) => {
     const {coachprofile, fetchAllCoachProfile}=
     CoachProfileService({});
 
+    const {studentprofile, fetchAllStudentProfile} = 
+    StudentProfileService({});
 
   const openModal = () => {
     //events, put key inside the parenthesis para di ma affect ang other modals
@@ -53,27 +57,10 @@ export const GlobalProvider = ({ children }) => {
       const res = await axios.delete(`/api/events/${id}`); // delete lang according kung unsay naa sa ID
       toast.success("Event Deleted");
 
-<<<<<<< HEAD
-      } catch (error) {
-        console.log(error);
-        
-      }
-    };
-
-    const allStudents = async () => {
-      setIsLoading(true)
-      try {
-        const studResults = await axios.get("api/studentProfiling");
-        
-        console.log(studResults.data)
-      }
-      catch {}
-=======
       allEvents();
     } catch (error) {
       console.log(error);
       toast.error("Something Went Wrong");
->>>>>>> 2286fb2b2e2660b9e8e539d721419290d6d1404d
     }
   };
 
@@ -98,6 +85,19 @@ export const GlobalProvider = ({ children }) => {
       toast.success("Coach Profile Deleted");
 
       fetchAllCoachProfile();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
+
+  
+  const deleteStudentProfile = async (id) => {
+    try {
+      const res = await axios.delete(`/api/studentProfiling/${id}`); // delete lang according kung unsay naa sa ID
+      toast.success("Student Profile Deleted");
+
+      fetchAllStudentProfile();
     } catch (error) {
       console.log(error);
       toast.error("Something Went Wrong");
@@ -129,8 +129,11 @@ export const GlobalProvider = ({ children }) => {
         closeModal,
         allEvents,
         coachprofile,
+        studentprofile,
         fetchAllCoachProfile,
         deleteCoachProfile,
+        fetchAllStudentProfile,
+        deleteStudentProfile,
         
         // isExternalEvents,
       }}
@@ -144,4 +147,3 @@ export const GlobalProvider = ({ children }) => {
 
 //para ma use ang context:
 export const useGlobalState = () => useContext(GlobalContext);
-export const useGlobalUpdate = () => useContext(GlobalUpdateContext);

@@ -12,10 +12,10 @@ model events {
   name         String
   startDate    DateTime
   endDate      DateTime
-  Sport        String
   CreatedAt    DateTime @default(now())
   UpdatedAt    DateTime @updatedAt
   eventDetails String?
+  Sport        String
   isExternal   Boolean  @default(false)
   isInternal   Boolean  @default(false)
   userId       String
@@ -45,38 +45,36 @@ model studentprofile {
   userId           String
 }
 
-model InventoryItem {
-  id           Int      @id @default(autoincrement())
-  item         String
-  quantity     Int
-  supplier     String
-  stockinDate  DateTime
-  userId       String
-}
-
 model coachprofile {
-  id                         Int      @id @default(autoincrement())
-  name                       String
-  contactNumber              String
-  sport                      String
-  permanentTeam              String
-  isMale                     Boolean  @default(false)
-  isFemale                   Boolean  @default(false)
-  emergencyContact           String
-  emergencyContactPerson     String
-  birthDate                  DateTime
-  nationality                String
-  weight                     Float?
-  height                     Float?
-  bloodType                  String?
-  academicYear               String
-  statusIsFulltime           Boolean  @default(false)
-  statusIsParttime           Boolean  @default(false)     
-  resumeUrl                  String?
-  email                      String
-  CreatedAt                  DateTime @default(now())
-  UpdatedAt                  DateTime @updatedAt
-  userId                     String
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  contactNumber          String
+  sport                  String
+  permanentTeam          String
+  isMale                 Boolean  @default(false)
+  isFemale               Boolean  @default(false)
+  emergencyContact       String
+  emergencyContactPerson String
+  birthDate              DateTime
+  nationality            String
+  weight                 Float?
+  height                 Float?
+  bloodType              String?
+  academicYear           String
+  statusIsFulltime       Boolean  @default(false)
+  statusIsParttime       Boolean  @default(false)
+  resumeUrl              String?
+  email                  String
+  CreatedAt              DateTime @default(now())
+  UpdatedAt              DateTime @updatedAt
+  userId                 String
 }
 
-// mag create na ng route
+model inventoryitem {
+  id          Int      @id @default(autoincrement())
+  item        String
+  quantity    Int
+  supplier    String
+  stockinDate DateTime
+  userId      String
+}
