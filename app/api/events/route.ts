@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
         const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = await req.json();
 
-        if (!name || !startDate || !endDate ) {
+        if (!name || !startDate || !endDate) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
@@ -25,9 +25,9 @@ export async function POST(req: Request) {
                 status: 400,
             });
         }
-       // console.log(name, startDate, endDate, SportId, eventDetails);
-       const formattedStartDate = new Date(startDate).toISOString();
-       const formattedEndDate = new Date(endDate).toISOString();
+        // console.log(name, startDate, endDate, SportId, eventDetails);
+        const formattedStartDate = new Date(startDate).toISOString();
+        const formattedEndDate = new Date(endDate).toISOString();
 
 
 
@@ -38,12 +38,12 @@ export async function POST(req: Request) {
                 endDate: formattedEndDate,
                 Sport: Sport,
                 eventDetails: eventDetails,
-                isExternal: isExternal, 
+                isExternal: isExternal,
                 isInternal: isInternal,
                 userId: userId,
             },
         });
-        
+
         console.log(event);
         return NextResponse.json(event);
     } catch (error) {
@@ -52,45 +52,47 @@ export async function POST(req: Request) {
     }
 }
 
-export async function GET(req: Request){
+export async function GET(req: Request) {
     try {
         const { userId } = auth();
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
-          }
-      
-          const event = await prisma.events.findMany({
+        }
+
+        const event = await prisma.events.findMany({
             where: {
-              userId,
+                userId,
             },
-          });
+        });
         //   console.log("EVENTS: ", events);
-          return NextResponse.json(event);
-  } catch (error) {
-    console.log("ERROR GETTING EVENTS: ", error);
-    return NextResponse.json({ error: "Error updating event", status: 500 });
-  }
+        return NextResponse.json(event);
+    } catch (error) {
+        console.log("ERROR GETTING EVENTS: ", error);
+        return NextResponse.json({ error: "Error updating event", status: 500 });
+    }
 }
 
 
-export async function PUT(req: Request){
-    const {userId}=auth();
-    
+export async function PUT(req: Request) {
+    const { userId } = auth();
+
     try {
-        
+
     } catch (error) {
         console.log("Error Updating Event: ", error);
         return NextResponse.json({ error: "Error Updating event", status: 500 });
-        
+
     }
 }
 
-export async function Delete(req: Request){
+export async function Delete(req: Request) {
     try {
-        
+
     } catch (error) {
         console.log("Error Deleting Event: ", error);
         return NextResponse.json({ error: "Error Deleting event", status: 500 });
-        
+
     }
 }
+
+// PATCH

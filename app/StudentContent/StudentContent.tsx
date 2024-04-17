@@ -68,28 +68,34 @@ function StudentProfileContent({
 
   return (
     <StudentContentStyled theme={theme}>
-      <h1>{lastName}</h1>
-      <h2>{firstName}</h2>
-      <h2>{middleName}</h2>
-      <p className="sport">Birth Date: {birthDate}</p>
+     <div className="nameContainer">
+  <h1>{lastName}</h1>
+  <h2>{firstName}</h2>
+  <h2>{middleName}</h2>
+</div>
+      <p> Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}</p>
       <p className="YearStartedPlaying">
         Year Started Playing: {yrStartedPlaying}
       </p>
       <p className="ContactNumber"> Contact Number: {contactNumber}</p>
-
+      <p className="AcademicYear"> Academic Year: {academicYear}</p>
       <div className="event-footer">
-        <button className="edit">{edit}</button>
-        <button className="edit">{edit}</button>
-        <button
-          className="delete"
-          onClick={() => {
-            deleteStudentProfile(id);
-          }}
-        >
-          {trash}
-        </button>
-        {/* <button className="completed">External</button> */}
-      </div>
+  {statusIsActive ? (
+    <button className="statusIsActive">Active</button>
+  ) : statusIsInactive ? (
+    <button className="statusIsInactive">Inactive</button>
+  ) : null}
+
+  <button className="edit">{edit}</button>
+  <button
+    className="delete"
+    onClick={() => {
+      deleteStudentProfile(id);
+    }}
+  >
+    {trash}
+  </button>
+</div>
     </StudentContentStyled>
   );
 }
@@ -100,7 +106,7 @@ const StudentContentStyled = styled.div`
   background-color: ${(props) => props.theme.borderColor2};
   box-shadow: ${(props) => props.theme.shadow7};
   border: 1px solid ${(props) => props.theme.borderColor2};
-  height: 20rem;
+  height: 25rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -109,6 +115,10 @@ const StudentContentStyled = styled.div`
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 0.4rem; /* Add margin to the bottom of the heading */
+  }
+
+  .nameContainer h1, .nameContainer h2 {
+    margin: 0.2rem 0; /* adjust as needed */
   }
 
  h2 {
@@ -144,17 +154,17 @@ const StudentContentStyled = styled.div`
     .edit {
       margin-left: auto;
     }
-    .isExternal,
-    .isInternal {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      border: 2px solid ${(props) => props.theme.colorDanger};
-      border-radius: 0.8rem;
-    }
-    
-    .isInternal {
-      border-color: ${(props) => props.theme.colorGreenDark}; 
-    }
+    .statusIsActive,
+    .statusIsInactive {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border: 2px solid #299758; 
+  border-radius: 0.8rem;
+}
+
+.statusIsInactive {
+  border-color: #fe6854; 
+}
 
   .sport {
     background: #002b88 !important;

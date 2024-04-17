@@ -31,7 +31,7 @@ function Sidebar() {
         <div className="imageaddu mb-4">
           <Image width={100} height={100} src="/addu.jpg" alt="profile" />
         </div>
-        <p className="text-center text-white">University Athletics Office</p>
+        <p className="text-center text-white text-lg">University Athletics Office</p>
       </div>
 
       <ul className="nav-items">

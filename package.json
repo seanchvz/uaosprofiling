@@ -10,11 +10,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.9",
-    "@prisma/client": "^5.11.0",
     "axios": "^1.6.8",
     "next": "14.1.3",
     "nextjs-toploader": "^1.6.11",
-    "prisma": "^5.11.0",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
@@ -22,6 +20,7 @@
     "styled-components": "^6.1.8"
   },
   "devDependencies": {
+    "@prisma/client": "^5.12.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -29,6 +28,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.3",
     "postcss": "^8",
+    "prisma": "^5.12.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
