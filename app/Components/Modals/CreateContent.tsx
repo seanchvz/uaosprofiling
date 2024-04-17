@@ -59,6 +59,39 @@ function CreateContent() {
         isInternal,
         userId,
     };
+
+    //handleEditFunction
+    const handleEdit = async (e: any) => {
+      e.preventDefault();
+
+      const event = {
+        name,
+        startDate,
+          endDate,
+          Sport,
+          eventDetails,
+          isExternal,
+          isInternal,
+          userId,
+    }
+    //try and catch for the editing
+    try {
+      const eventId = "existing-event-id"; // id of the event thats being edited
+      const res = await axios.put(`/api/events/${eventId}`, event);
+  
+      if (res.data.error) {
+        toast.error(res.data.error);
+      } else {
+        toast.success("Event updated successfully.");
+        allEvents(); // fetches all events and updates the state
+        closeModal();
+      }
+    } catch (error) {
+      toast.error("Something went wrong during event update.");
+      console.log(error);
+    }
+  };
+
     try {
       const res = await axios.post("/api/events", event);
 

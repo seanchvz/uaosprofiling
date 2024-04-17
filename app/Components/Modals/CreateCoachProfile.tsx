@@ -155,8 +155,7 @@ function CreateCoachProfile() {
             placeholder="Enter Fullname"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
-        </div>
-          
+        </div> 
         <div className="input-control">
           <label htmlFor="email">Email</label>
           <input

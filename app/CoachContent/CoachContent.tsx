@@ -1,9 +1,10 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { useGlobalState } from '../context/globalProvider';
 import styled from 'styled-components';
 import { edit, trash } from '../utils/Icons';
-
+import UpdateCoachProfile from '../Components/Modals/UpdateCoachProfile';
+import UpdateCoachModal from '../Components/Modals/UpdateCoachModal';
 /**
  * Props for the CoachContent component.
  */
@@ -30,19 +31,21 @@ interface Props {
   // inventory: any;
 }
 
-function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale, isFemale,emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email, id}:Props) {
+function CoachProfileContent({ name, contactNumber, sport, permanentTeam, isMale, isFemale,emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email, id}:Props) {
   // console.log(inventory)
   const {theme, deleteCoachProfile} = useGlobalState();
+  const {openModal, modal} = useGlobalState();
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
   };
-
+  
 
   // Card Contents
   return (
     <CoachContentStyled theme={theme}>
+      {modal && <UpdateCoachModal content={<UpdateCoachProfile name={name} contactNumber={contactNumber} sport={sport} permanentTeam={permanentTeam} isMale={false} isFemale={false} emergencyContact={''} emergencyContactPerson={''} birthDate={''} nationality={''} weight={0} height={0} bloodType={''} academicYear={''} statusIsFulltime={false} statusIsParttime={false} resumeUrl={''} email={email} id={''} />} />}
       <h1>{name}</h1>
       <p className="sport">Sport: {sport}</p>
       <p className='sport'>Permanent Team: {permanentTeam}</p>
@@ -58,7 +61,14 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
         ) : (
           <button className="isInternal">Part Time</button>
         )}
-        <button className="edit">{edit}</button>
+
+        {/* button to update coach */}
+        <button 
+        className="edit"
+      onClick={openModal}>
+        {edit}
+      </button>
+
 
         
         <button
@@ -71,7 +81,6 @@ function CoachProfileContent({name, contactNumber, sport, permanentTeam, isMale,
         </button>
         {/* <button className="completed">External</button> */}
       </div>
-
     </CoachContentStyled>
   );
 }

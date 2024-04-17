@@ -111,6 +111,18 @@ export const GlobalProvider = ({ children }) => {
       toast.error("Something Went Wrong");
     }
   };
+
+  const UpdateCoachProfile = async (id) => {
+    try {
+      const res = await axios.patch(`/api/coachProfiling/${id}`); // delete lang according kung unsay naa sa ID
+      toast.success("Coach Profile Updated");
+
+      fetchAllCoachProfileProfile();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
   //Filtering
   // const isExternalEvents = events.filter((event) => event.isExternal === true);
   // console.log(isExternalEvents);
@@ -138,6 +150,7 @@ export const GlobalProvider = ({ children }) => {
         deleteCoachProfile,
         fetchAllStudentProfile,
         deleteStudentProfile,
+        UpdateCoachProfile,
         
         // isExternalEvents,
       }}
