@@ -6,6 +6,10 @@ import axios from 'axios';
 import toast from "react-hot-toast";
 import { useGlobalState } from '@/app/context/globalProvider';
 
+// props avaialable
+// event: object || null
+// submitState: string 'create' | 'edit'
+
 function CreateContent() {
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -14,7 +18,7 @@ function CreateContent() {
   const [eventDetails, setEventDetails] = useState("");
   const [isExternal, setIsExternal] = useState(false);
   const [isInternal, setIsInternal] = useState(false);
-  const [userId, setUserId] = useState(""); // Assuming userId is obtained from authentication
+  const [userId, setUserId] = useState(""); //  userId is obtained from authentication
 
   const {allEvents, closeModal}= useGlobalState();
 
@@ -59,6 +63,8 @@ function CreateContent() {
         isInternal,
         userId,
     };
+
+    // handleEdit function
     try {
       const res = await axios.post("/api/events", event);
 
@@ -76,10 +82,6 @@ function CreateContent() {
       console.log(error);
     }
   };
-
-  
-
-
 
   return (
 <CreateContentStyled onSubmit={handleSubmit} className="mx-auto max-w-lg"> {/* Center the form and set max width */}

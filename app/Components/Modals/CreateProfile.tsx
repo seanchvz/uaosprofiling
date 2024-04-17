@@ -6,7 +6,10 @@ import Button from "../Button/Button";
 import axios from 'axios';
 import toast from "react-hot-toast";
 
+
+// Create profile function component
 function CreateProfile() {
+  //State variables for the form fields
   const [firstName, setfirstName] = useState("");
   const [middleName, setmiddleName] = useState("");
   const [lastName, setlastName] = useState("");
@@ -30,12 +33,13 @@ function CreateProfile() {
   const [homeAddress, setHomeAddress] = useState("");
   const [statusIsActive, setStatusIsActive] = useState(false);
   const [statusIsInactive, setStatusIsInactive] = useState(false);
-  const [userId, setUserId] = useState(""); // Assuming userId is obtained from authentication
+  const [userId, setUserId] = useState(""); // userId is obtained from authentication
 
   const { fetchAllStudentProfile, closeModal} = useGlobalState();
 
+  // Handle change function for form fields
   const handleChange = (field: string) => (e: any) => {
-    switch (field) {
+    switch (field) { // To perform different actions based on diff conditions
       case "firstName":
         setfirstName(e.target.value);
         break;
@@ -165,7 +169,7 @@ function CreateProfile() {
     <CreateStudentProfileStyled onSubmit={handleSubmit}>
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">
-          Add a Student 
+          Add a Student Profile
         </h1>
       </div>
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
@@ -533,7 +537,6 @@ color: ${(props) => props.theme.colorGrey1};
     transition-duration: 0.4s;
     cursor: pointer;
   }
-  
   
   .submit-btn button:hover {
     background-color: #0043d5;

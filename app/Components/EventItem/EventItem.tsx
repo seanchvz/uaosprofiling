@@ -13,7 +13,7 @@ interface Props {
   id: string;
 }
 
-function EventItem({ name, startDate, endDate, Sport, isExternal, id }: Props) {
+function EventItem({ name, startDate, handleEdit, endDate, Sport, isExternal, id }: Props) {
   const { theme, deleteEvent } = useGlobalState();
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -42,7 +42,7 @@ function EventItem({ name, startDate, endDate, Sport, isExternal, id }: Props) {
           <button className="isInternal">Internal</button>
         )}
 
-        <button className="edit">{edit}</button>
+        <button className="edit" onClick={handleEdit}>{edit}</button>
         <button
           className="delete"
           onClick={() => {
