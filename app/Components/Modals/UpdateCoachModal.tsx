@@ -4,15 +4,16 @@ import { useGlobalState } from "@/app/context/globalProvider";
 import styled from "styled-components";
 
 interface Props{
-  children: React.ReactNode;
+    content: React.ReactNode;
 }
 
-function EventModal({children}:Props) {
-  const {closeModal, theme}= useGlobalState();
+function UpdateCoachModal({content}:Props) {
+    const {closeModal, theme}= useGlobalState();
+
   return (
     <ModalStyled theme={theme}>
       <div className="modal-overlay" onClick={closeModal}></div>
-      <div className="modal-content">{children}</div>
+      <div className="modal-content">{content}</div>
     </ModalStyled>
   )
 }
@@ -40,24 +41,22 @@ const ModalStyled = styled.div`
 
   .modal-content {
     margin: 0 1rem;
+    height: 800px;
     padding: 2rem;
     position: relative;
-    max-width: 630px;
+    max-width: 1500px;
     width: 100%;
     z-index: 100;
+
     border-radius: 1rem;
     background-color: ${(props) => props.theme.colorBg2};
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
     border-radius: ${(props) => props.theme.borderRadiusMd2};
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-  
+
     @media screen and (max-width: 450px) {
       font-size: 90%;
     }
   }
-  }
 `;
 
-export default EventModal
+export default UpdateCoachModal

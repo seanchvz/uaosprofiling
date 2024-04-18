@@ -15,7 +15,7 @@ export function CoachProfileService(options: {
     setIsLoading(true);
     try {
       const res = await axios.get("/api/coachProfiling");
-    //   console.log(res.data);
+    //   console.log(res.data); 
       const sorted = res.data.sort((a, b) => {
         return (
           new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime()
@@ -30,6 +30,7 @@ export function CoachProfileService(options: {
     }
   };
 
+  // const updateCoachProfile = async () => {}
   return {
     coachprofile,
     fetchAllCoachProfile,

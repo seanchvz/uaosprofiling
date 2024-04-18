@@ -1,124 +1,126 @@
-import { useGlobalState } from "@/app/context/globalProvider";
-import { edit, trash } from "@/app/utils/Icons";
-import React from "react";
-import styled from "styled-components";
-
-interface Props {
-  // event: any;
-  name: string;
-  startDate: string;
-  endDate: string;
-  Sport: string;
-  isExternal: boolean;
-  id: string;
-}
-
-function EventItem({ name, startDate, endDate, Sport, isExternal, id }: Props) {
-  const { theme, deleteEvent } = useGlobalState();
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-
-  // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
-
-  return (
-    <EventItemStyled theme={theme}>
-      <h1> {name}</h1>
-      <p className="sport"> {Sport}</p>
-      <p className="date">
-        Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
-      </p>
-      <p className="dateend">
-        {" "}
-        End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
-      </p>
-
-      <div className="event-footer">
-        {isExternal ? (
-          <button className="isExternal">External</button>
-        ) : (
-          <button className="isInternal">Internal</button>
-        )}
-
-        <button className="edit" >{edit}</button>
-        <button
-          className="delete"
-          onClick={() => {
-            deleteEvent(id);
-          }}
-        >
-          {trash}
-        </button>
-        {/* <button className="completed">External</button> */}
-      </div>
-    </EventItemStyled>
-  );
-}
-const EventItemStyled = styled.div`
-  padding: 1.2rem 1rem;
-  border-radius: 1rem;
-  background-color: ${(props) => props.theme.borderColor2};
-  box-shadow: ${(props) => props.theme.shadow7};
-  border: 1px solid ${(props) => props.theme.borderColor2};
-  height: 25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  > h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
+  import { useGlobalState } from "@/app/context/globalProvider";
+  import { edit, trash } from "@/app/utils/Icons";
+  import { isExternal } from "node:util/types";
+  import React from "react";
+  import styled from "styled-components";
+  
+  interface Props {
+    // event: any;
+    name: string;
+    startDate: string;
+    endDate: string;
+    Sport: string;
+    isExternal: boolean;
+    id: string;
+    handleEdit: () => void;
   }
+  //added handleEdit as a prop but for now it doesnt return anything  
+    function EventItem({ name, startDate, handleEdit, endDate, Sport, isExternal, id }: Props): React.JSX.Element {
+      const { theme, deleteEvent } = useGlobalState();
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
 
-  .date {
-    margin-top: auto;
-    margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
-  }
+        // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
+        return (
+          <EventItemStyled theme={theme}>
+            <h1> {name}</h1>
+            <p className="sport"> {Sport}</p>
+            <p className="date">
+              Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
+            </p>
+            <p className="dateend">
+              {" "}
+              End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
+            </p>
 
-  .dateend {
-    margin-right: auto;
-    margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
-  }
+            <div className="event-footer">
+              {isExternal ? (
+                <button className="isExternal">External</button>
+              ) : (
+                <button className="isInternal">Internal</button>
+              )}
 
-  .event-footer {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-
-    button {
-      border: none;
-      outline: none;
-      cursor: pointer;
-
-      i {
-        font-size: 1.5rem;
-        color: #ffffff;
+              <button className="edit" onClick={handleEdit}>{edit}</button>
+              <button
+                className="delete"
+                onClick={() => {
+                  deleteEvent(id);
+                } }
+              >
+                {trash}
+              </button>
+              {/* <button className="completed">External</button> */}
+            </div>
+          </EventItemStyled>
+        );
       }
+    const EventItemStyled = styled.div`
+    padding: 1.2rem 1rem;
+    border-radius: 1rem;
+    background-color: ${(props) => props.theme.borderColor2};
+    box-shadow: ${(props) => props.theme.shadow7};
+    border: 1px solid ${(props) => props.theme.borderColor2};
+    height: 25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    > h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem; /* Add margin to the bottom of the heading */
     }
 
-    .edit {
-      margin-left: auto;
-    }
-    .isExternal,
-    .isInternal {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      border: 2px solid ${(props) => props.theme.colorDanger};
-      border-radius: 0.8rem;
-    }
-    
-    .isInternal {
-      border-color: ${(props) => props.theme.colorGreenDark}; 
+    .date {
+      margin-top: auto;
+      margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
     }
 
-  .sport {
-    background: #002b88 !important;
-    border-radius: 10px;
-    padding: 0.5rem 1rem; 
-  }
-`;
+    .dateend {
+      margin-right: auto;
+      margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
+    }
 
-export default EventItem;
+    .event-footer {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+
+      button {
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        i {
+          font-size: 1.5rem;
+          color: #ffffff;
+        }
+      }
+
+      .edit {
+        margin-left: auto;
+      }
+      .isExternal,
+      .isInternal {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        border: 2px solid ${(props) => props.theme.colorDanger};
+        border-radius: 0.8rem;
+      }
+      
+      .isInternal {
+        border-color: ${(props) => props.theme.colorGreenDark}; 
+      }
+
+    .sport {
+      background: #002b88 !important;
+      border-radius: 10px;
+      padding: 0.5rem 1rem; 
+    }
+  `;
+
+    export default EventItem;
+
