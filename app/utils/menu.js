@@ -1,4 +1,14 @@
-import { list, check, todo, home,student, coach, CalendarIcon, inventory, borrowing } from "./Icons";
+import {
+  list,
+  check,
+  todo,
+  home,
+  student,
+  coach,
+  CalendarIcon,
+  inventory,
+  borrowing,
+} from "./Icons";
 
 const menu = [
   {
@@ -25,7 +35,7 @@ const menu = [
     icon: coach,
     link: "/CoachScreen",
   },
- 
+  /* 
   {
     id: 4,
     title: "Inventory",
@@ -38,6 +48,7 @@ const menu = [
     icon: borrowing,
     link: "/borrowing",
   },
+  */
 ];
 
 export default menu;
