@@ -17,7 +17,7 @@ function Dashboard({ name, events }: Props) {
 
   return (
     <DashboardStyled theme={theme}>
-      {modal && <EventModal content={<CreateContent modalState={modalState} event={selectedEvent}/>} />}
+       {modal && <EventModal content={<CreateContent />} />}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
           {name}
@@ -34,11 +34,6 @@ function Dashboard({ name, events }: Props) {
             <EventItem
               key={event.id}
               name={event.name}
-              handleEdit={async (e) => {
-                setModalState('edit')
-                // fetch data through event/<id>
-                // setSelectedEvent(data)
-              }}
               startDate={event.startDate}
               endDate={event.endDate}
               Sport={event.Sport}
