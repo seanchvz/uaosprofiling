@@ -60,8 +60,14 @@ function CreateContent(props: Props) {
   useEffect(() => {
     if (submitState === "edit" && event) {
       setName(event.name);
-      setStartDate(event.startDate);
-      setEndDate(event.endDate);
+
+      // Format dates to YYYY-MM-DD for the date input fields
+      const formattedStartDate = new Date(event.startDate).toISOString().split('T')[0];
+      const formattedEndDate = new Date(event.endDate).toISOString().split('T')[0];
+
+      setStartDate(formattedStartDate);
+      setEndDate(formattedEndDate);
+
       setSport(event.Sport);
       setEventDetails(event.eventDetails);
       setIsExternal(event.isExternal);
