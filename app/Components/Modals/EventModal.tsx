@@ -4,16 +4,15 @@ import { useGlobalState } from "@/app/context/globalProvider";
 import styled from "styled-components";
 
 interface Props{
-    content: React.ReactNode;
+  children: React.ReactNode;
 }
 
-function EventModal({content}:Props) {
-    const {closeModal, theme}= useGlobalState();
-
+function EventModal({children}:Props) {
+  const {closeModal, theme}= useGlobalState();
   return (
     <ModalStyled theme={theme}>
       <div className="modal-overlay" onClick={closeModal}></div>
-      <div className="modal-content">{content}</div>
+      <div className="modal-content">{children}</div>
     </ModalStyled>
   )
 }

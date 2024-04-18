@@ -1,6 +1,6 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import EventItem from "../EventItem/EventItem";
 import { plus } from "@/app/utils/Icons";
@@ -14,10 +14,12 @@ interface Props {
 
 function Dashboard({ name, events }: Props) {
   const { theme, isLoading, openModal, modal, allEvents } = useGlobalState();
+  const [modalState, setModalState] = useState("create");
+  const [selectedEvent, setSelectedEvent] = useState()
 
   return (
     <DashboardStyled theme={theme}>
-      {modal && <EventModal content={<CreateContent modalState={modalState} event={selectedEvent}/>} />}
+      {modal && <EventModal><CreateContent submitState={modalState} event={selectedEvent} /></EventModal>}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
           {name}
@@ -34,10 +36,10 @@ function Dashboard({ name, events }: Props) {
             <EventItem
               key={event.id}
               name={event.name}
-              handleEdit={async (e) => {
+              handleEdit={() => {
                 setModalState('edit')
-                // fetch data through event/<id>
-                // setSelectedEvent(data)
+                openModal()
+                setSelectedEvent(event)
               }}
               startDate={event.startDate}
               endDate={event.endDate}
