@@ -25,6 +25,7 @@ function CreateCoachProfile() {
   const [statusIsParttime, setStatusIsParttime] = useState(false);
   const [resumeUrl, setResumeUrl] = useState("");
   const [email, setEmail] = useState("");
+  const [remarks, setRemarks] = useState("");
   const [userId, setUserId] = useState("");
 
   const { fetchAllCoachProfile, closeModal } = useGlobalState();
@@ -85,6 +86,9 @@ function CreateCoachProfile() {
       case "email":
         setEmail(e.target.value);
         break;
+      case "remarks":
+          setRemarks(e.target.value); // Set remarks
+          break;
       case "userId":
         setUserId(e.target.value);
         break;
@@ -115,6 +119,7 @@ function CreateCoachProfile() {
       statusIsParttime,
       resumeUrl,
       email,
+      remarks,
       userId,
     };
     try {
@@ -371,6 +376,21 @@ function CreateCoachProfile() {
             placeholder="Enter Resume URL"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
+        </div>
+
+        <div className="input-control">
+          <label htmlFor="remarks" className="block">
+            Event Details
+          </label>
+          <textarea
+            id="remarks"
+            value={remarks}
+            name="remarks"
+            onChange={handleChange("remarks")}
+            placeholder="Enter event details"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            rows={2}
+          ></textarea>
         </div>
 
 <div>

@@ -27,11 +27,12 @@ interface Props {
   statusIsParttime: boolean;
   resumeUrl: string;
   email: string;
+  remarks: string;
   id: string;
   // inventory: any;
 }
 
-function CoachProfileContent({ name, contactNumber, sport, permanentTeam, isMale, isFemale,emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email, id}:Props) {
+function CoachProfileContent({ name, contactNumber, sport, permanentTeam, remarks, isMale, isFemale,emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email, id}:Props) {
   // console.log(inventory)
   const {theme, deleteCoachProfile} = useGlobalState();
   const {openModal, modal} = useGlobalState();
@@ -51,6 +52,7 @@ function CoachProfileContent({ name, contactNumber, sport, permanentTeam, isMale
       <p className='sport'>Permanent Team: {permanentTeam}</p>
       <p className='sport'> Contact Number: {contactNumber}</p>
       <p className='sport'> Academic Year: {academicYear}</p>
+      <p className='sport'> Remarks: {remarks}</p>
 
 
   

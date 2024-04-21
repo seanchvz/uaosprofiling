@@ -11,34 +11,35 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { 
+        const {
             id,
-            firstName, 
-            middleName, 
-            lastName, 
-            contactNumber, 
-            birthDate, 
-            nationality, 
-            weight, 
-            height, 
-            bloodType, 
-            academicYear, 
-            isMale, 
-            isFemale, 
-            yrStartedPlaying, 
-            mothersName, 
-            fathersName, 
-            guardiansName, 
-            courseAndYear, 
-            emergencyContactPerson, 
-            emergencyContactNumber, 
-            email, 
-            homeAddress, 
-            statusIsActive, 
-            statusIsInactive, 
+            firstName,
+            middleName,
+            lastName,
+            contactNumber,
+            birthDate,
+            nationality,
+            weight,
+            height,
+            bloodType,
+            academicYear,
+            isMale,
+            isFemale,
+            yrStartedPlaying,
+            mothersName,
+            fathersName,
+            guardiansName,
+            courseAndYear,
+            emergencyContactPerson,
+            emergencyContactNumber,
+            email,
+            remarks,
+            homeAddress,
+            statusIsActive,
+            statusIsInactive,
         } = await req.json();
 
-        if (!firstName || !lastName ) {
+        if (!firstName || !lastName) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
                 status: 400,
             });
         }
-        
+
         const formattedBirthDate = new Date(birthDate).toISOString();
 
         const student = await prisma.studentprofile.create({
@@ -79,62 +80,63 @@ export async function POST(req: Request) {
                 homeAddress: homeAddress,
                 statusIsActive: statusIsActive,
                 statusIsInactive: statusIsInactive,
+                remarks: remarks,
                 userId: userId,
             },
         });
 
 
         console.log("STUDENT CREATED ", student);
-        
+
         return NextResponse.json(student);
     } catch (error) {
         console.log("Error creating Student Profile: ", error);
         return NextResponse.json({ error: "Error Creating Student Profile:", status: 500 });
     }
 }
-    
+
 
 //get rfunction
-export async function GET(req: Request){
+export async function GET(req: Request) {
     try {
         const { userId } = auth();
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
-          }
-      
-          const student = await prisma.studentprofile.findMany({
-            where: {
-              userId,
-            },
-          });
+        }
 
-          console.log("STUDENT: ", student);
-          return NextResponse.json(student);
+        const student = await prisma.studentprofile.findMany({
+            where: {
+                userId,
+            },
+        });
+
+        console.log("STUDENT: ", student);
+        return NextResponse.json(student);
 
     } catch (error) {
-    console.log("ERROR GETTING TASKS: ", error);
-    return NextResponse.json({ error: "Error updating event", status: 500 });
-  }
+        console.log("ERROR GETTING TASKS: ", error);
+        return NextResponse.json({ error: "Error updating event", status: 500 });
+    }
 }
 
 //update function
-export async function PUT(req: Request){
+export async function PUT(req: Request) {
     try {
-        
+
     } catch (error) {
         console.log("Error Updating profile: ", error);
         return NextResponse.json({ error: "Error Updating profile", status: 500 });
-        
+
     }
 }
 
 //delete function
-export async function Delete(req: Request){
+export async function Delete(req: Request) {
     try {
-        
+
     } catch (error) {
         console.log("Error Deleting profile: ", error);
         return NextResponse.json({ error: "Error Deleting profile", status: 500 });
-        
+
     }
 }

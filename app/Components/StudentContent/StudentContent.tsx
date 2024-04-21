@@ -28,6 +28,7 @@ interface Props {
   homeAddress: string;
   statusIsActive: boolean;
   statusIsInactive: boolean;
+  remarks: string | null;
   userId: string;
 }
 
@@ -55,6 +56,7 @@ function StudentProfileContent({
   email,
   homeAddress,
   statusIsActive,
+  remarks,
   statusIsInactive,
   userId,
 }: Props) {

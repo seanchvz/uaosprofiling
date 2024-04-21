@@ -22,33 +22,34 @@ model events {
 }
 
 model studentprofile {
-  id                        Int     @id @default(autoincrement())
-  firstName                 String  @unique(map: "StudentProfile_firstName_key")
-  middleName                String
-  lastName                  String
-  contactNumber             String
-  birthDate                 String
-  nationality               String
-  weight                    String?
-  height                    String?
-  bloodType                 String? 
-  academicYear              String
+  id                     Int      @id @default(autoincrement())
+  firstName              String   @unique(map: "StudentProfile_firstName_key")
+  middleName             String
+  lastName               String
+  contactNumber          String
+  birthDate              String
+  nationality            String
+  weight                 String?
+  height                 String?
+  bloodType              String?
+  academicYear           String
   isMale                 Boolean  @default(false)
   isFemale               Boolean  @default(false)
-  yrStartedPlaying          String
-  mothersName               String?
-  fathersName               String?
-  guardiansName             String?
-  courseAndYear             String
-  emergencyContactPerson    String
-  emergencyContactNumber    String
-  email                     String  @unique(map: "StudentProfile_email_key")
-  homeAddress               String
-  statusIsActive            Boolean  @default(false)
-  statusIsInactive          Boolean  @default(false)
-  CreatedAt                 DateTime @default(now())
-  UpdatedAt                 DateTime @updatedAt
-  userId                    String
+  yrStartedPlaying       String
+  mothersName            String?
+  fathersName            String?
+  guardiansName          String?
+  courseAndYear          String
+  emergencyContactPerson String
+  emergencyContactNumber String
+  email                  String   @unique(map: "StudentProfile_email_key")
+  homeAddress            String
+  statusIsActive         Boolean  @default(false)
+  statusIsInactive       Boolean  @default(false)
+  remarks                String?
+  CreatedAt              DateTime @default(now())
+  UpdatedAt              DateTime @updatedAt
+  userId                 String
 }
 
 model coachprofile {
@@ -71,6 +72,7 @@ model coachprofile {
   statusIsParttime       Boolean  @default(false)
   resumeUrl              String?
   email                  String
+  remarks                String?
   CreatedAt              DateTime @default(now())
   UpdatedAt              DateTime @updatedAt
   userId                 String

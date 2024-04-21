@@ -225,19 +225,17 @@ function CreateContent(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="eventDetails" className="block">
-            Event Details
-          </label>
-          <textarea
-            id="eventDetails"
-            value={eventDetails}
-            name="eventDetails"
-            onChange={() => handleChange("eventDetails")}
-            placeholder="Enter event details"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-            rows={2}
-          ></textarea>
-        </div>
+      <label htmlFor="eventDetails" className="block">Event Details</label>
+      <textarea
+        id="eventDetails"
+        value={eventDetails}
+        name="eventDetails"
+        onChange={handleChange("eventDetails")}
+        placeholder="Enter event details"
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+        rows={4}
+      ></textarea>
+    </div>
         <div className="input-control flex justify-between">
           <label
             htmlFor="isExternal"

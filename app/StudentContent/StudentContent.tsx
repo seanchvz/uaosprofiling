@@ -29,6 +29,7 @@ interface Props {
   homeAddress: string;
   statusIsActive: boolean;
   statusIsInactive: boolean;
+  remarks: string | null;
   userId: string;
 }
 function StudentProfileContent({
@@ -56,6 +57,7 @@ function StudentProfileContent({
   homeAddress,
   statusIsActive,
   statusIsInactive,
+  remarks,
   userId,
 }: Props) {
   console.log(StudentProfileContent);
@@ -79,6 +81,7 @@ function StudentProfileContent({
       </p>
       <p className="ContactNumber"> Contact Number: {contactNumber}</p>
       <p className="AcademicYear"> Academic Year: {academicYear}</p>
+      <p className="AcademicYear"> Remarks: {remarks}</p>
       <div className="event-footer">
   {statusIsActive ? (
     <button className="statusIsActive">Active</button>
