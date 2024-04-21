@@ -17,6 +17,7 @@ function EventModal({children}:Props) {
   )
 }
 const ModalStyled = styled.div`
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -27,37 +28,41 @@ const ModalStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+}
 
-  .modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.45);
-    filter: blur(4px);
-  }
+.modal-overlay {
+  position: fixed; // Changed from absolute to fixed
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 10; // Ensure this is below .modal-content
+}
 
-  .modal-content {
-    margin: 0 1rem;
-    padding: 2rem;
-    position: relative;
-    max-width: 630px;
-    width: 100%;
-    z-index: 100;
-    border-radius: 1rem;
-    background-color: ${(props) => props.theme.colorBg2};
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
-    border-radius: ${(props) => props.theme.borderRadiusMd2};
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-  
-    @media screen and (max-width: 450px) {
-      font-size: 90%;
-    }
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 1500px;
+  width: 40%;
+  max-height: 90vh; 
+  padding: 2rem;
+  margin-bottom: 2rem; 
+  overflow-y: auto;
+  z-index: 20; 
+
+  background-color: ${(props) => props.theme.colorBg2};
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+
+  @media screen and (max-width: 450px) {
+    font-size: 90%;
+    width: 95%; // Increase width for small screens to utilize space better
+    padding: 1rem; // Adjust padding for small screens
   }
-  }
+}
 `;
 
 export default EventModal
