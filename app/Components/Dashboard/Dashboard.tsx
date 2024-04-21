@@ -15,45 +15,54 @@ interface Props {
 function Dashboard({ name, events }: Props) {
   const { theme, isLoading, openModal, modal, allEvents } = useGlobalState();
   const [modalState, setModalState] = useState("create");
-  const [selectedEvent, setSelectedEvent] = useState()
+  const [selectedEvent, setSelectedEvent] = useState();
+
+  // Open modal specifically for creating a new event
+  const handleOpenCreateModal = () => {
+    setModalState('create');
+    setSelectedEvent(undefined); // Ensure no event data is passed into the creation form
+    openModal();
+  };
 
   return (
     <DashboardStyled theme={theme}>
-      {modal && <EventModal><CreateContent submitState={modalState} event={selectedEvent} /></EventModal>}
+      {modal && (
+        <EventModal>
+          <CreateContent submitState={modalState} event={selectedEvent} />
+        </EventModal>
+      )}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
           {name}
         </h1>
-        <button className="create-item" onClick={openModal}>
+        <button className="create-item" onClick={handleOpenCreateModal}>
           {plus}
           Add New Event
         </button>
       </div>
 
       <div className="inventoryitem grid mt-5">
-        {events &&
-          events.map((event) => (
-            <EventItem
-              key={event.id}
-              name={event.name}
-              handleEdit={() => {
-                setModalState('edit')
-                openModal()
-                setSelectedEvent(event)
-              }}
-              startDate={event.startDate}
-              endDate={event.endDate}
-              Sport={event.Sport}
-              isExternal={event.isExternal}
-              id={event.id}
-            />
-          ))}
+        {events.map((event) => (
+          <EventItem
+            key={event.id}
+            name={event.name}
+            handleEdit={() => {
+              setModalState('edit');
+              setSelectedEvent(event); // Pass the selected event to be edited
+              openModal();
+            }}
+            startDate={event.startDate}
+            endDate={event.endDate}
+            Sport={event.Sport}
+            isExternal={event.isExternal}
+            id={event.id}
+          />
+        ))}
       </div>
-
-      {/* <CreateContent /> */}
     </DashboardStyled>
   );
 }
+
 
 const DashboardStyled = styled.main`
   padding: 2rem;

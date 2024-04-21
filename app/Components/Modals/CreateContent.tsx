@@ -14,46 +14,52 @@ interface Props {
 
 // event: object || null
 // submitState: string 'create' | 'edit'
-// OR true ||
+// OR false ||
 // AND true &&
 function CreateContent(props: Props) {
   const { event, submitState } = props;
-  const [name, setName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [Sport, setSport] = useState("");
-  const [eventDetails, setEventDetails] = useState("");
-  const [isExternal, setIsExternal] = useState("");
-  const [isInternal, setIsInternal] = useState("");
-  const [userId, setUserId] = useState(""); //  userId is obtained from authentication
-  const [id, eventId] = useState("");
+  const [name, setName] = useState(event ? event.name : "");
+  const [startDate, setStartDate] = useState(event ? event.startDate : "");
+  const [endDate, setEndDate] = useState(event ? event.endDate : "");
+  const [Sport, setSport] = useState(event ? event.Sport : "");
+  const [eventDetails, setEventDetails] = useState(
+    event ? event.eventDetails : ""
+  );
+  const [isExternal, setIsExternal] = useState(
+    event ? event.isExternal : false
+  );
+  const [isInternal, setIsInternal] = useState(
+    event ? event.isInternal : false
+  );
+  const [userId, setUserId] = useState(event ? event.userId : ""); // userId is obtained from authentication
+  const [id, setId] = useState(event ? event.id : "");
   const { allEvents, closeModal } = useGlobalState();
 
-  const handleChange = (name: string) => (e: any) => {
-    switch (name) {
-      case "name":
-        setName(e.target.value);
-        break;
-      case "startDate":
-        setStartDate(e.target.value);
-        break;
-      case "endDate":
-        setEndDate(e.target.value);
-        break;
-      case "Sport":
-        setSport(e.target.value); // Convert to number if necessary
-        break;
-      case "eventDetails":
-        setEventDetails(e.target.value);
-        break;
-      case "isExternal":
-        setIsExternal(e.target.checked); // Convert to boolean if necessary
-        break;
-      case "isInternal":
-        setIsInternal(e.target.checked); // Convert to boolean if necessary
-        break;
-      default:
-        break;
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      // For checkboxes, use checked value
+      if (name === "isExternal") setIsExternal(checked);
+      if (name === "isInternal") setIsInternal(checked);
+    } else {
+      // For other inputs, use value
+      switch (name) {
+        case "name":
+          setName(value);
+          break;
+        case "startDate":
+          setStartDate(value);
+          break;
+        case "endDate":
+          setEndDate(value);
+          break;
+        case "Sport":
+          setSport(value);
+          break;
+        case "eventDetails":
+          setEventDetails(value);
+          break;
+      }
     }
   };
 
@@ -62,8 +68,12 @@ function CreateContent(props: Props) {
       setName(event.name);
 
       // Format dates to YYYY-MM-DD for the date input fields
-      const formattedStartDate = new Date(event.startDate).toISOString().split('T')[0];
-      const formattedEndDate = new Date(event.endDate).toISOString().split('T')[0];
+      const formattedStartDate = new Date(event.startDate)
+        .toISOString()
+        .split("T")[0];
+      const formattedEndDate = new Date(event.endDate)
+        .toISOString()
+        .split("T")[0];
 
       setStartDate(formattedStartDate);
       setEndDate(formattedEndDate);
@@ -80,6 +90,7 @@ function CreateContent(props: Props) {
     e.preventDefault();
 
     const event = {
+      id,
       name,
       startDate,
       endDate,
@@ -87,25 +98,34 @@ function CreateContent(props: Props) {
       eventDetails,
       isExternal,
       isInternal,
-      userId,
-      id,
+      userId, // Assuming you fetch this from some auth context or similar
     };
+
     //determine if mag create ng new event or mag update
-    if (submitState === "edit" && event?.id) {
+    if (submitState === "edit") {
+      // API call to update the event
       try {
-        const res = await axios.put(`/api/events/${event.id}`, FormData);
+        const response = await axios.patch(`/api/events/${event.id}`, event);
         toast.success("Event updated successfully!");
+        // Refresh events list or handle state update
       } catch (error) {
-        toast.error("An error occurred while updating the event.");
+        console.error("Failed to update the event:", error);
+        toast.error("Error updating event");
       }
     } else {
+      // API call to create a new event
       try {
-        const res = await axios.post("/api/events", FormData);
+        const response = await axios.post("/api/events", event);
         toast.success("Event created successfully!");
+        allEvents();
+        closeModal();
       } catch (error) {
-        toast.error("An error occurred while creating the event.");
+        console.error("Failed to create the event:", error);
+        toast.error("Error creating event");
       }
     }
+    // Optionally close the modal after operation
+    closeModal();
   };
   //handleEditFunction
   const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -141,32 +161,12 @@ function CreateContent(props: Props) {
     }
   };
 
-  /* try {
-      const res = await axios.post("/api/events", event);
-
-      if (res.data.error) {
-        toast.error(res.data.error);
-      }
-
-      if (!res.data.error) {
-        toast.success("Event created successfully.");
-        allEvents();
-        closeModal();
-      }
-    } catch (error) {
-      toast.error("Something went wrong.");
-      console.log(error);
-    } */
-
   return (
     <CreateContentStyled onSubmit={handleSubmit} className="mx-auto max-w-lg">
       {" "}
-      {/* Center the form and set max width */}
       <div className="mb-8">
         {" "}
-        {/* Add margin-bottom */}
         <h1 className="text-4xl font-bold mb-4">Create an Event</h1>{" "}
-        {/* Add margin-bottom */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="input-control">
@@ -176,7 +176,7 @@ function CreateContent(props: Props) {
             id="name"
             value={name}
             name="name"
-            onChange={() => handleChange("name")}
+            onChange={handleChange}
             placeholder="Enter event name"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
@@ -192,7 +192,7 @@ function CreateContent(props: Props) {
               id="startDate"
               value={startDate}
               name="startDate"
-              onChange={() => handleChange("startDate")}
+              onChange={handleChange}
               className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
             />
           </div>
@@ -205,7 +205,7 @@ function CreateContent(props: Props) {
               id="endDate"
               value={endDate}
               name="endDate"
-              onChange={() => handleChange("endDate")}
+              onChange={handleChange}
               className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
             />
           </div>
@@ -219,35 +219,37 @@ function CreateContent(props: Props) {
             id="Sport"
             value={Sport}
             name="Sport"
-            onChange={() => handleChange("Sport")}
+            onChange={handleChange}
             placeholder="Enter sport"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
         <div className="input-control">
-      <label htmlFor="eventDetails" className="block">Event Details</label>
-      <textarea
-        id="eventDetails"
-        value={eventDetails}
-        name="eventDetails"
-        onChange={handleChange("eventDetails")}
-        placeholder="Enter event details"
-        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-        rows={4}
-      ></textarea>
-    </div>
+          <label htmlFor="eventDetails" className="block">
+            Event Details
+          </label>
+          <textarea
+            id="eventDetails"
+            value={eventDetails}
+            name="eventDetails"
+            onChange={handleChange}
+            placeholder="Enter event details"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            rows={4}
+          ></textarea>
+        </div>
         <div className="input-control flex justify-between">
           <label
             htmlFor="isExternal"
             className="flex items-center cursor-pointer"
           >
             <span className="mr-2 text-white">Is External</span>{" "}
-            {/* Added text-white class */}
             <input
               id="isExternal"
               type="checkbox"
               checked={isExternal}
-              onChange={() => handleChange("isExternal")}
+              onChange={handleChange}
+              name="isExternal"
               className="hidden"
             />
             <span
@@ -270,12 +272,12 @@ function CreateContent(props: Props) {
             className="flex items-center cursor-pointer"
           >
             <span className="mr-2 text-white">Is Internal</span>{" "}
-            {/* Added text-white class */}
             <input
               id="isInternal"
               type="checkbox"
               checked={isInternal}
-              onChange={() => handleChange("isInternal")}
+              onChange={handleChange}
+              name="isInternal"
               className="hidden"
             />
             <span
@@ -299,8 +301,7 @@ function CreateContent(props: Props) {
           type="submit"
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
         >
-          {add}
-          Create Event
+          {submitState === "edit" ? "Update Event" : "Create Event"}
         </button>
       </div>
     </CreateContentStyled>
@@ -395,3 +396,6 @@ const CreateContentStyled = styled.form`
 `;
 
 export default CreateContent;
+function fetchAllInventoryItems() {
+  throw new Error("Function not implemented.");
+}

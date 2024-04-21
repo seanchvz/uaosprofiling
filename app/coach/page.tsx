@@ -68,8 +68,8 @@ function Page({ name, coachprofile }: Props) {
               statusIsParttime={coachProfile.statusIsParttime}
               resumeUrl={coachProfile.resumeUrl}
               email={coachProfile.email}
-              id={coachProfile.id}
-            />
+              id={coachProfile.id} 
+              remarks={coachProfile.remarks}            />
           ))}
       </table>
     </CoachStyled>
