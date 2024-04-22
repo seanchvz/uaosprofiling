@@ -6,7 +6,7 @@ import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
 import { InventoryItemService } from "./lib/InventoryItemService";
-import {EventsService} from "./lib/EventsService";
+import { EventsService } from "./lib/EventsService";
 import { CoachProfileService } from "./lib/CoachProfileService";
 import { StudentProfileService } from "./lib/StudentProfileService";
 import { student } from "../utils/Icons";
@@ -25,19 +25,15 @@ export const GlobalProvider = ({ children }) => {
   const [selectedTheme, setSelectedTheme] = useState(0);
   const theme = themes[selectedTheme];
   const [isLoading, setIsLoading] = useState(false);
-  const [modal, setModal] = useState(false); 
+  const [modal, setModal] = useState(false);
 
-  const { InventoryItem, fetchAllInventoryItems } =
-    InventoryItemService({});
+  const { InventoryItem, fetchAllInventoryItems } = InventoryItemService({});
 
-  const { events, allEvents } =
-    EventsService({ });
+  const { events, allEvents } = EventsService({});
 
-  const {coachprofile, fetchAllCoachProfile}=
-    CoachProfileService({});
+  const { coachprofile, fetchAllCoachProfile } = CoachProfileService({});
 
-    const {studentprofile, fetchAllStudentProfile} = 
-    StudentProfileService({});
+  const { studentprofile, fetchAllStudentProfile } = StudentProfileService({});
 
   /**
    * Opens the modal.
@@ -69,6 +65,20 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+  const patchEvent = async (id, updatedEventData) => {
+    try {
+      const res = await axios.patch(`/api/events/${id}`, updatedEventData);
+
+      const updatedEvent = res.data;
+      allEvents();
+      return updatedEvent;
+    } catch (error) {
+      console.error(error);
+      // Optionally, handle error here or re-throw to let the caller handle it
+      throw new Error("Failed to update event");
+    }
+  };
+
   /**
    * Deletes an inventory item by its ID.
    * @param {string} id - The ID of the inventory item to delete.
@@ -90,7 +100,7 @@ export const GlobalProvider = ({ children }) => {
    */
   const deleteCoachProfile = async (id) => {
     try {
-      const res = await axios.delete(`/api/coachProfiling/${id}`);
+      const res = await axios.delete(`/api/coachProfiling${id}`);
       toast.success("Coach Profile Deleted");
       fetchAllCoachProfile();
     } catch (error) {
@@ -99,7 +109,23 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  
+  const patchCoachProfile = async (id, updatedCoachProfile) => {
+    try {
+      const res = await axios.patch(
+        `/api/coachProfiling${id}`,
+        updatedCoachProfile
+      );
+
+      const updatedEvent = res.data;
+      fetchAllCoachProfile();
+      return updatedEvent;
+    } catch (error) {
+      console.error(error);
+      // Optionally, handle error here or re-throw to let the caller handle it
+      throw new Error("Failed to update profile");
+    }
+  };
+
   const deleteStudentProfile = async (id) => {
     try {
       const res = await axios.delete(`/api/studentProfiling/${id}`); // delete lang according kung unsay naa sa ID
@@ -112,23 +138,12 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  const UpdateCoachProfile = async (id) => {
-    try {
-      const res = await axios.patch(`/api/coachProfiling/${id}`); // delete lang according kung unsay naa sa ID
-      toast.success("Coach Profile Updated");
-
-      fetchAllCoachProfileProfile();
-    } catch (error) {
-      console.log(error);
-      toast.error("Something Went Wrong");
-    }
-  };
   //Filtering
   // const isExternalEvents = events.filter((event) => event.isExternal === true);
   // console.log(isExternalEvents);
   React.useEffect(() => {
     if (user) allEvents();
-  }, [user]); 
+  }, [user]);
 
   return (
     <GlobalContext.Provider
@@ -146,12 +161,12 @@ export const GlobalProvider = ({ children }) => {
         allEvents,
         coachprofile,
         studentprofile,
+        patchEvent,
         fetchAllCoachProfile,
         deleteCoachProfile,
         fetchAllStudentProfile,
         deleteStudentProfile,
-        UpdateCoachProfile,
-        
+        patchCoachProfile,
         // isExternalEvents,
       }}
     >

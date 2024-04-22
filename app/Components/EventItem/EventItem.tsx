@@ -1,63 +1,73 @@
-  import { useGlobalState } from "@/app/context/globalProvider";
-  import { edit, trash } from "@/app/utils/Icons";
-  import { isExternal } from "node:util/types";
-  import React from "react";
-  import styled from "styled-components";
-  
-  interface Props {
-    // event: any;
-    name: string;
-    startDate: string;
-    endDate: string;
-    Sport: string;
-    isExternal: boolean;
-    id: string;
-    handleEdit: () => void;
-  }
-  //added handleEdit as a prop but for now it doesnt return anything  
-    function EventItem({ name, startDate, handleEdit, endDate, Sport, isExternal, id }: Props): React.JSX.Element {
-      const { theme, deleteEvent } = useGlobalState();
-      const options: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      };
+import { useGlobalState } from "@/app/context/globalProvider";
+import { edit, trash } from "@/app/utils/Icons";
+import { isExternal } from "node:util/types";
+import React from "react";
+import styled from "styled-components";
 
-        // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
-        return (
-          <EventItemStyled theme={theme}>
-            <h1> {name}</h1>
-            <p className="sport"> {Sport}</p>
-            <p className="date">
-              Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
-            </p>
-            <p className="dateend">
-              {" "}
-              End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
-            </p>
+interface Props {
+  // event: any;
+  name: string;
+  startDate: string;
+  endDate: string;
+  Sport: string;
+  isExternal: boolean;
+  id: string;
+  handleEdit: () => void;
+}
+//added handleEdit as a prop but for now it doesnt return anything
+function EventItem({
+  name,
+  startDate,
+  handleEdit,
+  endDate,
+  Sport,
+  isExternal,
+  id,
+}: Props): React.JSX.Element {
+  const { theme, deleteEvent } = useGlobalState();
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
 
-            <div className="event-footer">
-              {isExternal ? (
-                <button className="isExternal">External</button>
-              ) : (
-                <button className="isInternal">Internal</button>
-              )}
+  // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
+  return (
+    <EventItemStyled theme={theme}>
+      <h1> {name}</h1>
+      <p className="sport"> {Sport}</p>
+      <p className="date">
+        Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
+      </p>
+      <p className="dateend">
+        {" "}
+        End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
+      </p>
 
-              <button className="edit" onClick={handleEdit}>{edit}</button>
-              <button
-                className="delete"
-                onClick={() => {
-                  deleteEvent(id);
-                } }
-              >
-                {trash}
-              </button>
-              {/* <button className="completed">External</button> */}
-            </div>
-          </EventItemStyled>
-        );
-      }
-    const EventItemStyled = styled.div`
+      <div className="event-footer">
+        {isExternal ? (
+          <button className="isExternal">External</button>
+        ) : (
+          <button className="isInternal">Internal</button>
+        )}
+
+        <button className="edit" onClick={handleEdit}>
+          {edit}
+        </button>
+        <button
+          className="delete"
+          onClick={() => {
+            deleteEvent(id);
+          }}
+        >
+          {trash}
+        </button>
+        {/* <button className="completed">External</button> */}
+      </div>
+    </EventItemStyled>
+  );
+}
+const EventItemStyled = styled.div`
     padding: 1.2rem 1rem;
     border-radius: 1rem;
     background-color: ${(props) => props.theme.borderColor2};
@@ -122,5 +132,4 @@
     }
   `;
 
-    export default EventItem;
-
+export default EventItem;

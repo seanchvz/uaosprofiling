@@ -77,7 +77,6 @@ function CreateContent(props: Props) {
 
       setStartDate(formattedStartDate);
       setEndDate(formattedEndDate);
-
       setSport(event.Sport);
       setEventDetails(event.eventDetails);
       setIsExternal(event.isExternal);
@@ -98,7 +97,7 @@ function CreateContent(props: Props) {
       eventDetails,
       isExternal,
       isInternal,
-      userId, // Assuming you fetch this from some auth context or similar
+      userId,
     };
 
     //determine if mag create ng new event or mag update
@@ -127,46 +126,46 @@ function CreateContent(props: Props) {
     // Optionally close the modal after operation
     closeModal();
   };
-  //handleEditFunction
-  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.preventDefault();
+  // //handleEditFunction
+  // const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   e.preventDefault();
 
-    const event = {
-      name,
-      startDate,
-      endDate,
-      Sport,
-      eventDetails,
-      isExternal,
-      isInternal,
-      userId,
-    };
+  //   const event = {
+  //     name,
+  //     startDate,
+  //     endDate,
+  //     Sport,
+  //     eventDetails,
+  //     isExternal,
+  //     isInternal,
+  //     userId,
+  //   };
 
-    //try and catch for the editing
-    try {
-      const eventId = "existing-event-id"; // id of the event thats being edited
-      const res = await axios.put(`/api/events/${eventId}`, event);
+  //   //try and catch for the editing
+  //   try {
+  //     const eventId = "existing-event-id"; // id of the event thats being edited
+  //     const res = await axios.patch(`/api/events/${eventId}`, event);
 
-      if (res.data.error) {
-        toast.error(res.data.error);
-      } else {
-        toast.success("Event updated successfully.");
-        allEvents(); // fetches all events and updates the state
-        closeModal();
-      }
-    } catch (error) {
-      toast.error("Something went wrong during event update.");
-      console.log(error);
-    }
-  };
+  //     if (res.data.error) {
+  //       toast.error(res.data.error);
+  //     } else {
+  //       toast.success("Event updated successfully.");
+  //       allEvents(); // fetches all events and updates the state
+  //       closeModal();
+  //     }
+  //   } catch (error) {
+  //     toast.error("Something went wrong during event update.");
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <CreateContentStyled onSubmit={handleSubmit} className="mx-auto max-w-lg">
       {" "}
       <div className="mb-8">
         {" "}
-        <h1 className="text-4xl font-bold mb-4">Create an Event</h1>{" "}
+        <h1 className="text-4xl font-bold mb-4">Event Details</h1>{" "}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="input-control">

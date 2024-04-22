@@ -19,7 +19,7 @@ function Dashboard({ name, events }: Props) {
 
   // Open modal specifically for creating a new event
   const handleOpenCreateModal = () => {
-    setModalState('create');
+    setModalState("create");
     setSelectedEvent(undefined); // Ensure no event data is passed into the creation form
     openModal();
   };
@@ -47,7 +47,7 @@ function Dashboard({ name, events }: Props) {
             key={event.id}
             name={event.name}
             handleEdit={() => {
-              setModalState('edit');
+              setModalState("edit");
               setSelectedEvent(event); // Pass the selected event to be edited
               openModal();
             }}
@@ -62,7 +62,6 @@ function Dashboard({ name, events }: Props) {
     </DashboardStyled>
   );
 }
-
 
 const DashboardStyled = styled.main`
   padding: 2rem;

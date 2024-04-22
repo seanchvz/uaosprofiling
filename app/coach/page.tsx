@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { plus } from "../utils/Icons";
 import { useGlobalState } from "../context/globalProvider";
-import CoachProfileContent from "../CoachContent/CoachContent";
 import CreateCoachProfile from "../Components/Modals/CreateCoachProfile";
 import CoachModal from "../Components/Modals/CoachModal";
+import CoachContent from "../CoachContent/CoachContent";
 
 interface Props {
   name: string;
@@ -22,56 +22,72 @@ interface Props {
 function Page({ name, coachprofile }: Props) {
   const { theme, isLoading, fetchAllCoachProfile, openModal, modal } =
     useGlobalState();
+  const [modalState, setModalState] = useState("create");
+  const [selectedCoachProfile, setSelectedCoachProfile] = useState();
 
-  useEffect(() => {
-    console.log("Fetch all coach profile");
-    fetchAllCoachProfile();
-  }, []);
+  // Open modal specifically for creating a new event
+  const handleOpenCreateModal = () => {
+    setModalState("create");
+    setSelectedCoachProfile(undefined); // Ensure no event data is passed into the creation form
+    openModal();
+  };
+
+  // useEffect(() => {
+  //   console.log("Fetch all coach profile");
+  //   fetchAllCoachProfile();
+  // }, []);
 
   return (
-    // <div>
-    //   {isLoading ? "true" : "false"}
-
     <CoachStyled theme={theme}>
-      {modal && <CoachModal content={<CreateCoachProfile />} />}
+      {modal && (
+        <CoachModal>
+          <CreateCoachProfile
+            submitState={modalState} // Fix: Cast modalState to "create" | "edit"
+            coachProfile={selectedCoachProfile}
+          />
+        </CoachModal>
+      )}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
           {name}
         </h1>
-        <button className="create-item" onClick={openModal}>
+        <button className="create-item" onClick={handleOpenCreateModal}>
           {plus}
           Add New Coach
         </button>
       </div>
-
-      <table className="inventoryitem grid mt-5">
-        {coachprofile &&
-          Array.isArray(coachprofile) &&
-          coachprofile.map((coachProfile) => (
-            <CoachProfileContent
-              key={coachProfile.id}
-              name={coachProfile.name}
-              contactNumber={coachProfile.contactNumber}
-              sport={coachProfile.sport}
-              permanentTeam={coachProfile.permanentTeam}
-              isMale={coachProfile.isMale}
-              isFemale={coachProfile.isFemale}
-              emergencyContact={coachProfile.emergencyContact}
-              emergencyContactPerson={coachProfile.emergencyContactPerson}
-              birthDate={coachProfile.birthDate}
-              nationality={coachProfile.nationality}
-              weight={coachProfile.weight}
-              height={coachProfile.height}
-              bloodType={coachProfile.bloodType}
-              academicYear={coachProfile.academicYear}
-              statusIsFulltime={coachProfile.statusIsFulltime}
-              statusIsParttime={coachProfile.statusIsParttime}
-              resumeUrl={coachProfile.resumeUrl}
-              email={coachProfile.email}
-              id={coachProfile.id} 
-              remarks={coachProfile.remarks}            />
-          ))}
-      </table>
+      <div className="inventoryitem grid mt-5">
+        {coachprofile.map((coachProfile) => (
+          <CoachContent
+            key={coachProfile.id}
+            name={coachProfile.name}
+            contactNumber={coachProfile.contactNumber}
+            sport={coachProfile.sport}
+            permanentTeam={coachProfile.permanentTeam}
+            isMale={coachProfile.isMale}
+            isFemale={coachProfile.isFemale}
+            emergencyContact={coachProfile.emergencyContact}
+            emergencyContactPerson={coachProfile.emergencyContactPerson}
+            birthDate={coachProfile.birthDate}
+            nationality={coachProfile.nationality}
+            weight={coachProfile.weight}
+            height={coachProfile.height}
+            bloodType={coachProfile.bloodType}
+            academicYear={coachProfile.academicYear}
+            statusIsFulltime={coachProfile.statusIsFulltime}
+            statusIsParttime={coachProfile.statusIsParttime}
+            resumeUrl={coachProfile.resumeUrl}
+            email={coachProfile.email}
+            id={coachProfile.id}
+            remarks={coachProfile.remarks}
+            handleEdit={() => {
+              setModalState("edit");
+              setSelectedCoachProfile(coachProfile); // Pass the selected coach to be edited
+              openModal();
+            }}
+          />
+        ))}
+      </div>
     </CoachStyled>
     // </div>
   );

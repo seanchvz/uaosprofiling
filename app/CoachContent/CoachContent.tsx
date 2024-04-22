@@ -1,10 +1,8 @@
-"use client"
-import React, { useState } from 'react'
-import { useGlobalState } from '../context/globalProvider';
-import styled from 'styled-components';
-import { edit, trash } from '../utils/Icons';
-import UpdateCoachProfile from '../Components/Modals/UpdateCoachProfile';
-import UpdateCoachModal from '../Components/Modals/UpdateCoachModal';
+"use client";
+import React from "react";
+import { useGlobalState } from "../context/globalProvider";
+import styled from "styled-components";
+import { edit, trash } from "../utils/Icons";
 /**
  * Props for the CoachContent component.
  */
@@ -29,34 +27,54 @@ interface Props {
   email: string;
   remarks: string;
   id: string;
+  handleEdit: () => void;
+
   // inventory: any;
 }
 
-function CoachProfileContent({ name, contactNumber, sport, permanentTeam, remarks, isMale, isFemale,emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email, id}:Props) {
-  // console.log(inventory)
-  const {theme, deleteCoachProfile} = useGlobalState();
-  const {openModal, modal} = useGlobalState();
+function CoachContent({
+  name,
+  contactNumber,
+  sport,
+  permanentTeam,
+  remarks,
+  isMale,
+  isFemale,
+  emergencyContact,
+  emergencyContactPerson,
+  birthDate,
+  nationality,
+  weight,
+  height,
+  bloodType,
+  academicYear,
+  statusIsFulltime,
+  statusIsParttime,
+  resumeUrl,
+  email,
+  id,
+  handleEdit,
+}: Props): React.JSX.Element {
+  const { theme, deleteCoachProfile } = useGlobalState();
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
   };
-  
 
   // Card Contents
   return (
     <CoachContentStyled theme={theme}>
-      {modal && <UpdateCoachModal content={<UpdateCoachProfile name={name} contactNumber={contactNumber} sport={sport} permanentTeam={permanentTeam} isMale={false} isFemale={false} emergencyContact={''} emergencyContactPerson={''} birthDate={''} nationality={''} weight={0} height={0} bloodType={''} academicYear={''} statusIsFulltime={false} statusIsParttime={false} resumeUrl={''} email={email} id={''} />} />}
       <h1>{name}</h1>
       <p className="sport">Sport: {sport}</p>
-      <p className='sport'>Permanent Team: {permanentTeam}</p>
-      <p className='sport'> Contact Number: {contactNumber}</p>
-      <p className='sport'> Academic Year: {academicYear}</p>
-      <p className='sport'> Remarks: {remarks}</p>
+      <p className="sport">Permanent Team: {permanentTeam}</p>
+      <p className="sport"> Contact Number: {contactNumber}</p>
+      <p className="sport"> Academic Year: {academicYear}</p>
+      <p className="sport"> Remarks: {remarks}</p>
+      <p className="date">
+        Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
+      </p>
 
-
-  
-      
       <div className="event-footer">
         {statusIsFulltime ? (
           <button className="isExternal">Full Time</button>
@@ -64,15 +82,10 @@ function CoachProfileContent({ name, contactNumber, sport, permanentTeam, remark
           <button className="isInternal">Part Time</button>
         )}
 
-        {/* button to update coach */}
-        <button 
-        className="edit"
-      onClick={openModal}>
-        {edit}
-      </button>
+        <button className="edit" onClick={handleEdit}>
+          {edit}
+        </button>
 
-
-        
         <button
           className="delete"
           onClick={() => {
@@ -88,68 +101,68 @@ function CoachProfileContent({ name, contactNumber, sport, permanentTeam, remark
 }
 
 const CoachContentStyled = styled.div`
-  padding: 1.2rem 1rem;
-  border-radius: 1rem;
-  background-color: ${(props) => props.theme.borderColor2};
-  box-shadow: ${(props) => props.theme.shadow7};
-  border: 1px solid ${(props) => props.theme.borderColor2};
-  height: 25rem;
+padding: 1.2rem 1rem;
+border-radius: 1rem;
+background-color: ${(props) => props.theme.borderColor2};
+box-shadow: ${(props) => props.theme.shadow7};
+border: 1px solid ${(props) => props.theme.borderColor2};
+height: 25rem;
+display: flex;
+flex-direction: column;
+gap: 1rem;
+
+> h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem; /* Add margin to the bottom of the heading */
+}
+
+.date {
+  margin-top: auto;
+  margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
+}
+
+.dateend {
+  margin-right: auto;
+  margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
+}
+
+.event-footer {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.2rem;
 
-  > h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    i {
+      font-size: 1.5rem;
+      color: #ffffff;
+    }
   }
 
-  .date {
-    margin-top: auto;
-    margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
+  .edit {
+    margin-left: auto;
+  }
+  .isExternal,
+  .isInternal {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 2px solid ${(props) => props.theme.colorDanger};
+    border-radius: 0.8rem;
+  }
+  
+  .isInternal {
+    border-color: ${(props) => props.theme.colorGreenDark}; 
   }
 
-  .dateend {
-    margin-right: auto;
-    margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
-  }
-
-  .event-footer {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-
-    button {
-      border: none;
-      outline: none;
-      cursor: pointer;
-
-      i {
-        font-size: 1.5rem;
-        color: #ffffff;
-      }
-    }
-
-    .edit {
-      margin-left: auto;
-    }
-    .isExternal,
-    .isInternal {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      border: 2px solid ${(props) => props.theme.colorDanger};
-      border-radius: 0.8rem;
-    }
-    
-    .isInternal {
-      border-color: ${(props) => props.theme.colorGreenDark}; 
-    }
-
-  .sport {
-    background: #002b88 !important;
-    border-radius: 10px;
-    padding: 0.5rem 1rem; 
-  }
+.sport {
+  background: #002b88 !important;
+  border-radius: 10px;
+  padding: 0.5rem 1rem; 
+}
 `;
 
-export default CoachProfileContent
+export default CoachContent;

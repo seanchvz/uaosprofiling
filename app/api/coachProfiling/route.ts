@@ -8,17 +8,16 @@ import { NextResponse } from "next/server";
  * @param req - The request object.
  * @returns A JSON response containing the created coach profile or an error message.
  */
-export async function POST(req:Request) {
+export async function POST(req: Request) {
     try {
-        const {userId}=auth();
-
+        const { userId } = auth();
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
-          }
+        }
 
-          const {name, contactNumber, sport, permanentTeam, isMale, isFemale,emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email } = await req.json();
-          
-          if (!name || !contactNumber || !sport || !permanentTeam ) {
+        const { name, remarks, contactNumber, sport, permanentTeam, isMale, isFemale, emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email } = await req.json();
+
+        if (!name || !contactNumber || !sport || !permanentTeam) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
@@ -31,38 +30,41 @@ export async function POST(req:Request) {
             });
         }
         const formattedBirthDate = new Date(birthDate).toISOString(); // Parse the stockinDate value if necessary
+
         const coachProfile = await prisma.coachprofile.create({
-          data: {
-            name: name,
-            contactNumber : contactNumber,
-            sport: sport,
-            permanentTeam: permanentTeam ,
-            isMale: isMale,
-            isFemale: isFemale,
-            emergencyContact: emergencyContact,
-            emergencyContactPerson: emergencyContactPerson,
-            birthDate: formattedBirthDate,
-            nationality: nationality,
-            weight: weight, 
-            height: height, 
-            bloodType: bloodType, 
-            academicYear: academicYear, 
-            statusIsFulltime: statusIsFulltime, 
-            statusIsParttime: statusIsParttime, 
-            resumeUrl: resumeUrl, 
-            email: email,
-            userId: userId,
-          },
+            data: {
+                name: name,
+                contactNumber: contactNumber,
+                sport: sport,
+                permanentTeam: permanentTeam,
+                isMale: isMale,
+                isFemale: isFemale,
+                emergencyContact: emergencyContact,
+                emergencyContactPerson: emergencyContactPerson,
+                birthDate: formattedBirthDate,
+                nationality: nationality,
+                weight: weight,
+                height: height,
+                bloodType: bloodType,
+                academicYear: academicYear,
+                statusIsFulltime: statusIsFulltime,
+                statusIsParttime: statusIsParttime,
+                resumeUrl: resumeUrl,
+                email: email,
+                remarks: remarks,
+                userId: userId,
+            },
         });
-    return NextResponse.json(coachProfile);
-       
-        
+        console.log(coachProfile);
+        return NextResponse.json(coachProfile);
+
+
     } catch (error) {
         console.log("Error Creating Coach Profile ", error);
-        return NextResponse.json({error: "Error Creating Coach Profile", status:500});
-        
+        return NextResponse.json({ error: "Error Creating Coach Profile", status: 500 });
+
     }
-    
+
 }
 
 /**
@@ -76,7 +78,7 @@ export async function GET(req: Request) {
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
-      
+
         const coachProfile = await prisma.coachprofile.findMany({
             where: {
                 userId,
@@ -90,25 +92,37 @@ export async function GET(req: Request) {
     }
 }
 
-export async function PUT(req:Request) {
-    const {userId}=auth();
+export async function PUT(req: Request) {
+    const { userId } = auth();
     try {
-        
+
     } catch (error) {
         console.log("Error Updating Coach Proffile: ", error);
-        return NextResponse.json({error: "Error Updating Coach Proffile", status:500});
-        
+        return NextResponse.json({ error: "Error Updating Coach Proffile", status: 500 });
+
     }
-    
+
 }
 
-export async function DELETE(req:Request) {
+export async function DELETE(req: Request) {
     try {
-        
+
     } catch (error) {
         console.log("Error deleting Coach Profile: ", error);
-        return NextResponse.json({error: "Error Deleting Coach Profile", status:500});
-        
+        return NextResponse.json({ error: "Error Deleting Coach Profile", status: 500 });
+
     }
-    
+
 }
+
+export async function PATCH(req: Request) {
+    try {
+
+    } catch (error) {
+        console.log("Error Updating Profile: ", error);
+        return NextResponse.json({ error: "Error Updating Profile", status: 500 });
+
+    }
+}
+
+

@@ -1,21 +1,21 @@
-"use client"
-import React from 'react'
+"use client";
+import React from "react";
 import { useGlobalState } from "@/app/context/globalProvider";
 import styled from "styled-components";
 
-interface Props{
-    content: React.ReactNode;
+interface Props {
+  children: React.ReactNode;
 }
 
-function CoachModal({content}:Props) {
-    const {closeModal, theme}= useGlobalState();
+function CoachModal({ children }: Props) {
+  const { closeModal, theme } = useGlobalState();
 
   return (
     <ModalStyled theme={theme}>
       <div className="modal-overlay" onClick={closeModal}></div>
-      <div className="modal-content">{content}</div>
+      <div className="modal-content">{children}</div>
     </ModalStyled>
-  )
+  );
 }
 const ModalStyled = styled.div`
   position: fixed;
@@ -40,13 +40,17 @@ const ModalStyled = styled.div`
   }
 
   .modal-content {
-    margin: 0 1rem;
-    height: 800px;
-    padding: 2rem;
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     max-width: 1500px;
-    width: 100%;
-    z-index: 100;
+    width: 80%;
+    max-height: 90vh;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    overflow-y: auto;
+    z-index: 20;
 
     border-radius: 1rem;
     background-color: ${(props) => props.theme.colorBg2};
@@ -59,4 +63,4 @@ const ModalStyled = styled.div`
   }
 `;
 
-export default CoachModal
+export default CoachModal;

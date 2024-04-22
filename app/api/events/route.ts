@@ -95,4 +95,64 @@ export async function Delete(req: Request) {
     }
 }
 
-// PATCH
+
+export async function PATCH(req: Request) {
+    try {
+
+    } catch (error) {
+        console.log("Error Updating Event: ", error);
+        return NextResponse.json({ error: "Error Updating event", status: 500 });
+
+    }
+}
+
+
+
+
+// export async function PATCH(req: Request) {
+//     // Authenticate the user
+//     const { userId } = auth();
+//     if (!userId) {
+//         return NextResponse.json({ error: "Unauthorized", status: 401 });
+//     }
+
+//     try {
+//         const url = new URL(req.url);
+//         const eventId = parseInt(url.pathname.split('/').pop() || "", 10);  // Parse event ID safely
+
+//         if (isNaN(eventId)) {
+//             return NextResponse.json({ error: "Invalid event ID", status: 400 });
+//         }
+
+//         const {
+//             name,
+//             startDate,
+//             endDate,
+//             Sport,
+//             eventDetails,
+//             isExternal,
+//             isInternal
+//         } = await req.json();
+
+//         const updateData: any = {};
+//         if (name) updateData.name = name;
+//         if (startDate) updateData.startDate = new Date(startDate).toISOString();
+//         if (endDate) updateData.endDate = new Date(endDate).toISOString();
+//         if (Sport !== undefined) updateData.Sport = Sport;
+//         if (eventDetails !== undefined) updateData.eventDetails = eventDetails;
+//         if (isExternal !== undefined) updateData.isExternal = isExternal;
+//         if (isInternal !== undefined) updateData.isInternal = isInternal;
+
+//         // Perform the update
+//         const updatedEvent = await prisma.events.update({
+//             where: { id: eventId },  // Use parsed ID
+//             data: updateData
+//         });
+
+//         console.log("Updated Event: ", updatedEvent);
+//         return NextResponse.json(updatedEvent);
+//     } catch (error) {
+//         console.error("Error Updating Event: ", error);
+//         return NextResponse.json({ error: "Error updating event", status: 500 });
+//     }
+// }
