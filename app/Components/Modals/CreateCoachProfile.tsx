@@ -372,9 +372,11 @@ function CreateCoachProfile(props: Props) {
         <div className="input-control mr-4">
           <label htmlFor="weight">Weight in KG</label>
           <input
-            type="text"
+            type="number"
+            step="0.01"
             id="weight"
             name="weight"
+            value={coachProfile.weight}
             onChange={handleChange}
             placeholder="eg. 45.7"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
@@ -384,9 +386,11 @@ function CreateCoachProfile(props: Props) {
         <div className="input-control">
           <label htmlFor="height">Height in CM</label>
           <input
-            type="text"
+            type="number"
+            step="0.01"
             id="height"
             name="height"
+            value={coachProfile.height}
             onChange={handleChange}
             placeholder="eg. 156.3"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"

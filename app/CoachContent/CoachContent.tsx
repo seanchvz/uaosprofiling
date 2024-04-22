@@ -106,7 +106,7 @@ border-radius: 1rem;
 background-color: ${(props) => props.theme.borderColor2};
 box-shadow: ${(props) => props.theme.shadow7};
 border: 1px solid ${(props) => props.theme.borderColor2};
-height: 25rem;
+height: 30rem;
 display: flex;
 flex-direction: column;
 gap: 1rem;

@@ -100,7 +100,7 @@ export const GlobalProvider = ({ children }) => {
    */
   const deleteCoachProfile = async (id) => {
     try {
-      const res = await axios.delete(`/api/coachProfiling${id}`);
+      const res = await axios.delete(`/api/coachProfiling/${id}`);
       toast.success("Coach Profile Deleted");
       fetchAllCoachProfile();
     } catch (error) {
