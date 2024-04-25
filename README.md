@@ -20,4 +20,4 @@ To get a local copy up and running follow these simple steps.
 This project uses Clerk for handling user authentication. To properly configure Clerk, you will need the API key. Please reach out to the Project Leader, Sean Chavez, to obtain the necessary credentials.
 
 ### Running The application
-1. Once the dependencies are installed, you can run the application locally: ```bash npm run dev
+1. Once the dependencies are installed, you can run the application locally: npm run dev
