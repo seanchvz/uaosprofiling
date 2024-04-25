@@ -36,6 +36,8 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
 
 
+
+
 export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { userId } = await auth();

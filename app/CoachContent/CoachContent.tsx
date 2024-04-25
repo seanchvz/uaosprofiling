@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useGlobalState } from "../context/globalProvider";
 import styled from "styled-components";
 import { edit, trash } from "../utils/Icons";
@@ -166,3 +166,6 @@ gap: 1rem;
 `;
 
 export default CoachContent;
+function fetchAllCoachProfile() {
+  throw new Error("Function not implemented.");
+}

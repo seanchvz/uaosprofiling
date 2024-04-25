@@ -10,6 +10,7 @@ import { EventsService } from "./lib/EventsService";
 import { CoachProfileService } from "./lib/CoachProfileService";
 import { StudentProfileService } from "./lib/StudentProfileService";
 import { student } from "../utils/Icons";
+import { useClerk } from "@clerk/clerk-react";
 
 export const GlobalContext = createContext();
 export const GlobalUpdateContext = createContext();
@@ -67,17 +68,32 @@ export const GlobalProvider = ({ children }) => {
 
   const patchEvent = async (id, updatedEventData) => {
     try {
-      const res = await axios.patch(`/api/events/${id}`, updatedEventData);
-
-      const updatedEvent = res.data;
-      allEvents();
-      return updatedEvent;
+      const response = await axios.patch(
+        `/api/events/${id}`,
+        updatedEventData,
+        {
+          headers: {
+            Authorization: `Bearer ${session.idToken}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      allEvents(); // Refresh events data
+      return response.data; // Return updated data
     } catch (error) {
-      console.error(error);
-      // Optionally, handle error here or re-throw to let the caller handle it
-      throw new Error("Failed to update event");
+      console.error("Error Updating Event:", error);
+      toast.error(
+        "Error updating event: " +
+          (error.response?.data.error || "Unexpected error")
+      );
+      throw new Error("Failed to update event"); // Re-throw error for caller to handle if needed
     }
   };
+
+  useEffect(() => {
+    if (user) allEvents();
+  }, [user]);
 
   /**
    * Deletes an inventory item by its ID.

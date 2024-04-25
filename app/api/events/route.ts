@@ -1,9 +1,10 @@
 import prisma from "@/app/utils/connect";
 import { NextResponse } from "next/server";
+import { NextApiResponse } from 'next';
 import { auth } from "@clerk/nextjs";
 
 
-export async function POST(req: Request) {
+export async function POST(req: Request, res: NextApiResponse) {
     try {
         const { userId } = auth();
         if (!userId) {

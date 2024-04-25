@@ -11,6 +11,7 @@ interface Props {
   endDate: string;
   Sport: string;
   isExternal: boolean;
+  eventDetails: string;
   id: string;
   handleEdit: () => void;
 }
@@ -22,6 +23,7 @@ function EventItem({
   endDate,
   Sport,
   isExternal,
+  eventDetails,
   id,
 }: Props): React.JSX.Element {
   const { theme, deleteEvent } = useGlobalState();
@@ -43,6 +45,7 @@ function EventItem({
         {" "}
         End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
       </p>
+      <p className="sport">{eventDetails}</p>
 
       <div className="event-footer">
         {isExternal ? (

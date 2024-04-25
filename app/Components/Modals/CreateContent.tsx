@@ -88,11 +88,12 @@ function CreateContent(props: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Format dates to ISO string for proper server-side handling
     const event = {
       id,
       name,
-      startDate,
-      endDate,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
       Sport,
       eventDetails,
       isExternal,
@@ -100,65 +101,82 @@ function CreateContent(props: Props) {
       userId,
     };
 
-    //determine if mag create ng new event or mag update
     if (submitState === "edit") {
-      // API call to update the event
+      // handleEdit(event);
       try {
+        console.log("Sending PATCH request for event ID:", event.id);
+        console.log("Data being sent:", event);
         const response = await axios.patch(`/api/events/${event.id}`, event);
+
+        console.log("Server response:", response.data);
         toast.success("Event updated successfully!");
-        // Refresh events list or handle state update
       } catch (error) {
-        console.error("Failed to update the event:", error);
-        toast.error("Error updating event");
+        handleAxiosError(error);
       }
     } else {
-      // API call to create a new event
       try {
         const response = await axios.post("/api/events", event);
         toast.success("Event created successfully!");
         allEvents();
         closeModal();
       } catch (error) {
-        console.error("Failed to create the event:", error);
-        toast.error("Error creating event");
+        handleAxiosError(error, "creating");
       }
     }
-    // Optionally close the modal after operation
+
     closeModal();
   };
-  // //handleEditFunction
-  // const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   e.preventDefault();
 
-  //   const event = {
-  //     name,
-  //     startDate,
-  //     endDate,
-  //     Sport,
-  //     eventDetails,
-  //     isExternal,
-  //     isInternal,
-  //     userId,
-  //   };
+  function handleAxiosError(error: any, action: string = "updating") {
+    console.error(`Failed to ${action} the event:`, error);
+    if (error.response && error.response.data) {
+      console.error("Server error details:", error.response.data);
+      const errorMessage =
+        error.response.data.error || "Unexpected server error";
+      toast.error(`Error ${action} event: ${errorMessage}`);
+    } else if (error.message) {
+      console.error("Network or other error:", error.message);
+      toast.error(`Error ${action} event: ${error.message}`);
+    } else {
+      toast.error(`Error ${action} event: Unknown error`);
+    }
+  }
+  interface EventData {
+    id: string;
+    name?: string;
+    startDate?: Date;
+    endDate?: Date;
+    Sport?: string;
+    eventDetails?: string;
+    isExternal?: boolean;
+    isInternal?: boolean;
+  }
 
-  //   //try and catch for the editing
-  //   try {
-  //     const eventId = "existing-event-id"; // id of the event thats being edited
-  //     const res = await axios.patch(`/api/events/${eventId}`, event);
+  const handleEdit = async (event: EventData) => {
+    if (!event.id) {
+      toast.error("Event ID is missing");
+      return;
+    }
 
-  //     if (res.data.error) {
-  //       toast.error(res.data.error);
-  //     } else {
-  //       toast.success("Event updated successfully.");
-  //       allEvents(); // fetches all events and updates the state
-  //       closeModal();
-  //     }
-  //   } catch (error) {
-  //     toast.error("Something went wrong during event update.");
-  //     console.log(error);
-  //   }
-  // };
+    try {
+      console.log("Sending PATCH request for event ID:", event.id);
+      console.log("Data being sent:", event);
+
+      // Destructure the event to separate id from other data
+      const { id, ...updateData } = event;
+
+      const response = await axios.patch(`/api/events/${id}`, updateData);
+
+      console.log("Server response:", response.data);
+      if (response.data && response.data.error) {
+        toast.error(response.data.error);
+      } else {
+        toast.success("Event updated successfully!");
+      }
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  };
 
   return (
     <CreateContentStyled onSubmit={handleSubmit} className="mx-auto max-w-lg">
@@ -396,5 +414,8 @@ const CreateContentStyled = styled.form`
 
 export default CreateContent;
 function fetchAllInventoryItems() {
+  throw new Error("Function not implemented.");
+}
+function handleAxiosError(error: unknown) {
   throw new Error("Function not implemented.");
 }

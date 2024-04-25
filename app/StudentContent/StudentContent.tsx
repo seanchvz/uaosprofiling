@@ -70,12 +70,15 @@ function StudentProfileContent({
 
   return (
     <StudentContentStyled theme={theme}>
-     <div className="nameContainer">
-  <h1>{lastName}</h1>
-  <h2>{firstName}</h2>
-  <h2>{middleName}</h2>
-</div>
-      <p> Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}</p>
+      <div className="nameContainer">
+        <h1 style={{ fontWeight: "bold", fontSize: "1em" }}>{lastName},</h1>
+        <h2>{firstName}</h2>
+        <h2>{middleName}</h2>
+      </div>
+      <p>
+        {" "}
+        Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
+      </p>
       <p className="YearStartedPlaying">
         Year Started Playing: {yrStartedPlaying}
       </p>
@@ -83,22 +86,22 @@ function StudentProfileContent({
       <p className="AcademicYear"> Academic Year: {academicYear}</p>
       <p className="AcademicYear"> Remarks: {remarks}</p>
       <div className="event-footer">
-  {statusIsActive ? (
-    <button className="statusIsActive">Active</button>
-  ) : statusIsInactive ? (
-    <button className="statusIsInactive">Inactive</button>
-  ) : null}
+        {statusIsActive ? (
+          <button className="statusIsActive">Active</button>
+        ) : statusIsInactive ? (
+          <button className="statusIsInactive">Inactive</button>
+        ) : null}
 
-  <button className="edit">{edit}</button>
-  <button
-    className="delete"
-    onClick={() => {
-      deleteStudentProfile(id);
-    }}
-  >
-    {trash}
-  </button>
-</div>
+        <button className="edit">{edit}</button>
+        <button
+          className="delete"
+          onClick={() => {
+            deleteStudentProfile(id);
+          }}
+        >
+          {trash}
+        </button>
+      </div>
     </StudentContentStyled>
   );
 }

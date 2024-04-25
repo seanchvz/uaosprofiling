@@ -376,7 +376,7 @@ function CreateCoachProfile(props: Props) {
             step="0.01"
             id="weight"
             name="weight"
-            value={coachProfile.weight}
+            value={weight}
             onChange={handleChange}
             placeholder="eg. 45.7"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
@@ -390,7 +390,7 @@ function CreateCoachProfile(props: Props) {
             step="0.01"
             id="height"
             name="height"
-            value={coachProfile.height}
+            value={height}
             onChange={handleChange}
             placeholder="eg. 156.3"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"

@@ -32,10 +32,10 @@ function Page({ name, coachprofile }: Props) {
     openModal();
   };
 
-  // useEffect(() => {
-  //   console.log("Fetch all coach profile");
-  //   fetchAllCoachProfile();
-  // }, []);
+  useEffect(() => {
+    console.log("Fetch all coach profile");
+    fetchAllCoachProfile();
+  }, []);
 
   return (
     <CoachStyled theme={theme}>
