@@ -61,3 +61,78 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         return res.status(500).json({ error: "Error updating event", details: error.message });
     }
 }
+
+// Function to add a student to an event
+export async function addStudentToEvent(req: NextApiRequest, res: NextApiResponse) {
+    const { userId } = auth();
+    if (!userId) {
+        return NextResponse.json({ error: "Unauthorized", status: 401 });
+    }
+
+    const { eventId, studentId } = await req.json();
+
+    try {
+        const link = await prisma.studentEvent.create({
+            data: {
+                eventId: eventId,
+                studentId: studentId,
+            },
+        });
+        return NextResponse.json(link);
+    } catch (error) {
+        console.log("Error adding student to event: ", error);
+        return NextResponse.json({ error: "Error adding student to event", status: 500 });
+    }
+}
+
+// Function to remove a student from an event
+export async function removeStudentFromEvent(req: NextApiRequest, res: NextApiResponse) {
+    const { userId } = auth();
+    if (!userId) {
+        return NextResponse.json({ error: "Unauthorized", status: 401 });
+    }
+
+    const { eventId, studentId } = await req.json();
+
+    try {
+        const unlink = await prisma.studentEvent.delete({
+            where: {
+                eventId_studentId: {
+                    eventId: eventId,
+                    studentId: studentId,
+                },
+            },
+        });
+        return NextResponse.json(unlink);
+    } catch (error) {
+        console.log("Error removing student from event: ", error);
+        return NextResponse.json({ error: "Error removing student from event", status: 500 });
+    }
+}
+
+// // Function to list all students for a specific event
+// export async function getStudentsForEvent(req: NextApiRequest, res: NextApiResponse) {
+//     const { userId } = auth();
+//     if (!userId) {
+//         return NextResponse.json({ error: "Unauthorized", status: 401 });
+//     }
+
+//     const { eventId } = await req.json();
+
+//     try {
+//         const eventWithStudents = await prisma.events.findUnique({
+//             where: { id: eventId },
+//             include: {
+//                 attendees: {
+//                     include: {
+//                         studentProfile: true,
+//                     },
+//                 },
+//             },
+//         });
+//         return NextResponse.json(eventWithStudents);
+//     } catch (error) {
+//         console.log("Error getting students for event: ", error);
+//         return NextResponse.json({ error: "Error getting students for event", status: 500 });
+//     }
+// }

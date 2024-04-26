@@ -1,8 +1,9 @@
-"use client"
-import { useGlobalState } from '@/app/context/globalProvider';
-import { edit, trash } from '@/app/utils/Icons';
-import React from 'react'
-import styled from 'styled-components';
+"use client";
+import { useGlobalState } from "@/app/context/globalProvider";
+import { edit, trash } from "@/app/utils/Icons";
+import React from "react";
+import styled from "styled-components";
+
 interface Props {
   id: number;
   firstName: string;
@@ -30,9 +31,10 @@ interface Props {
   statusIsInactive: boolean;
   remarks: string | null;
   userId: string;
+  handleEdit: () => void;
 }
-
 function StudentProfileContent({
+  handleEdit,
   id,
   firstName,
   middleName,
@@ -56,103 +58,128 @@ function StudentProfileContent({
   email,
   homeAddress,
   statusIsActive,
-  remarks,
   statusIsInactive,
+  remarks,
   userId,
-}: Props) {
-    const {theme, deleteStudentProfile} = useGlobalState();
-
-    // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
+}: Props): React.JSX.Element {
+  const { theme, deleteStudentProfile } = useGlobalState();
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
 
   return (
     <StudentContentStyled theme={theme}>
-        <h1> Student </h1>
-        <p className='firstname'> {firstName}</p>
-        <p className="middleName"> {middleName}</p>
-        <p className='lastName'> {lastName}</p>
-        <div className="event-footer">
-            {isMale ? (
-            <button className="isExternal">Male</button>
-            ) : (
-            <button className="isInternal">Female</button> 
-        )}
-         
-        <button className="edit">{edit}</button>
-        <button 
-        className="delete" 
-        onClick={()=>{
-          deleteStudentProfile(id); //delete event muna since wala pa ako deleteStudent
-        }}>
-          {trash}</button>
-            {/* <button className="completed">External</button> */}
-        </div>
-       
+      <div className="nameContainer">
+        <h1>{lastName}</h1>
+        <h2>{firstName}</h2>
+        <h2>{middleName}</h2>
+      </div>
+      <p>
+        {" "}
+        Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
+      </p>
+      <p className="YearStartedPlaying">
+        Year Started Playing: {yrStartedPlaying}
+      </p>
+      <p className="ContactNumber"> Contact Number: {contactNumber}</p>
+      <p className="AcademicYear"> Academic Year: {academicYear}</p>
+      <p className="AcademicYear"> Remarks: {remarks}</p>
+      <div className="event-footer">
+        {statusIsActive ? (
+          <button className="statusIsActive">Active</button>
+        ) : statusIsInactive ? (
+          <button className="statusIsInactive">Inactive</button>
+        ) : null}
 
+        <button className="edit" onClick={handleEdit}>
+          {edit}
+        </button>
+        <button
+          className="delete"
+          onClick={() => {
+            deleteStudentProfile(id);
+          }}
+        >
+          {trash}
+        </button>
+      </div>
     </StudentContentStyled>
-  )
+  );
 }
+
 const StudentContentStyled = styled.div`
-padding: 1.2rem 1rem;
-border-radius: 1rem;
-background-color: ${(props) => props.theme.borderColor2};
-box-shadow: ${(props) => props.theme.shadow7};
-border: 1px solid ${(props) => props.theme.borderColor2};
-height: 20rem;
-display: flex;
-flex-direction: column;
-gap: 1rem;
-
-> h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem; /* Add margin to the bottom of the heading */
-}
-
-.date {
-  margin-top: auto;
-  margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
-}
-
-.dateend {
-  margin-right: auto;
-  margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
-}
-
-.event-footer {
+  padding: 1.2rem 1rem;
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.borderColor2};
+  box-shadow: ${(props) => props.theme.shadow7};
+  border: 1px solid ${(props) => props.theme.borderColor2};
+  height: 25rem;
   display: flex;
-  align-items: center;
-  gap: 1.2rem;
+  flex-direction: column;
+  gap: 1rem;
 
-  button {
-    border: none;
-    outline: none;
-    cursor: pointer;
+  > h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem; /* Add margin to the bottom of the heading */
+  }
 
-    i {
-      font-size: 1.5rem;
-      color: #ffffff;
+  .nameContainer h1, .nameContainer h2 {
+    margin: 0.2rem 0; /* adjust as needed */
+  }
+
+ h2 {
+    margin-bottom: 0.5rem; // adjust this value to change the spacing
+  }
+
+  .date {
+    margin-top: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
+  }
+
+  .dateend {
+    margin-right: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
+  }
+
+  .event-footer {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+
+      i {
+        font-size: 1.5rem;
+        color: #ffffff;
+      }
     }
-  }
 
-  .edit {
-    margin-left: auto;
-  }
-  .isExternal,
-  .isInternal {
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    border: 2px solid ${(props) => props.theme.colorDanger};
-    border-radius: 0.8rem;
-  }
-  
-  .isInternal {
-    border-color: ${(props) => props.theme.colorGreenDark}; 
-  }
-
-.sport {
-  background: #002b88 !important;
-  border-radius: 10px;
-  padding: 0.5rem 1rem; 
+    .edit {
+      margin-left: auto;
+    }
+    .statusIsActive,
+    .statusIsInactive {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border: 2px solid #299758; 
+  border-radius: 0.8rem;
 }
+
+.statusIsInactive {
+  border-color: #fe6854; 
+}
+
+  .sport {
+    background: #002b88 !important;
+    border-radius: 10px;
+    padding: 0.5rem 1rem; 
+  }
 `;
-export default StudentProfileContent
+
+export default StudentProfileContent;

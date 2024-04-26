@@ -8,22 +8,23 @@ datasource db {
 }
 
 model events {
-  id           Int      @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   name         String
   startDate    DateTime
   endDate      DateTime
-  CreatedAt    DateTime @default(now())
-  UpdatedAt    DateTime @updatedAt
+  CreatedAt    DateTime       @default(now())
+  UpdatedAt    DateTime       @updatedAt
   eventDetails String?
   Sport        String
-  isExternal   Boolean  @default(false)
-  isInternal   Boolean  @default(false)
+  isExternal   Boolean        @default(false)
+  isInternal   Boolean        @default(false)
   userId       String
+  attendees    studentEvent[]
 }
 
 model studentprofile {
-  id                     Int      @id @default(autoincrement())
-  firstName              String   @unique(map: "StudentProfile_firstName_key")
+  id                     Int            @id @default(autoincrement())
+  firstName              String         @unique(map: "StudentProfile_firstName_key")
   middleName             String
   lastName               String
   contactNumber          String
@@ -33,8 +34,8 @@ model studentprofile {
   height                 String?
   bloodType              String?
   academicYear           String
-  isMale                 Boolean  @default(false)
-  isFemale               Boolean  @default(false)
+  isMale                 Boolean        @default(false)
+  isFemale               Boolean        @default(false)
   yrStartedPlaying       String
   mothersName            String?
   fathersName            String?
@@ -42,14 +43,24 @@ model studentprofile {
   courseAndYear          String
   emergencyContactPerson String
   emergencyContactNumber String
-  email                  String   @unique(map: "StudentProfile_email_key")
+  email                  String         @unique(map: "StudentProfile_email_key")
   homeAddress            String
-  statusIsActive         Boolean  @default(false)
-  statusIsInactive       Boolean  @default(false)
+  statusIsActive         Boolean        @default(false)
+  statusIsInactive       Boolean        @default(false)
   remarks                String?
-  CreatedAt              DateTime @default(now())
-  UpdatedAt              DateTime @updatedAt
+  CreatedAt              DateTime       @default(now())
+  UpdatedAt              DateTime       @updatedAt
   userId                 String
+  events                 studentEvent[]
+}
+
+model studentEvent {
+  eventId        Int
+  studentId      Int
+  event          events         @relation(fields: [eventId], references: [id])
+  studentProfile studentprofile @relation(fields: [studentId], references: [id])
+
+  @@id([eventId, studentId])
 }
 
 model coachprofile {

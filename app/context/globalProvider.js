@@ -154,6 +154,21 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+  const patchStudentProfile = async (id) => {
+    try {
+      const res = await axios.patch(`/api/studentProfiling/${id}`);
+      toast.success("Student profile updated successfully");
+
+      const updatedStudent = res.data;
+      fetchAllStudentProfile();
+      return updatedStudent;
+    } catch (error) {
+      console.error(error);
+      // Optionally, handle error here or re-throw to let the caller handle it
+      throw new Error("Failed to update profile");
+    }
+  };
+
   //Filtering
   // const isExternalEvents = events.filter((event) => event.isExternal === true);
   // console.log(isExternalEvents);
@@ -183,6 +198,7 @@ export const GlobalProvider = ({ children }) => {
         fetchAllStudentProfile,
         deleteStudentProfile,
         patchCoachProfile,
+        patchStudentProfile,
         // isExternalEvents,
       }}
     >

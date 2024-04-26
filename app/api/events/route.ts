@@ -1,6 +1,6 @@
 import prisma from "@/app/utils/connect";
 import { NextResponse } from "next/server";
-import { NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { auth } from "@clerk/nextjs";
 
 
@@ -52,6 +52,8 @@ export async function POST(req: Request, res: NextApiResponse) {
         return NextResponse.json({ error: "Error creating event", status: 500 });
     }
 }
+
+
 
 export async function GET(req: Request) {
     try {
@@ -106,6 +108,7 @@ export async function PATCH(req: Request) {
 
     }
 }
+
 
 
 

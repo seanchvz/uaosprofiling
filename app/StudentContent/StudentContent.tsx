@@ -31,6 +31,7 @@ interface Props {
   statusIsInactive: boolean;
   remarks: string | null;
   userId: string;
+  handleEdit: () => void;
 }
 function StudentProfileContent({
   id,
@@ -59,6 +60,7 @@ function StudentProfileContent({
   statusIsInactive,
   remarks,
   userId,
+  handleEdit,
 }: Props) {
   console.log(StudentProfileContent);
   const { theme, deleteStudentProfile } = useGlobalState();
@@ -92,7 +94,9 @@ function StudentProfileContent({
           <button className="statusIsInactive">Inactive</button>
         ) : null}
 
-        <button className="edit">{edit}</button>
+        <button className="edit" onClick={handleEdit}>
+          {edit}
+        </button>
         <button
           className="delete"
           onClick={() => {
