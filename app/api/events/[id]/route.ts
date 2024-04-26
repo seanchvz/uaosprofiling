@@ -27,7 +27,9 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         return new NextResponse(JSON.stringify({ error: "Error deleting event" }), { status: 500 });
     }
 
-} export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
+}
+
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
         // Authentication check
         const { userId } = await auth();
@@ -35,30 +37,32 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
+        console.log('Params:', params);
 
+        const { id: eventId } = params
 
-        if (!req.query.id) {
-            return res.status(400).json({ error: "Missing event ID" });
+        if (!eventId) {
+            return new NextResponse("Missing Event ID", { status: 400 });
         }
 
-        const eventId = parseInt(req.query.id as string, 10);
-        if (isNaN(eventId)) {
-            return res.status(400).json({ error: "Invalid event ID" });
+        if (isNaN(+eventId)) {
+            return new NextResponse("Invalid Event ID", { status: 400 });
         }
 
-        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = req.body;
+        const body = await req.json();
+        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = body;
 
         // Perform the update operation
         const updatedEvent = await prisma.events.update({
-            where: { id: eventId },
+            where: { id: +eventId },
             data: { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal },
         });
 
         console.log("Event Updated: ", updatedEvent);
-        return res.status(200).json(updatedEvent);
+        return new NextResponse("Event Updated: ", { status: 200 });
     } catch (error) {
         console.error('Error updating event:', error);
-        return res.status(500).json({ error: "Error updating event", details: error.message });
+        return new NextResponse("Error updating event");
     }
 }
 

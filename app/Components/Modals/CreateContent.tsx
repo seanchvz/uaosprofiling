@@ -106,7 +106,7 @@ function CreateContent(props: Props) {
       try {
         console.log("Sending PATCH request for event ID:", event.id);
         console.log("Data being sent:", event);
-        const response = await axios.patch(`/api/events/${event.id}`, event);
+        const response = await axios.patch(`/api/events/${event.id}/`, event);
 
         console.log("Server response:", response.data);
         toast.success("Event updated successfully!");
