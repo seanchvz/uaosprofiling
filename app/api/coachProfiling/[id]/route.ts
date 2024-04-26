@@ -30,27 +30,31 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         return new NextResponse(JSON.stringify(coachProfile), { status: 200 });
     } catch (error) {
         console.log("Error Deleting Coach Profile: ", error);
-        return new NextResponse(JSON.stringify({ error: "Error deleting event" }), { status: 500 });
+        return new NextResponse(JSON.stringify({ error: "Error deleting Coach" }), { status: 500 });
     }
 }
 
 
 
 
-
-export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
         const { userId } = await auth();
+
         if (!userId) {
-            res.status(401).json({ error: "Unauthorized" });
-            return;
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+        const { id: coachprofileId } = params
+
+        if (!coachprofileId) {
+            return new NextResponse("Missing Coach Profile ID", { status: 400 });
         }
 
-        const coachId = parseInt(req.query.id as string, 10);
-        if (isNaN(coachId)) {
-            res.status(400).json({ error: "Invalid event ID" });
-            return;
+        if (isNaN(+coachprofileId)) {
+            return new NextResponse("Invalid Coach Profile ID", { status: 400 });
         }
+
+        const body = await req.json();
 
         const {
             name,
@@ -72,38 +76,40 @@ export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
             resumeUrl,
             email,
             remarks,
-        } = req.body;
+        } = body;
+
+        // Perform the update operation
 
         const updatedCoachProfile = await prisma.coachprofile.update({
-            where: { id: coachId, userId },
+            where: { id: +coachprofileId },
             data: {
-                name: name,
-                contactNumber: contactNumber,
-                sport: sport,
-                permanentTeam: permanentTeam,
-                isMale: isMale,
-                isFemale: isFemale,
-                emergencyContact: emergencyContact,
-                emergencyContactPerson: emergencyContactPerson,
-                birthDate: new Date(birthDate),
-                nationality: nationality,
-                weight: weight,
-                height: height,
-                bloodType: bloodType,
-                academicYear: academicYear,
-                statusIsFulltime: statusIsFulltime,
-                statusIsParttime: statusIsParttime,
-                resumeUrl: resumeUrl,
-                email: email,
-                remarks: remarks,
-                userId: userId,
+                name,
+                contactNumber,
+                sport,
+                permanentTeam,
+                isMale,
+                isFemale,
+                emergencyContact,
+                emergencyContactPerson,
+                birthDate,
+                nationality,
+                weight,
+                height,
+                bloodType,
+                academicYear,
+                statusIsFulltime,
+                statusIsParttime,
+                resumeUrl,
+                email,
+                remarks,
             },
         });
 
-        res.status(200).json(updatedCoachProfile);
+        console.log("Profile Updated: ", updatedCoachProfile);
+        return new NextResponse("Coach Updated: ", { status: 200 });
     } catch (error) {
-        console.error('Error Updating Event:', error);
-        res.status(500).json({ error: "Error updating event" });
+        console.error('Error updating coach:', error);
+        return new NextResponse("Error updating coach");
     }
 }
 

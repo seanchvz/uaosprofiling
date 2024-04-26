@@ -125,8 +125,8 @@ function CreateCoachProfile(props: Props) {
         case "remarks":
           setRemarks(value);
           break;
-        default:
-          console.log("Unhandled field: ", name);
+        // default:
+        //   console.log("Unhandled field: ", name);
       }
     }
   };
@@ -174,7 +174,7 @@ function CreateCoachProfile(props: Props) {
       isFemale,
       emergencyContact,
       emergencyContactPerson,
-      birthDate,
+      birthDate: new Date(birthDate),
       nationality,
       weight,
       height,
@@ -189,32 +189,98 @@ function CreateCoachProfile(props: Props) {
     };
 
     if (submitState === "edit") {
-      // API call to update the event
+      // handleEdit(event);
       try {
+        console.log("Sending PATCH request for coach ID:", coachProfile.id);
+        console.log("Data being sent:", coachProfile);
         const response = await axios.patch(
-          `/api/coachProfiling${coachProfile.id}`,
+          `/api/coachProfiling/${coachProfile.id}/`,
           coachProfile
         );
-        toast.success("Event updated successfully!");
-        // Refresh events list or handle state update
+
+        console.log("Server response:", response.data);
+        toast.success("Profile updated successfully!");
       } catch (error) {
-        console.error("Failed to update the event:", error);
-        toast.error("Error updating event");
+        handleAxiosError(error);
       }
     } else {
-      // API call to create a new event
       try {
         const response = await axios.post("/api/coachProfiling", coachProfile);
-        toast.success("Event created successfully!");
+        toast.success("Profile created successfully!");
         fetchAllCoachProfile();
         closeModal();
       } catch (error) {
-        console.error("Failed to create the event:", error);
-        toast.error("Error creating event");
+        handleAxiosError(error, "creating");
       }
     }
-    // Optionally close the modal after operation
     closeModal();
+  };
+
+  function handleAxiosError(error: any, action: string = "updating") {
+    console.error(`Failed to ${action} the event:`, error);
+    if (error.response && error.response.data) {
+      console.error("Server error details:", error.response.data);
+      const errorMessage =
+        error.response.data.error || "Unexpected server error";
+      toast.error(`Error ${action} event: ${errorMessage}`);
+    } else if (error.message) {
+      console.error("Network or other error:", error.message);
+      toast.error(`Error ${action} event: ${error.message}`);
+    } else {
+      toast.error(`Error ${action} event: Unknown error`);
+    }
+  }
+
+  interface CoachData {
+    id: string;
+    name: string;
+    contactNumber: string;
+    sport: string;
+    permanentTeam: string;
+    isMale: boolean;
+    isFemale: boolean;
+    emergencyContact: string;
+    emergencyContactPerson: string;
+    birthDate: Date;
+    nationality: string;
+    weight?: number;
+    height?: number;
+    bloodType?: string;
+    academicYear: string;
+    statusIsFulltime: boolean;
+    statusIsParttime: boolean;
+    resumeUrl: string;
+    email: string;
+    remarks?: string;
+  }
+
+  const handleEdit = async (coachProfile: CoachData) => {
+    if (!coachProfile.id) {
+      toast.error("Coach ID is missing");
+      return;
+    }
+
+    try {
+      console.log("Sending PATCH request for coach ID:", coachProfile.id);
+      console.log("Data being sent:", coachProfile);
+
+      // Destructure the event to separate id from other data
+      const { id, ...updateData } = coachProfile;
+
+      const response = await axios.patch(
+        `/api/coachProfiling/${id}`,
+        updateData
+      );
+
+      console.log("Server response:", response.data);
+      if (response.data && response.data.error) {
+        toast.error(response.data.error);
+      } else {
+        toast.success("Coach updated successfully!");
+      }
+    } catch (error) {
+      handleAxiosError(error);
+    }
   };
 
   return (
@@ -655,3 +721,6 @@ const CreateCoachProfileStyled = styled.form`
 `;
 
 export default CreateCoachProfile;
+function handleAxiosError(error: unknown, p0?: string) {
+  throw new Error("Function not implemented.");
+}
