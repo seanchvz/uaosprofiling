@@ -110,6 +110,7 @@ function CreateContent(props: Props) {
 
         console.log("Server response:", response.data);
         toast.success("Event updated successfully!");
+        allEvents(); // displays updated events after updating
       } catch (error) {
         handleAxiosError(error);
       }

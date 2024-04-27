@@ -200,6 +200,7 @@ function CreateCoachProfile(props: Props) {
 
         console.log("Server response:", response.data);
         toast.success("Profile updated successfully!");
+        fetchAllCoachProfile();
       } catch (error) {
         handleAxiosError(error);
       }
