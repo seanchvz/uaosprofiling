@@ -180,7 +180,6 @@ const CoachContentStyled = styled.div`
       padding: 0.4rem 1rem;
       border-radius: 0.8rem;
       color: white;
-
       border: 1px solid white;
       cursor: pointer;
       margin-right: 10px; // Add this line

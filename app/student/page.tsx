@@ -103,7 +103,7 @@ function Page({ name, studentprofile }: Props) {
           </select>
           <input
             type="text"
-            placeholder="Search Profiles..."
+            placeholder="Search Profile Lastnames..."
             value={searchTerm}
             onChange={handleSearchChange}
             style={{
@@ -149,6 +149,7 @@ function Page({ name, studentprofile }: Props) {
                 nationality={studentProfile.nationality}
                 weight={studentProfile.weight}
                 height={studentProfile.height}
+                sport={studentProfile.sport}
                 bloodType={studentProfile.bloodType}
                 academicYear={studentProfile.academicYear}
                 isMale={studentProfile.isMale}
