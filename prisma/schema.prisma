@@ -28,6 +28,7 @@ model studentprofile {
   middleName             String
   lastName               String
   contactNumber          String
+  sport                  String?
   birthDate              String
   nationality            String
   weight                 String?
@@ -51,6 +52,7 @@ model studentprofile {
   CreatedAt              DateTime       @default(now())
   UpdatedAt              DateTime       @updatedAt
   userId                 String
+  imageUrl               String?
   events                 studentEvent[]
 }
 

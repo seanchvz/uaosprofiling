@@ -15,12 +15,31 @@ function Page({ name, studentprofile }: Props) {
     useGlobalState();
   const [modalState, setModalState] = useState("create");
   const [selectedStudent, setSelectedStudent] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSport, setSelectedSport] = useState("all");
 
   const handleOpenCreateModal = () => {
     setModalState("create");
     setSelectedStudent(undefined); // Ensure no event data is passed into the creation form
     openModal();
   };
+
+  const handleSearchChange = (studentProfile) => {
+    setSearchTerm(studentProfile.target.value);
+  };
+
+  const filteredStudentProfile = studentprofile.filter((studentProfile) => {
+    const matchesName = studentProfile.lastName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesSport =
+      selectedSport === "all" ||
+      studentProfile.sport.toLowerCase() === selectedSport.toLowerCase();
+    console.log(
+      `Event: ${studentProfile.sport}, Sport: ${studentProfile.sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
+    ); // Debugging line
+    return matchesName && matchesSport;
+  });
 
   useEffect(() => {
     console.log("Fetch all student profile");
@@ -31,58 +50,130 @@ function Page({ name, studentprofile }: Props) {
     <StudentStyled theme={theme}>
       {modal && (
         <StudentModal>
-          <CreateProfile submitState={modalState} student={selectedStudent} />
+          <CreateProfile
+            submitState={modalState}
+            studentProfile={selectedStudent}
+          />
         </StudentModal>
       )}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
           {name}
         </h1>
-        <button className="create-item" onClick={handleOpenCreateModal}>
-          {plus}
-          Add New Student
-        </button>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <select
+            value={selectedSport}
+            onChange={(e) => setSelectedSport(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Sports</option>
+            <optgroup label="Basketball">
+              <option value="basketball men">Basketball Men</option>
+              <option value="basketball Women">Basketball Women</option>
+            </optgroup>
+            <optgroup label="Volleyball">
+              <option value="volleyball men">Volleyball Men</option>
+              <option value="volleyball women">Volleyball Women</option>
+            </optgroup>
+            <optgroup label="Badminton">
+              <option value="badmintonwomen">Badminton Women</option>
+              <option value="badmintonmen">Badminton Men</option>
+            </optgroup>
+            <optgroup label="ESport">
+              <option value="valorant">Valorant</option>
+              <option value="dota">DoTA</option>
+              <option value="mobile legends">Mobile Legends</option>
+            </optgroup>
+            <option value="tabletennis">Table Tennis</option>
+            <option value="taekwondo">Taekwondo</option>
+            <option value="chess">Chess</option>
+            <option value="swimming">Swimming</option>
+            <option value="football">Football</option>
+
+            {/* Add more sports as needed */}
+          </select>
+          <input
+            type="text"
+            placeholder="Search Profiles..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            style={{
+              height: "3rem",
+              width: "20rem",
+              marginRight: "1rem",
+              border: "1px solid #555",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              fontSize: "1rem",
+              fontFamily: "Arial, sans-serif",
+              outline: "none",
+              boxShadow: "none", // remove shadow
+              textAlign: "left", // align text to the left
+            }}
+          />
+
+          <button className="create-item" onClick={handleOpenCreateModal}>
+            {plus}
+            Add New Student
+          </button>
+        </div>
       </div>
 
-      <table className="inventoryitem grid mt-5">
-        {studentprofile &&
-          studentprofile.map((student) => (
-            <StudentProfileContent
-              handleEdit={() => {
-                setModalState("edit");
-                openModal();
-                setSelectedStudent(student);
-              }}
-              key={student.id}
-              firstName={student.firstName}
-              middleName={student.middleName}
-              lastName={student.lastName}
-              contactNumber={student.contactNumber}
-              birthDate={student.birthDate}
-              nationality={student.nationality}
-              weight={student.weight}
-              height={student.height}
-              bloodType={student.bloodType}
-              academicYear={student.academicYear}
-              isMale={student.isMale}
-              isFemale={student.isFemale}
-              yrStartedPlaying={student.yrStartedPlaying}
-              mothersName={student.mothersName}
-              fathersName={student.fathersName}
-              guardiansName={student.guardiansName}
-              courseAndYear={student.courseAndYear}
-              emergencyContactPerson={student.emergencyContactPerson}
-              emergencyContactNumber={student.emergencyContactNumber}
-              email={student.email}
-              homeAddress={student.homeAddress}
-              statusIsActive={student.statusIsActive}
-              statusIsInactive={student.statusIsInactive}
-              userId={student.userId}
-              remarks={student.remarks}
-              id={student.id}
-            />
-          ))}
-      </table>
+      <div className="inventoryitem grid mt-5">
+        <tbody>
+          {filteredStudentProfile.length > 0 ? (
+            filteredStudentProfile.map((studentProfile) => (
+              <StudentProfileContent
+                handleEdit={() => {
+                  setModalState("edit");
+                  openModal();
+                  setSelectedStudent(studentProfile);
+                }}
+                key={studentProfile.id}
+                firstName={studentProfile.firstName}
+                middleName={studentProfile.middleName}
+                lastName={studentProfile.lastName}
+                contactNumber={studentProfile.contactNumber}
+                birthDate={studentProfile.birthDate}
+                nationality={studentProfile.nationality}
+                weight={studentProfile.weight}
+                height={studentProfile.height}
+                bloodType={studentProfile.bloodType}
+                academicYear={studentProfile.academicYear}
+                isMale={studentProfile.isMale}
+                isFemale={studentProfile.isFemale}
+                yrStartedPlaying={studentProfile.yrStartedPlaying}
+                mothersName={studentProfile.mothersName}
+                fathersName={studentProfile.fathersName}
+                guardiansName={studentProfile.guardiansName}
+                courseAndYear={studentProfile.courseAndYear}
+                emergencyContactPerson={studentProfile.emergencyContactPerson}
+                emergencyContactNumber={studentProfile.emergencyContactNumber}
+                email={studentProfile.email}
+                homeAddress={studentProfile.homeAddress}
+                statusIsActive={studentProfile.statusIsActive}
+                statusIsInactive={studentProfile.statusIsInactive}
+                userId={studentProfile.userId}
+                remarks={studentProfile.remarks}
+                id={studentProfile.id}
+              />
+            ))
+          ) : (
+            <p>No student profiles available.</p>
+          )}
+        </tbody>
+      </div>
     </StudentStyled>
     // </div>
   );

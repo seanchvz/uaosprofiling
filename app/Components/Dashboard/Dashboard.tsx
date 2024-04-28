@@ -88,16 +88,17 @@ function Dashboard({ name, events }: Props) {
               <option value="badmintonwomen">Badminton Women</option>
               <option value="badmintonmen">Badminton Men</option>
             </optgroup>
-            <option value="tabletennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming</option>
-            <option value="football">Football</option>
             <optgroup label="ESport">
               <option value="valorant">Valorant</option>
               <option value="dota">DoTA</option>
               <option value="mobile legends">Mobile Legends</option>
             </optgroup>
+            <option value="tabletennis">Table Tennis</option>
+            <option value="taekwondo">Taekwondo</option>
+            <option value="chess">Chess</option>
+            <option value="swimming">Swimming</option>
+            <option value="football">Football</option>
+
             {/* Add more sports as needed */}
           </select>
           <input

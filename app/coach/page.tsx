@@ -86,23 +86,28 @@ function Page({ name, coachprofile }: Props) {
           >
             <option value="all">All Sports</option>
             <optgroup label="Basketball">
-              <option value="basketballmen">Basketball Men</option>
-              <option value="basketballwomen">Basketball Women</option>
+              <option value="basketball men">Basketball Men</option>
+              <option value="basketball women">Basketball Women</option>
             </optgroup>
             <optgroup label="Volleyball">
-              <option value="volleyballmen">Volleyball Men</option>
-              <option value="volleyballwomen">Volleyball Women</option>
+              <option value="volleyball men">Volleyball Men</option>
+              <option value="volleyball women">Volleyball Women</option>
+            </optgroup>
+            <optgroup label="Badminton">
+              <option value="badminton women">Badminton Women</option>
+              <option value="badminton men">Badminton Men</option>
+            </optgroup>
+            <optgroup label="ESport">
+              <option value="valorant">Valorant</option>
+              <option value="dota">DoTA</option>
+              <option value="mobile legends">Mobile Legends</option>
             </optgroup>
             <option value="table tennis">Table Tennis</option>
             <option value="taekwondo">Taekwondo</option>
             <option value="chess">Chess</option>
             <option value="swimming">Swimming</option>
             <option value="football">Football</option>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
+
             {/* Add more sports as needed */}
           </select>
           <input

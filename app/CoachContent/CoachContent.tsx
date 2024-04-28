@@ -40,7 +40,7 @@ const roleColors = {
   badmintonmen: "#D90368",
   badmintonwomen: "#D90368",
   tabletennis: "#32CD32",
-  Taekwondo: "#FFD700",
+  taekwondo: "#000000",
   chess: "#00CED1",
   swimming: "#1E90FF",
   football: "#FF6347",
@@ -107,10 +107,10 @@ function CoachContent({
       <p className="date" style={{ marginBottom: "5px" }}>
         Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
       </p>
-      <p className="sport" style={{ marginBottom: "5px" }}>
+      <p className="contactInfo" style={{ marginBottom: "5px" }}>
         Contact Number: {contactNumber}
       </p>
-      <p className="sport" style={{ marginBottom: "5px" }}>
+      <p className="remarks" style={{ marginBottom: "5px" }}>
         Remarks: {remarks}
       </p>
 
@@ -138,76 +138,67 @@ const Tag = styled.span`
   padding: 0.3rem 0.6rem;
   margin-right: 0.5rem;
   border-radius: 0.8rem;
+  // border: 2px solid #ffffff; // Add this line to add a border
   background-color: ${(props) => props.color || "#6c757d"}; // A default color
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
 `;
-
 const CoachContentStyled = styled.div`
-padding: 1.2rem 1rem;
-border-radius: 1rem;
-background-color: ${(props) => props.theme.borderColor2};
-box-shadow: ${(props) => props.theme.shadow7};
-border: 1px solid ${(props) => props.theme.borderColor2};
-height: 24rem;
-display: flex;
-flex-direction: column;
-gap: 1rem;
-
-> h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem; /* Add margin to the bottom of the heading */
-}
-
-.date {
-  margin-top: auto;
-  margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
-}
-
-.dateend {
-  margin-right: auto;
-  margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
-}
-
-.event-footer {
+  padding: 1.2rem 1rem;
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.borderColor2};
+  box-shadow: ${(props) => props.theme.shadow7};
+  border: 1px solid ${(props) => props.theme.borderColor2};
+  height: 24rem;
   display: flex;
-  align-items: center;
-  gap: 1.2rem;
+  flex-direction: column;
+  gap: 1rem;
 
-  button {
-    border: none;
-    outline: none;
-    cursor: pointer;
+  > h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
+  }
 
-    i {
-      font-size: 1.5rem;
-      color: #ffffff;
+  .date {
+    margin-top: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
+  }
+
+  .dateend {
+    margin-right: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
+  }
+  .event-footer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: auto;
+
+    button {
+      padding: 0.4rem 1rem;
+      border-radius: 0.8rem;
+      color: white;
+
+      border: 1px solid white;
+      cursor: pointer;
+      margin-right: 10px; // Add this line
+
+      &:last-child {
+        margin-right: 0; // Add this line
+      }
+
+      &.delete {
+        border: 1px solid white;
+      }
     }
   }
-
-  .edit {
-    margin-left: auto;
+  .sport {
+    background: #002b88 !important;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
   }
-  .isExternal,
-  .isInternal {
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    border: 2px solid ${(props) => props.theme.colorDanger};
-    border-radius: 0.8rem;
-  }
-  
-  .isInternal {
-    border-color: ${(props) => props.theme.colorGreenDark}; 
-  }
-
-.sport {
-  background: #002b88 !important;
-  border-radius: 10px;
-  padding: 0.5rem 1rem; 
-}
 `;
 
 export default CoachContent;

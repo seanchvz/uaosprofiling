@@ -11,7 +11,7 @@ interface Props {
   endDate: string;
   Sport: string;
   isExternal: boolean;
-  eventDetails: string;
+  eventDetails: string | null;
   id: string;
   handleEdit: () => void;
 }
@@ -73,14 +73,13 @@ function EventItem({
           <Tag color={roleColors["isInternal"]}>Internal</Tag>
         )}
       </div>
-
+      <p className="eventDetails">{eventDetails}</p>
       <p className="date">
         Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
       </p>
       <p className="dateend">
         End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
       </p>
-      <p className="details">{eventDetails}</p>
 
       <div className="event-footer">
         {/* Buttons for editing and deleting */}
@@ -112,77 +111,66 @@ const Tag = styled.span`
 `;
 
 const EventItemStyled = styled.div`
-    padding: 1.2rem 1rem;
-    border-radius: 1rem;
-    background-color: ${(props) => props.theme.borderColor2};
-    box-shadow: ${(props) => props.theme.shadow7};
-    border: 1px solid ${(props) => props.theme.borderColor2};
-    height: 25rem;
+  padding: 1.2rem 1rem;
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.borderColor2};
+  box-shadow: ${(props) => props.theme.shadow7};
+  border: 1px solid ${(props) => props.theme.borderColor2};
+  height: 23rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .tags {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center; // Align tags nicely if they wrap
+    margin-top: 1rem; // Adjust as needed
+  }
 
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center; // Align tags nicely if they wrap
-      margin-top: 1rem; // Adjust as needed
-    }
-    
+  > h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
+  }
 
-    > h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem; /* Add margin to the bottom of the heading */
-    }
+  .date {
+    margin-top: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
+  }
 
-    .date {
-      margin-top: auto;
-      margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
-    }
+  .dateend {
+    margin-right: auto;
+    margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
+  }
 
-    .dateend {
-      margin-right: auto;
-      margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
-    }
+  .event-footer {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
 
-    .event-footer {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
+    button {
+      padding: 0.4rem 1rem;
+      border-radius: 0.8rem;
+      color: white;
+      border: 1px solid white;
+      cursor: pointer;
 
-      button {
-        border: none;
-        outline: none;
-        cursor: pointer;
-
-        i {
-          font-size: 1.5rem;
-          color: #ffffff;
-        }
+      &:last-child {
       }
 
-      .edit {
-        margin-left: auto;
+      &.delete {
+        border: 1px solid white;
       }
-      .isExternal,
-      .isInternal {
-        display: inline-block;
-        padding: 0.4rem 1rem;
-        border: 2px solid ${(props) => props.theme.colorDanger};
-        border-radius: 0.8rem;
-      }
-      
-      .isInternal {
-        border-color: ${(props) => props.theme.colorGreenDark}; 
-      }
-
-    .sport {
-      background: #002b88 !important;
-      border-radius: 10px;
-      padding: 0.5rem 1rem; 
     }
-  `;
+  }
+
+  .sport {
+    background: #002b88 !important;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+  }
+`;
 
 export default EventItem;

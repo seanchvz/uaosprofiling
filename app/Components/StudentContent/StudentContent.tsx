@@ -11,6 +11,7 @@ interface Props {
   lastName: string;
   contactNumber: string;
   birthDate: string;
+  sport: string;
   nationality: string;
   weight: string | null;
   height: string | null;
@@ -33,6 +34,27 @@ interface Props {
   userId: string;
   handleEdit: () => void;
 }
+
+const roleColors = {
+  basketballmen: "#192BC2",
+  basketballwomen: "#D90368",
+  volleyballmen: "#276FBF",
+  volleyballwomen: "#DA70D6",
+  badmintonmen: "#D90368",
+  badmintonwomen: "#D90368",
+  tabletennis: "#32CD32",
+  taekwondo: "#000000",
+  chess: "#00CED1",
+  swimming: "#1E90FF",
+  football: "#FF6347",
+  valorant: "#FF4500",
+  dota: "#DA70D6",
+  mobilelegends: "#0038ff",
+  statusIsActive: "#228B22",
+  statusIsInactive: "#E03616",
+  academicYear: "#fda600",
+};
+
 function StudentProfileContent({
   handleEdit,
   id,
@@ -40,6 +62,7 @@ function StudentProfileContent({
   middleName,
   lastName,
   contactNumber,
+  sport,
   birthDate,
   nationality,
   weight,
@@ -76,6 +99,27 @@ function StudentProfileContent({
         <h2>{firstName}</h2>
         <h2>{middleName}</h2>
       </div>
+
+      <div className="tags">
+        <Tag
+          style={{ marginBottom: "10px" }}
+          color={
+            statusIsActive
+              ? roleColors.statusIsActive
+              : roleColors.statusIsInactive
+          }
+        >
+          {statusIsInactive ? "Full Time" : "Part Time"}
+        </Tag>
+        <Tag
+          style={{ marginRight: "10px" }}
+          color={roleColors[sport.replace(/\s+/g, "").toLowerCase()]}
+        >
+          {sport}
+        </Tag>
+        <Tag color={roleColors.academicYear}>{academicYear}</Tag>
+      </div>
+
       <p>
         {" "}
         Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
@@ -86,13 +130,8 @@ function StudentProfileContent({
       <p className="ContactNumber"> Contact Number: {contactNumber}</p>
       <p className="AcademicYear"> Academic Year: {academicYear}</p>
       <p className="AcademicYear"> Remarks: {remarks}</p>
-      <div className="event-footer">
-        {statusIsActive ? (
-          <button className="statusIsActive">Active</button>
-        ) : statusIsInactive ? (
-          <button className="statusIsInactive">Inactive</button>
-        ) : null}
 
+      <div className="event-footer">
         <button className="edit" onClick={handleEdit}>
           {edit}
         </button>
@@ -108,6 +147,19 @@ function StudentProfileContent({
     </StudentContentStyled>
   );
 }
+
+const Tag = styled.span`
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  margin-right: 0.5rem;
+  border-radius: 0.8rem;
+  // border: 2px solid #ffffff; // Add this line to add a border
+  background-color: ${(props) => props.color || "#6c757d"}; // A default color
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+`;
 
 const StudentContentStyled = styled.div`
   padding: 1.2rem 1rem;

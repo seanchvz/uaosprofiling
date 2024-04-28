@@ -1,8 +1,8 @@
 "use client";
+import { useGlobalState } from "@/app/context/globalProvider";
+import { edit, trash } from "@/app/utils/Icons";
 import React from "react";
-import { useGlobalState } from "../context/globalProvider";
 import styled from "styled-components";
-import { edit, trash } from "../utils/Icons";
 
 interface Props {
   id: number;
@@ -11,6 +11,7 @@ interface Props {
   lastName: string;
   contactNumber: string;
   birthDate: string;
+  sport: string | null;
   nationality: string;
   weight: string | null;
   height: string | null;
@@ -33,12 +34,40 @@ interface Props {
   userId: string;
   handleEdit: () => void;
 }
+
+const roleColors = {
+  basketballmen: "#192BC2",
+  basketballwomen: "#D90368",
+  volleyballmen: "#276FBF",
+  volleyballwomen: "#DA70D6",
+  badmintonmen: "#D90368",
+  badmintonwomen: "#D90368",
+  tabletennis: "#32CD32",
+  taekwondo: "#000000",
+  chess: "#00CED1",
+  swimming: "#1E90FF",
+  football: "#FF6347",
+  valorant: "#FF4500",
+  dota: "#DA70D6",
+  mobilelegends: "#0038ff",
+  statusIsActive: "#228B22",
+  statusIsInactive: "#E03616",
+  academicYear: "#fda600",
+};
+
+const getSportColor = (sport) => {
+  const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
+  return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
+};
+
 function StudentProfileContent({
+  handleEdit,
   id,
   firstName,
   middleName,
   lastName,
   contactNumber,
+  sport,
   birthDate,
   nationality,
   weight,
@@ -60,9 +89,7 @@ function StudentProfileContent({
   statusIsInactive,
   remarks,
   userId,
-  handleEdit,
-}: Props) {
-  console.log(StudentProfileContent);
+}: Props): React.JSX.Element {
   const { theme, deleteStudentProfile } = useGlobalState();
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -72,37 +99,34 @@ function StudentProfileContent({
 
   return (
     <StudentContentStyled theme={theme}>
-      <div className="nameContainer">
-        <h1 style={{ fontWeight: "bold", fontSize: "1em" }}>{lastName},</h1>
-        <h2>{firstName}</h2>
-        <h2>{middleName}</h2>
+      <h1>{`${lastName}, ${firstName} ${middleName}`}</h1>{" "}
+      {/* Combine names in a single header */}
+      <div className="tags">
+        <Tag
+          style={{ marginBottom: "10px" }}
+          color={
+            statusIsActive
+              ? roleColors.statusIsActive
+              : roleColors.statusIsInactive
+          }
+        >
+          {statusIsActive ? "Active" : "Inactive"}
+        </Tag>
+        <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
+          {sport || "Unknown Sport"}
+        </Tag>
+        <Tag color={roleColors.academicYear}>{academicYear}</Tag>
       </div>
-      <p>
-        {" "}
+      <p className="date">
         Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
       </p>
-      <p className="YearStartedPlaying">
-        Year Started Playing: {yrStartedPlaying}
-      </p>
-      <p className="ContactNumber"> Contact Number: {contactNumber}</p>
-      <p className="AcademicYear"> Academic Year: {academicYear}</p>
-      <p className="AcademicYear"> Remarks: {remarks}</p>
+      <p className="contactInfo">Contact Number: {contactNumber}</p>
+      <p className="remarks">Remarks: {remarks}</p>
       <div className="event-footer">
-        {statusIsActive ? (
-          <button className="statusIsActive">Active</button>
-        ) : statusIsInactive ? (
-          <button className="statusIsInactive">Inactive</button>
-        ) : null}
-
         <button className="edit" onClick={handleEdit}>
           {edit}
         </button>
-        <button
-          className="delete"
-          onClick={() => {
-            deleteStudentProfile(id);
-          }}
-        >
+        <button className="delete" onClick={() => deleteStudentProfile(id)}>
           {trash}
         </button>
       </div>
@@ -110,13 +134,25 @@ function StudentProfileContent({
   );
 }
 
+const Tag = styled.span`
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  margin-right: 0.5rem;
+  border-radius: 0.8rem;
+  // border: 2px solid #ffffff; // Add this line to add a border
+  background-color: ${(props) => props.color || "#6c757d"}; // A default color
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+`;
 const StudentContentStyled = styled.div`
   padding: 1.2rem 1rem;
   border-radius: 1rem;
   background-color: ${(props) => props.theme.borderColor2};
   box-shadow: ${(props) => props.theme.shadow7};
   border: 1px solid ${(props) => props.theme.borderColor2};
-  height: 25rem;
+  height: 30rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -124,15 +160,7 @@ const StudentContentStyled = styled.div`
   > h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 0.4rem; /* Add margin to the bottom of the heading */
-  }
-
-  .nameContainer h1, .nameContainer h2 {
-    margin: 0.2rem 0; /* adjust as needed */
-  }
-
- h2 {
-    margin-bottom: 0.5rem; // adjust this value to change the spacing
+    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
   }
 
   .date {
@@ -144,42 +172,33 @@ const StudentContentStyled = styled.div`
     margin-right: auto;
     margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
   }
-
   .event-footer {
     display: flex;
-    align-items: center;
-    gap: 1.2rem;
+    justify-content: flex-start;
+    margin-top: auto;
 
     button {
-      border: none;
-      outline: none;
+      padding: 0.4rem 1rem;
+      border-radius: 0.8rem;
+      color: white;
+      border: 1px solid white;
       cursor: pointer;
+      margin-right: 10px; // Add this line
 
-      i {
-        font-size: 1.5rem;
-        color: #ffffff;
+      &:last-child {
+        margin-right: 0; // Add this line
+      }
+
+      &.delete {
+        border: 1px solid white;
       }
     }
-
-    .edit {
-      margin-left: auto;
-    }
-    .statusIsActive,
-    .statusIsInactive {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  border: 2px solid #299758; 
-  border-radius: 0.8rem;
-}
-
-.statusIsInactive {
-  border-color: #fe6854; 
-}
+  }
 
   .sport {
     background: #002b88 !important;
     border-radius: 10px;
-    padding: 0.5rem 1rem; 
+    padding: 0.5rem 1rem;
   }
 `;
 

@@ -16,6 +16,7 @@ interface Props {
 // submitState: string 'create' | 'edit'
 // OR false ||
 // AND true &&
+// Main functional component
 function CreateContent(props: Props) {
   const { event, submitState } = props;
   const [name, setName] = useState(event ? event.name : "");
@@ -31,7 +32,7 @@ function CreateContent(props: Props) {
   const [isInternal, setIsInternal] = useState(
     event ? event.isInternal : false
   );
-  const [userId, setUserId] = useState(event ? event.userId : ""); // userId is obtained from authentication
+  const [userId, setUserId] = useState(event ? event.userId : "");
   const [id, setId] = useState(event ? event.id : "");
   const { allEvents, closeModal } = useGlobalState();
 

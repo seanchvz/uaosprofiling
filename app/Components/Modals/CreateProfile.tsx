@@ -1,69 +1,95 @@
-import { useGlobalState } from "@/app/context/globalProvider";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FunctionComponent } from "react";
 import styled from "styled-components"; // Import styled-components// Assuming Button component exists
 import { add } from "@/app/utils/Icons"; // Assuming Icons are imported
 import Button from "../Button/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useGlobalState } from "@/app/context/globalProvider";
+import StudentProfileContent from "../StudentContent/StudentContent";
 
 interface Props {
-  student?: any;
+  studentProfile?: any;
   submitState: "create" | "edit";
 }
 
 // Create profile function component
 function CreateProfile(props: Props) {
-  const { student, submitState } = props;
-  const [firstName, setfirstName] = useState(student ? student.firstName : "");
+  const { studentProfile, submitState } = props;
+  const [firstName, setfirstName] = useState(
+    studentProfile ? studentProfile.firstName : ""
+  );
   const [middleName, setmiddleName] = useState(
-    student ? student.middleName : ""
+    studentProfile ? studentProfile.middleName : ""
   );
-  const [lastName, setlastName] = useState(student ? student.lastName : "");
+  const [lastName, setlastName] = useState(
+    studentProfile ? studentProfile.lastName : ""
+  );
   const [contactNumber, setContactNumber] = useState(
-    student ? student.contactNumber : ""
+    studentProfile ? studentProfile.contactNumber : ""
   );
-  const [birthDate, setBirthdate] = useState(student ? student.Birthdate : "");
+  const [birthDate, setBirthdate] = useState(
+    studentProfile ? studentProfile.Birthdate : ""
+  );
   const [nationality, setNationality] = useState(
-    student ? student.Nationality : ""
+    studentProfile ? studentProfile.Nationality : ""
   );
-  const [weight, setWeight] = useState(student ? student.Weight : "");
-  const [height, setHeight] = useState(student ? student.Height : "");
-  const [bloodType, setbloodType] = useState(student ? student.bloodType : "");
+  const [weight, setWeight] = useState(
+    studentProfile ? studentProfile.Weight : ""
+  );
+  const [height, setHeight] = useState(
+    studentProfile ? studentProfile.Height : ""
+  );
+  const [sport, setSport] = useState(
+    studentProfile ? studentProfile.sport : ""
+  );
+  const [bloodType, setbloodType] = useState(
+    studentProfile ? studentProfile.bloodType : ""
+  );
   const [academicYear, setAcademicYear] = useState(
-    student ? student.AcademicYear : ""
+    studentProfile ? studentProfile.AcademicYear : ""
   );
-  const [isMale, setIsMale] = useState(student ? student.isMale : false);
-  const [isFemale, setIsFemale] = useState(student ? student.isFemale : false);
+  const [isMale, setIsMale] = useState(
+    studentProfile ? studentProfile.isMale : false
+  );
+  const [isFemale, setIsFemale] = useState(
+    studentProfile ? studentProfile.isFemale : false
+  );
   const [yrStartedPlaying, setyrStartedPlaying] = useState(
-    student ? student.yrStartedPlaying : ""
+    studentProfile ? studentProfile.yrStartedPlaying : ""
   );
   const [mothersName, setMothersName] = useState(
-    student ? student.MothersName : ""
+    studentProfile ? studentProfile.MothersName : ""
   );
   const [fathersName, setFathersName] = useState(
-    student ? student.FathersName : ""
+    studentProfile ? studentProfile.FathersName : ""
   );
   const [guardiansName, setGuardiansName] = useState(
-    student ? student.GuardiansName : ""
+    studentProfile ? studentProfile.GuardiansName : ""
   );
   const [courseAndYear, setCourseAndYear] = useState(
-    student ? student.CourseAndYear : ""
+    studentProfile ? studentProfile.CourseAndYear : ""
   );
   const [emergencyContactNumber, setEmergencyContactNumber] = useState(
-    student ? student.EmergencyContactNumber : ""
+    studentProfile ? studentProfile.EmergencyContactNumber : ""
   );
   const [emergencyContactPerson, setEmergencyContactPerson] = useState(
-    student ? student.EmergencyContactPerson : ""
+    studentProfile ? studentProfile.EmergencyContactPerson : ""
   );
-  const [email, setEmail] = useState(student ? student.Email : "");
+  const [email, setEmail] = useState(
+    studentProfile ? studentProfile.Email : ""
+  );
   const [homeAddress, setHomeAddress] = useState(
-    student ? student.HomeAddress : ""
+    studentProfile ? studentProfile.HomeAddress : ""
   );
-  const [remarks, setRemarks] = useState(student ? student.Remarks : "");
+  const [remarks, setRemarks] = useState(
+    studentProfile ? studentProfile.Remarks : ""
+  );
   const [statusIsActive, setStatusIsActive] = useState(false);
   const [statusIsInactive, setStatusIsInactive] = useState(false);
-  const [userId, setUserId] = useState(student ? student.UserId : "");
-  const [id, setId] = useState(student ? student.id : "");
+  const [userId, setUserId] = useState(
+    studentProfile ? studentProfile.UserId : ""
+  );
+  const [id, setId] = useState(studentProfile ? studentProfile.id : "");
   const { fetchAllStudentProfile, closeModal } = useGlobalState();
 
   // Handle change function for form fields
@@ -87,6 +113,9 @@ function CreateProfile(props: Props) {
           break;
         case "contactNumber":
           setContactNumber(value);
+          break;
+        case "sport":
+          setSport(value);
           break;
         case "birthDate":
           setBirthdate(value);
@@ -146,39 +175,40 @@ function CreateProfile(props: Props) {
   };
 
   useEffect(() => {
-    if (submitState === "edit" && student) {
-      setfirstName(student.firstName);
-      setmiddleName(student.middleName);
-      setlastName(student.lastName);
-      setContactNumber(student.contactNumber);
-      setBirthdate(student.birthDate);
-      setNationality(student.nationality);
-      setWeight(student.weight);
-      setHeight(student.height);
-      setbloodType(student.bloodType);
-      setAcademicYear(student.academicYear);
-      setIsMale(student.isMale);
-      setIsFemale(student.isFemale);
-      setyrStartedPlaying(student.yrStartedPlaying);
-      setMothersName(student.mothersName);
-      setFathersName(student.fathersName);
-      setGuardiansName(student.guardiansName);
-      setCourseAndYear(student.courseAndYear);
-      setEmergencyContactNumber(student.emergencyContactNumber);
-      setEmergencyContactPerson(student.emergencyContactPerson);
-      setEmail(student.email);
-      setHomeAddress(student.homeAddress);
-      setRemarks(student.remarks);
-      setStatusIsActive(student.statusIsActive);
-      setStatusIsInactive(student.statusIsInactive);
-      setUserId(student.userId);
+    if (submitState === "edit" && studentProfile) {
+      setfirstName(studentProfile.firstName);
+      setmiddleName(studentProfile.middleName);
+      setlastName(studentProfile.lastName);
+      setContactNumber(studentProfile.contactNumber);
+      setBirthdate(studentProfile.birthDate);
+      setNationality(studentProfile.nationality);
+      setWeight(studentProfile.weight);
+      setHeight(studentProfile.height);
+      setSport(studentProfile.sport);
+      setbloodType(studentProfile.bloodType);
+      setAcademicYear(studentProfile.academicYear);
+      setIsMale(studentProfile.isMale);
+      setIsFemale(studentProfile.isFemale);
+      setyrStartedPlaying(studentProfile.yrStartedPlaying);
+      setMothersName(studentProfile.mothersName);
+      setFathersName(studentProfile.fathersName);
+      setGuardiansName(studentProfile.guardiansName);
+      setCourseAndYear(studentProfile.courseAndYear);
+      setEmergencyContactNumber(studentProfile.emergencyContactNumber);
+      setEmergencyContactPerson(studentProfile.emergencyContactPerson);
+      setEmail(studentProfile.email);
+      setHomeAddress(studentProfile.homeAddress);
+      setRemarks(studentProfile.remarks);
+      setStatusIsActive(studentProfile.statusIsActive);
+      setStatusIsInactive(studentProfile.statusIsInactive);
+      setUserId(studentProfile.userId);
     }
-  }, [submitState, student]);
+  }, [submitState, studentProfile]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const student = {
+    const studentProfile = {
       firstName,
       middleName,
       lastName,
@@ -187,6 +217,7 @@ function CreateProfile(props: Props) {
       nationality,
       weight,
       height,
+      sport,
       bloodType,
       academicYear,
       isMale,
@@ -211,80 +242,111 @@ function CreateProfile(props: Props) {
     if (submitState === "edit") {
       // API call to update the event
       try {
+        console.log("Sending PATCH request for coach ID:", studentProfile.id);
+        console.log("Data being sent:", studentProfile);
         const response = await axios.patch(
-          `/api/studentProfiling/${student.id}`,
-          student
+          `/api/studentProfiling/${studentProfile.id}/`,
+          studentProfile
         );
-        toast.success("Student updated successfully!");
-        // Refresh events list or handle state update
+        console.log("Server response:", response.data);
+        toast.success("Profile updated successfully!");
+        fetchAllStudentProfile();
       } catch (error) {
-        console.error("Failed to update the student:", error);
-        toast.error("Error updating student");
+        console.error("Failed to update the studentProfile:", error);
+        toast.error("Error updating studentProfile");
+        handleAxiosError(error);
       }
     } else {
       // API call to create a new event
       try {
-        const response = await axios.post("/api/studentProfiling", student);
-        toast.success("student created successfully!");
+        const response = await axios.post(
+          "/api/studentProfiling",
+          studentProfile
+        );
+        toast.success("Event created successfully!");
+        toast.success("Profile created successfully!");
         fetchAllStudentProfile();
         closeModal();
       } catch (error) {
-        console.error("Failed to create the student:", error);
-        toast.error("Error creating student");
+        console.error("Failed to create the event:", error);
+        toast.error("Error creating studentProfile");
+        handleAxiosError(error, "creating");
       }
     }
     // Optionally close the modal after operation
     closeModal();
   };
 
-  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  function handleAxiosError(error: any, action: string = "updating") {
+    console.error(`Failed to ${action} the event:`, error);
+    if (error.response && error.response.data) {
+      console.error("Server error details:", error.response.data);
+      const errorMessage =
+        error.response.data.error || "Unexpected server error";
+      toast.error(`Error ${action} studentProfile: ${errorMessage}`);
+    } else if (error.message) {
+      console.error("Network or other error:", error.message);
+      toast.error(`Error ${action} studentProfile: ${error.message}`);
+    } else {
+      toast.error(`Error ${action} studentProfile: Unknown error`);
+    }
+  }
 
-    const student = {
-      firstName,
-      middleName,
-      lastName,
-      contactNumber,
-      birthDate,
-      nationality,
-      weight,
-      height,
-      bloodType,
-      academicYear,
-      isMale,
-      isFemale,
-      yrStartedPlaying,
-      mothersName,
-      fathersName,
-      guardiansName,
-      courseAndYear,
-      emergencyContactNumber,
-      emergencyContactPerson,
-      email,
-      homeAddress,
-      statusIsActive,
-      statusIsInactive,
-      remarks,
-      userId,
-    };
+  interface studentData {
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    contactNumber: string;
+    birthDate: string;
+    nationality: string;
+    weight?: number;
+    height?: number;
+    sport?: string;
+    bloodType?: string;
+    academicYear: string;
+    isMale: boolean;
+    isFemale: boolean;
+    yrStartedPlaying: string;
+    mothersName: string;
+    fathersName: string;
+    guardiansName: string;
+    courseAndYear: string;
+    emergencyContactNumber: string;
+    emergencyContactPerson: string;
+    email: string;
+    homeAddress: string;
+    statusIsActive: boolean;
+    statusIsInactive: boolean;
+    remarks?: string;
+    userId: string;
+    id: string;
+  }
 
+  const handleEdit = async (studentProfile: studentData) => {
+    if (!studentProfile.id) {
+      toast.error("Student ID is missing");
+      return;
+    }
     try {
-      const studentId = "existing-student-id"; // id of the event thats being edited
-      const res = await axios.put(
-        `/api/studentProfiling/${studentId}`,
-        student
+      console.log("Sending PATCH request for coach ID:", studentProfile.id);
+      console.log("Data being sent:", studentProfile);
+
+      // Destructure the event to separate id from other data
+      const { id, ...updateData } = studentProfile;
+
+      const response = await axios.patch(
+        `/api/studentProfiling/${id}`,
+        updateData
       );
 
-      if (res.data.error) {
-        toast.error(res.data.error);
+      console.log("Server response:", response.data);
+      if (response.data && response.data.error) {
+        toast.error(response.data.error);
       } else {
-        toast.success("student updated successfully.");
-        fetchAllStudentProfile(); // fetches all events and updates the state
-        closeModal();
+        toast.success("Student updated successfully!");
       }
     } catch (error) {
-      toast.error("Something went wrong during student update.");
-      console.log(error);
+      handleAxiosError(error);
     }
   };
   return (
@@ -325,6 +387,21 @@ function CreateProfile(props: Props) {
             value={lastName}
             name="lastName"
             onChange={handleChange}
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+
+        <div className="input-control">
+          <label htmlFor="sport" className="block">
+            Sport
+          </label>
+          <input
+            type="text"
+            id="sport"
+            value={sport}
+            name="sport"
+            onChange={handleChange}
+            placeholder="Enter sport"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -416,31 +493,6 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label>
-            <input
-              id="isMale"
-              type="checkbox"
-              checked={isMale}
-              onChange={handleChange}
-              name="isMale"
-            />
-            Male
-          </label>
-        </div>
-        <div className="input-control">
-          <label>
-            <input
-              id="isFemale"
-              type="checkbox"
-              checked={isFemale}
-              onChange={handleChange}
-              name="isFemale"
-            />
-            Female
-          </label>
-        </div>
-
-        <div className="input-control">
           <label htmlFor="name"> Year started playing: </label>
           <input
             type="text"
@@ -451,6 +503,59 @@ function CreateProfile(props: Props) {
             placeholder="e.g. 2021"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
+        </div>
+
+        <div className="input-control flex justify-between">
+          <label htmlFor="isMale" className="flex items-center cursor-pointer">
+            <span className="mr-2 text-white">Male</span>
+            <input
+              type="checkbox"
+              id="isMale"
+              checked={isMale}
+              onChange={handleChange}
+              name="isMale"
+              className="hidden"
+            />
+            <span
+              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
+                isMale ? "bg-blue-500" : ""
+              }`}
+            >
+              <span
+                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
+                  isMale ? "translate-x-5" : ""
+                }`}
+              />
+            </span>
+          </label>
+        </div>
+
+        <div className="input-control flex justify-between">
+          <label
+            htmlFor="isFemale"
+            className="flex items-center cursor-pointer"
+          >
+            <span className="mr-2 text-white">Female</span>
+            <input
+              type="checkbox"
+              id="isFemale"
+              checked={isFemale}
+              onChange={handleChange}
+              name="isFemale"
+              className="hidden"
+            />
+            <span
+              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
+                isFemale ? "bg-red-500" : ""
+              }`}
+            >
+              <span
+                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
+                  isFemale ? "translate-x-5" : ""
+                }`}
+              />
+            </span>
+          </label>
         </div>
         <div className="input-control">
           <label htmlFor="mothersName"> Mother's Name </label>
@@ -560,7 +665,7 @@ function CreateProfile(props: Props) {
               htmlFor="statusIsActive"
               className="flex items-center cursor-pointer"
             >
-              <span className="mr-2 text-white">Is an Active Athlete</span>
+              <span className="mr-2 text-white">Active</span>
               <input
                 type="checkbox"
                 id="statusIsActive"
@@ -588,7 +693,7 @@ function CreateProfile(props: Props) {
               htmlFor="statusIsInactive"
               className="flex items-center cursor-pointer"
             >
-              <span className="mr-2 text-white">Is an Inactive Athlete</span>
+              <span className="mr-2 text-white">Inactive</span>
               <input
                 type="checkbox"
                 id="statusIsInactive"
@@ -610,6 +715,7 @@ function CreateProfile(props: Props) {
               </span>
             </label>
           </div>
+
           <div className="input-control">
             <label htmlFor="remarks" className="block">
               Remarks
@@ -618,7 +724,7 @@ function CreateProfile(props: Props) {
               id="remarks"
               value={remarks}
               onChange={handleChange}
-              placeholder="Enter student remarks"
+              placeholder="Enter studentProfile remarks"
               name="remarks"
               className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
               rows={4}
