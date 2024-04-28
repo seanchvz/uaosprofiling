@@ -77,8 +77,8 @@ function Dashboard({ name, events }: Props) {
           >
             <option value="all">All Sports</option>
             <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women">Basketball Women</option>
+              <option value="basketballMen">Basketball Men</option>
+              <option value="basketballWomen">Basketball Women</option>
             </optgroup>
             <optgroup label="Volleyball">
               <option value="volleyball men">Volleyball Men</option>
