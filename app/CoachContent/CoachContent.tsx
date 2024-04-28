@@ -33,21 +33,23 @@ interface Props {
 }
 
 const roleColors = {
-  basketballMen: "#F2BB05",
-  basketballWomen: "#FF4500",
-  Volleyball: "#DA70D6",
-  "table tennis": "#32CD32",
+  basketballmen: "#192BC2",
+  basketballwomen: "#D90368",
+  volleyballmen: "#276FBF",
+  volleyballwomen: "#DA70D6",
+  badmintonmen: "#D90368",
+  badmintonwomen: "#D90368",
+  tabletennis: "#32CD32",
   Taekwondo: "#FFD700",
   chess: "#00CED1",
   swimming: "#1E90FF",
   football: "#FF6347",
-  valorant: "#FF4500", // Assign appropriate colors
-  dota: "#DA70D6", // Assign appropriate colors
-  "Mobile Legends": "#32CD32",
+  valorant: "#FF4500",
+  dota: "#DA70D6",
+  mobilelegends: "#0038ff",
   fullTime: "#228B22",
   partTime: "#E03616",
-  academicYear: "#F2BB05",
-  // ...add more roles with their colors
+  academicYear: "#fda600",
 };
 
 function CoachContent({
@@ -83,33 +85,36 @@ function CoachContent({
   // Card Contents
   return (
     <CoachContentStyled theme={theme}>
-      <h1>{name}</h1>
+      <h1 style={{ marginBottom: "5px" }}>{name}</h1>
 
       <div className="tags">
-        <Tag
-          style={{ marginRight: "10px" }}
-          color={roleColors[sport.replace(/\s+/g, "").toLowerCase()]}
-        >
-          {sport}
-        </Tag>
         <Tag
           style={{ marginBottom: "10px" }}
           color={statusIsFulltime ? roleColors.fullTime : roleColors.partTime}
         >
           {statusIsFulltime ? "Full Time" : "Part Time"}
         </Tag>
-        {/* Tag for academic year */}
+        <Tag
+          style={{ marginRight: "10px" }}
+          color={roleColors[sport.replace(/\s+/g, "").toLowerCase()]}
+        >
+          {sport}
+        </Tag>
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
       </div>
 
-      <p className="sport">Permanent Team: {permanentTeam}</p>
-      <p className="sport"> Contact Number: {contactNumber}</p>
-      <p className="sport"> Remarks: {remarks}</p>
-      <p className="date">
+      {/* <p className="sport">Permanent Team: {permanentTeam}</p> */}
+      <p className="date" style={{ marginBottom: "5px" }}>
         Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
       </p>
+      <p className="sport" style={{ marginBottom: "5px" }}>
+        Contact Number: {contactNumber}
+      </p>
+      <p className="sport" style={{ marginBottom: "5px" }}>
+        Remarks: {remarks}
+      </p>
 
-      <div className="event-footer">
+      <div className="event-footer" style={{ marginTop: "5px" }}>
         <button className="edit" onClick={handleEdit}>
           {edit}
         </button>
@@ -146,7 +151,7 @@ border-radius: 1rem;
 background-color: ${(props) => props.theme.borderColor2};
 box-shadow: ${(props) => props.theme.shadow7};
 border: 1px solid ${(props) => props.theme.borderColor2};
-height: 25rem;
+height: 24rem;
 display: flex;
 flex-direction: column;
 gap: 1rem;

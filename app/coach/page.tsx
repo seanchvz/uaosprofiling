@@ -86,12 +86,12 @@ function Page({ name, coachprofile }: Props) {
           >
             <option value="all">All Sports</option>
             <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women">Basketball Women</option>
+              <option value="basketballmen">Basketball Men</option>
+              <option value="basketballwomen">Basketball Women</option>
             </optgroup>
             <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
+              <option value="volleyballmen">Volleyball Men</option>
+              <option value="volleyballwomen">Volleyball Women</option>
             </optgroup>
             <option value="table tennis">Table Tennis</option>
             <option value="taekwondo">Taekwondo</option>

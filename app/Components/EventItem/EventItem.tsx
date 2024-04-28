@@ -15,6 +15,26 @@ interface Props {
   id: string;
   handleEdit: () => void;
 }
+
+const roleColors = {
+  basketballmen: "#192BC2",
+  basketballwomen: "#D90368",
+  volleyballmen: "#276FBF",
+  volleyballwomen: "#DA70D6",
+  badmintonmen: "#D90368",
+  badmintonwomen: "#D90368",
+  tabletennis: "#32CD32",
+  Taekwondo: "#FFD700",
+  chess: "#00CED1",
+  swimming: "#1E90FF",
+  football: "#FF6347",
+  valorant: "#FF4500",
+  dota: "#DA70D6",
+  mobilelegends: "#0038ff",
+  isInternal: "#228B22",
+  isExternal: "#E03616",
+  academicYear: "#F2BB05",
+};
 //added handleEdit as a prop but for now it doesnt return anything
 function EventItem({
   name,
@@ -36,24 +56,34 @@ function EventItem({
   // const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = event;
   return (
     <EventItemStyled theme={theme}>
-      <h1> {name}</h1>
-      <p className="sport"> {Sport}</p>
+      <h1 style={{ marginBottom: "5px" }}>{name}</h1>
+      <div className="tags" style={{ marginTop: "5px" }}>
+        {/* Tag for the sport */}
+        <Tag
+          style={{ marginRight: "10px" }}
+          color={roleColors[Sport.replace(/\s+/g, "").toLowerCase()]}
+        >
+          {Sport}
+        </Tag>
+
+        {/* Conditional rendering of tags based on the event being internal or external */}
+        {isExternal ? (
+          <Tag color={roleColors["isExternal"]}>External</Tag>
+        ) : (
+          <Tag color={roleColors["isInternal"]}>Internal</Tag>
+        )}
+      </div>
+
       <p className="date">
         Start Date: {new Date(startDate).toLocaleDateString(undefined, options)}
       </p>
       <p className="dateend">
-        {" "}
         End Date: {new Date(endDate).toLocaleDateString(undefined, options)}
       </p>
-      <p className="sport">{eventDetails}</p>
+      <p className="details">{eventDetails}</p>
 
       <div className="event-footer">
-        {isExternal ? (
-          <button className="isExternal">External</button>
-        ) : (
-          <button className="isInternal">Internal</button>
-        )}
-
+        {/* Buttons for editing and deleting */}
         <button className="edit" onClick={handleEdit}>
           {edit}
         </button>
@@ -65,11 +95,22 @@ function EventItem({
         >
           {trash}
         </button>
-        {/* <button className="completed">External</button> */}
       </div>
     </EventItemStyled>
   );
 }
+const Tag = styled.span`
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  margin-right: 0.5rem;
+  border-radius: 0.8rem;
+  background-color: ${(props) => props.color || "#6c757d"}; // A default color
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+`;
+
 const EventItemStyled = styled.div`
     padding: 1.2rem 1rem;
     border-radius: 1rem;
@@ -80,6 +121,15 @@ const EventItemStyled = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center; // Align tags nicely if they wrap
+      margin-top: 1rem; // Adjust as needed
+    }
+    
 
     > h1 {
       font-size: 1.5rem;
