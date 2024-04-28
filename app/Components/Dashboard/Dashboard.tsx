@@ -16,6 +16,7 @@ function Dashboard({ name, events }: Props) {
   const { theme, isLoading, openModal, modal, allEvents } = useGlobalState();
   const [modalState, setModalState] = useState("create");
   const [selectedEvent, setSelectedEvent] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Open modal specifically for creating a new event
   const handleOpenCreateModal = () => {
@@ -23,6 +24,14 @@ function Dashboard({ name, events }: Props) {
     setSelectedEvent(undefined); // Ensure no event data is passed into the creation form
     openModal();
   };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredEvents = events.filter((event) =>
+    event.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <DashboardStyled theme={theme}>
@@ -35,6 +44,13 @@ function Dashboard({ name, events }: Props) {
         <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
           {name}
         </h1>
+        <input
+          type="text"
+          placeholder="Search events..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          style={{ height: "2rem", marginRight: "1rem" }}
+        />
         <button className="create-item" onClick={handleOpenCreateModal}>
           {plus}
           Add New Event
@@ -42,22 +58,26 @@ function Dashboard({ name, events }: Props) {
       </div>
 
       <div className="inventoryitem grid mt-5">
-        {events.map((event) => (
-          <EventItem
-            key={event.id}
-            name={event.name}
-            handleEdit={() => {
-              setModalState("edit");
-              setSelectedEvent(event); // Pass the selected event to be edited
-              openModal();
-            }}
-            startDate={event.startDate}
-            endDate={event.endDate}
-            Sport={event.Sport}
-            isExternal={event.isExternal}
-            id={event.id}
-          />
-        ))}
+        {filteredEvents.length > 0 ? (
+          filteredEvents.map((event) => (
+            <EventItem
+              key={event.id}
+              name={event.name}
+              handleEdit={() => {
+                setModalState("edit");
+                setSelectedEvent(event);
+                openModal();
+              }}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              Sport={event.Sport}
+              isExternal={event.isExternal}
+              id={event.id}
+            />
+          ))
+        ) : (
+          <p>No events found.</p>
+        )}
       </div>
     </DashboardStyled>
   );
