@@ -85,8 +85,8 @@ function Page({ name, studentprofile }: Props) {
               <option value="volleyball women">Volleyball Women</option>
             </optgroup>
             <optgroup label="Badminton">
-              <option value="badmintonwomen">Badminton Women</option>
-              <option value="badmintonmen">Badminton Men</option>
+              <option value="badminton women">Badminton Women</option>
+              <option value="badminton men">Badminton Men</option>
             </optgroup>
             <optgroup label="ESport">
               <option value="valorant">Valorant</option>
@@ -131,49 +131,47 @@ function Page({ name, studentprofile }: Props) {
       </div>
 
       <div className="inventoryitem grid mt-5">
-        <tbody>
-          {filteredStudentProfile.length > 0 ? (
-            filteredStudentProfile.map((studentProfile) => (
-              <StudentProfileContent
-                handleEdit={() => {
-                  setModalState("edit");
-                  openModal();
-                  setSelectedStudent(studentProfile);
-                }}
-                key={studentProfile.id}
-                firstName={studentProfile.firstName}
-                middleName={studentProfile.middleName}
-                lastName={studentProfile.lastName}
-                contactNumber={studentProfile.contactNumber}
-                birthDate={studentProfile.birthDate}
-                nationality={studentProfile.nationality}
-                weight={studentProfile.weight}
-                height={studentProfile.height}
-                sport={studentProfile.sport}
-                bloodType={studentProfile.bloodType}
-                academicYear={studentProfile.academicYear}
-                isMale={studentProfile.isMale}
-                isFemale={studentProfile.isFemale}
-                yrStartedPlaying={studentProfile.yrStartedPlaying}
-                mothersName={studentProfile.mothersName}
-                fathersName={studentProfile.fathersName}
-                guardiansName={studentProfile.guardiansName}
-                courseAndYear={studentProfile.courseAndYear}
-                emergencyContactPerson={studentProfile.emergencyContactPerson}
-                emergencyContactNumber={studentProfile.emergencyContactNumber}
-                email={studentProfile.email}
-                homeAddress={studentProfile.homeAddress}
-                statusIsActive={studentProfile.statusIsActive}
-                statusIsInactive={studentProfile.statusIsInactive}
-                userId={studentProfile.userId}
-                remarks={studentProfile.remarks}
-                id={studentProfile.id}
-              />
-            ))
-          ) : (
-            <p>No student profiles available.</p>
-          )}
-        </tbody>
+        {filteredStudentProfile.length > 0 ? (
+          filteredStudentProfile.map((studentProfile) => (
+            <StudentProfileContent
+              handleEdit={() => {
+                setModalState("edit");
+                openModal();
+                setSelectedStudent(studentProfile);
+              }}
+              key={studentProfile.id}
+              firstName={studentProfile.firstName}
+              middleName={studentProfile.middleName}
+              lastName={studentProfile.lastName}
+              contactNumber={studentProfile.contactNumber}
+              birthDate={studentProfile.birthDate}
+              nationality={studentProfile.nationality}
+              weight={studentProfile.weight}
+              height={studentProfile.height}
+              sport={studentProfile.sport}
+              bloodType={studentProfile.bloodType}
+              academicYear={studentProfile.academicYear}
+              isMale={studentProfile.isMale}
+              isFemale={studentProfile.isFemale}
+              yrStartedPlaying={studentProfile.yrStartedPlaying}
+              mothersName={studentProfile.mothersName}
+              fathersName={studentProfile.fathersName}
+              guardiansName={studentProfile.guardiansName}
+              courseAndYear={studentProfile.courseAndYear}
+              emergencyContactPerson={studentProfile.emergencyContactPerson}
+              emergencyContactNumber={studentProfile.emergencyContactNumber}
+              email={studentProfile.email}
+              homeAddress={studentProfile.homeAddress}
+              statusIsActive={studentProfile.statusIsActive}
+              statusIsInactive={studentProfile.statusIsInactive}
+              userId={studentProfile.userId}
+              remarks={studentProfile.remarks}
+              id={studentProfile.id}
+            />
+          ))
+        ) : (
+          <p>No student profiles available.</p>
+        )}
       </div>
     </StudentStyled>
     // </div>

@@ -5,11 +5,17 @@ import Button from "../Button/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useGlobalState } from "@/app/context/globalProvider";
+import Select from "react-select/base";
 
 // props avaialable
 interface Props {
   event?: any;
   submitState: "create" | "edit";
+}
+
+interface StudentOption {
+  value: number;
+  label: string;
 }
 
 // event: object || null
@@ -35,6 +41,26 @@ function CreateContent(props: Props) {
   const [userId, setUserId] = useState(event ? event.userId : "");
   const [id, setId] = useState(event ? event.id : "");
   const { allEvents, closeModal } = useGlobalState();
+  const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+  const [studentOptions, setStudentOptions] = useState<StudentOption[]>([]);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get("/api/studentProfiling");
+        setStudentOptions(
+          response.data.map((student: any) => ({
+            value: student.id,
+            label: `${student.firstName} ${student.lastName}`,
+          }))
+        );
+      } catch (error) {
+        toast.error("Error fetching students");
+      }
+    };
+
+    fetchStudents();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -118,31 +144,37 @@ function CreateContent(props: Props) {
     } else {
       try {
         const response = await axios.post("/api/events", event);
-        toast.success("Event created successfully!");
+        const eventId = response.data.id;
+
+        await axios.post("/api/studentEvent", {
+          eventId: eventId,
+          studentIds: selectedStudents,
+        });
+
+        toast.success("Event created and students tagged successfully!");
         allEvents();
         closeModal();
       } catch (error) {
-        handleAxiosError(error, "creating");
+        toast.error("Error creating event or tagging students");
       }
     }
-
     closeModal();
   };
 
-  function handleAxiosError(error: any, action: string = "updating") {
-    console.error(`Failed to ${action} the event:`, error);
-    if (error.response && error.response.data) {
-      console.error("Server error details:", error.response.data);
-      const errorMessage =
-        error.response.data.error || "Unexpected server error";
-      toast.error(`Error ${action} event: ${errorMessage}`);
-    } else if (error.message) {
-      console.error("Network or other error:", error.message);
-      toast.error(`Error ${action} event: ${error.message}`);
-    } else {
-      toast.error(`Error ${action} event: Unknown error`);
-    }
-  }
+  // function handleAxiosError(error: any, action: string = "updating") {
+  //   console.error(`Failed to ${action} the event:`, error);
+  //   if (error.response && error.response.data) {
+  //     console.error("Server error details:", error.response.data);
+  //     const errorMessage =
+  //       error.response.data.error || "Unexpected server error";
+  //     toast.error(`Error ${action} event: ${errorMessage}`);
+  //   } else if (error.message) {
+  //     console.error("Network or other error:", error.message);
+  //     toast.error(`Error ${action} event: ${error.message}`);
+  //   } else {
+  //     toast.error(`Error ${action} event: Unknown error`);
+  //   }
+  // }
   interface EventData {
     id: string;
     name?: string;
@@ -200,7 +232,16 @@ function CreateContent(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-
+        <Select
+          options={studentOptions}
+          isMulti
+          onChange={(selected) =>
+            setSelectedStudents(selected.map((s) => s.value))
+          }
+          onMenuOpen={() => {}}
+          className="basic-multi-select"
+          classNamePrefix="select"
+        />
         <div className="flex">
           <div className="input-control">
             <label htmlFor="startDate" className="block">

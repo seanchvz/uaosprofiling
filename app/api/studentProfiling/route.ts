@@ -40,16 +40,35 @@ export async function POST(req: Request) {
             statusIsInactive,
         } = await req.json();
 
-        if (!firstName || !lastName) {
+        // Check if firstName, lastName, and email are provided
+        if (!firstName || !lastName || !email) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
             });
         }
 
-        if (email.length < 3) {
+        // Check if email is valid
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
             return NextResponse.json({
-                error: "The email must contain a domain",
+                error: "Invalid email format",
+                status: 400,
+            });
+        }
+
+        // Check if contactNumber is provided and is a valid number
+        if (!contactNumber || isNaN(contactNumber)) {
+            return NextResponse.json({
+                error: "Invalid contact number",
+                status: 400,
+            });
+        }
+
+        // Check if birthDate is provided and is a valid date
+        if (!birthDate || isNaN(Date.parse(birthDate))) {
+            return NextResponse.json({
+                error: "Invalid birth date",
                 status: 400,
             });
         }

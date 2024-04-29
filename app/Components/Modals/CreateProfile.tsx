@@ -263,12 +263,11 @@ function CreateProfile(props: Props) {
           "/api/studentProfiling",
           studentProfile
         );
-        toast.success("Event created successfully!");
         toast.success("Profile created successfully!");
         fetchAllStudentProfile();
         closeModal();
       } catch (error) {
-        console.error("Failed to create the event:", error);
+        console.error("Failed to create the profile:", error);
         toast.error("Error creating studentProfile");
         handleAxiosError(error, "creating");
       }

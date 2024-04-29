@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
         const { name, remarks, contactNumber, sport, permanentTeam, isMale, isFemale, emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email } = await req.json();
 
-        if (!name || !contactNumber || !sport || !permanentTeam) {
+        if (!name || !contactNumber || !sport || !permanentTeam || !nationality || !academicYear || !emergencyContact || !emergencyContactPerson) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
