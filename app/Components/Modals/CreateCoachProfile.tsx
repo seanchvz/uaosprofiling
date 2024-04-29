@@ -340,7 +340,7 @@ function CreateCoachProfile(props: Props) {
             value={sport}
             name="sport"
             onChange={handleChange}
-            placeholder="Enter Sport"
+            placeholder="e.g. Volleyball Women"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -472,7 +472,7 @@ function CreateCoachProfile(props: Props) {
           value={bloodType}
           name="bloodType"
           onChange={handleChange}
-          placeholder="Enter Blood Type"
+          placeholder="e.g. O+"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -590,7 +590,7 @@ function CreateCoachProfile(props: Props) {
           value={remarks}
           name="remarks"
           onChange={handleChange}
-          placeholder="Remarks"
+          placeholder="Enter Coach Remarks"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           rows={2}
         ></textarea>

@@ -4,6 +4,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { auth } from "@clerk/nextjs";
 
 
+/**
+ * Handles the HTTP POST request for creating an event.
+ * 
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A JSON response containing the created event or an error message.
+ */
 export async function POST(req: Request, res: NextApiResponse) {
     try {
         const { userId } = auth();
@@ -44,6 +51,9 @@ export async function POST(req: Request, res: NextApiResponse) {
                 userId: userId,
             },
         });
+        console.log("Received data:", req.body);
+        console.log("Sending event data:", event);
+
 
         console.log(event);
         return NextResponse.json(event);

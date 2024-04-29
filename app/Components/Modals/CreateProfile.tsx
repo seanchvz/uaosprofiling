@@ -362,7 +362,7 @@ function CreateProfile(props: Props) {
             value={firstName}
             name="firstName"
             onChange={handleChange}
-            placeholder="First name"
+            placeholder="Enter First Name"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -374,7 +374,7 @@ function CreateProfile(props: Props) {
             value={middleName}
             name="middleName"
             onChange={handleChange}
-            placeholder="Middle Name: "
+            placeholder="Enter Middle Name"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -386,6 +386,7 @@ function CreateProfile(props: Props) {
             value={lastName}
             name="lastName"
             onChange={handleChange}
+            placeholder="Enter Last Name"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -400,7 +401,7 @@ function CreateProfile(props: Props) {
             value={sport}
             name="sport"
             onChange={handleChange}
-            placeholder="Enter sport"
+            placeholder="e.g. Basketball Men"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -412,7 +413,7 @@ function CreateProfile(props: Props) {
             value={contactNumber}
             name="contactNumber"
             onChange={handleChange}
-            placeholder="Contac Number:  "
+            placeholder="e.g. 0987654321 "
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -436,7 +437,7 @@ function CreateProfile(props: Props) {
             value={nationality}
             name="nationality"
             onChange={handleChange}
-            placeholder=" Nationality: "
+            placeholder="Enter Nationality"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -473,7 +474,7 @@ function CreateProfile(props: Props) {
             value={bloodType}
             name="bloodType"
             onChange={handleChange}
-            placeholder="bloodType: "
+            placeholder="e.g. O+"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -503,58 +504,63 @@ function CreateProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-
-        <div className="input-control flex justify-between">
-          <label htmlFor="isMale" className="flex items-center cursor-pointer">
-            <span className="mr-2 text-white">Male</span>
-            <input
-              type="checkbox"
-              id="isMale"
-              checked={isMale}
-              onChange={handleChange}
-              name="isMale"
-              className="hidden"
-            />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                isMale ? "bg-blue-500" : ""
-              }`}
+        <span className="text-white">Gender</span>
+        <div className="flex">
+          <div className="input-control flex justify-between">
+            <label
+              htmlFor="isMale"
+              className="flex items-center cursor-pointer"
             >
-              <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  isMale ? "translate-x-5" : ""
-                }`}
+              <span className="mr-10 text-white">Male</span>
+              <input
+                type="checkbox"
+                id="isMale"
+                checked={isMale}
+                onChange={handleChange}
+                name="isMale"
+                className="hidden"
               />
-            </span>
-          </label>
-        </div>
+              <span
+                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
+                  isMale ? "bg-blue-500" : ""
+                }`}
+              >
+                <span
+                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
+                    isMale ? "translate-x-5" : ""
+                  }`}
+                />
+              </span>
+            </label>
+          </div>
 
-        <div className="input-control flex justify-between">
-          <label
-            htmlFor="isFemale"
-            className="flex items-center cursor-pointer"
-          >
-            <span className="mr-2 text-white">Female</span>
-            <input
-              type="checkbox"
-              id="isFemale"
-              checked={isFemale}
-              onChange={handleChange}
-              name="isFemale"
-              className="hidden"
-            />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                isFemale ? "bg-red-500" : ""
-              }`}
+          <div className="input-control flex justify-between">
+            <label
+              htmlFor="isFemale"
+              className="flex items-center cursor-pointer"
             >
-              <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  isFemale ? "translate-x-5" : ""
-                }`}
+              <span className="mr-2 text-white">Female</span>
+              <input
+                type="checkbox"
+                id="isFemale"
+                checked={isFemale}
+                onChange={handleChange}
+                name="isFemale"
+                className="hidden"
               />
-            </span>
-          </label>
+              <span
+                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
+                  isFemale ? "bg-red-500" : ""
+                }`}
+              >
+                <span
+                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
+                    isFemale ? "translate-x-5" : ""
+                  }`}
+                />
+              </span>
+            </label>
+          </div>
         </div>
         <div className="input-control">
           <label htmlFor="mothersName"> Mother's Name </label>
@@ -564,7 +570,7 @@ function CreateProfile(props: Props) {
             value={mothersName}
             name="mothersName"
             onChange={handleChange}
-            placeholder=" Mother's name: "
+            placeholder=" Mother's name "
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -600,7 +606,7 @@ function CreateProfile(props: Props) {
             value={courseAndYear}
             name="courseAndYear"
             onChange={handleChange}
-            placeholder="Course and Year: "
+            placeholder="e.g. IT3A"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -613,7 +619,7 @@ function CreateProfile(props: Props) {
             value={emergencyContactNumber}
             name="emergencyContactNumber"
             onChange={handleChange}
-            placeholder="Enter Emergency Contact"
+            placeholder="Enter Emergency Contact Number"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -641,7 +647,7 @@ function CreateProfile(props: Props) {
             value={email}
             name="email"
             onChange={handleChange}
-            placeholder="email: "
+            placeholder="Email"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -653,11 +659,12 @@ function CreateProfile(props: Props) {
             value={homeAddress}
             name="homeAddress"
             onChange={handleChange}
-            placeholder="homeAddress: "
+            placeholder="e.g. Davao City"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
 
+        <span className="text-white">Status</span>
         <div className="flex">
           <div className="input-control flex justify-between mr-4">
             <label
@@ -714,21 +721,20 @@ function CreateProfile(props: Props) {
               </span>
             </label>
           </div>
-
-          <div className="input-control">
-            <label htmlFor="remarks" className="block">
-              Remarks
-            </label>
-            <textarea
-              id="remarks"
-              value={remarks}
-              onChange={handleChange}
-              placeholder="Enter studentProfile remarks"
-              name="remarks"
-              className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-              rows={4}
-            ></textarea>
-          </div>
+        </div>
+        <div className="input-control">
+          <label htmlFor="remarks" className="block">
+            Remarks
+          </label>
+          <textarea
+            id="remarks"
+            value={remarks}
+            onChange={handleChange}
+            placeholder="Enter Student remarks"
+            name="remarks"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            rows={4}
+          ></textarea>
         </div>
 
         <div className="submit-btn mt-4 flex justify-center">

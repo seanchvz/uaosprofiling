@@ -8,18 +8,19 @@ datasource db {
 }
 
 model events {
-  id           Int            @id @default(autoincrement())
+  id           Int              @id @default(autoincrement())
   name         String
   startDate    DateTime
   endDate      DateTime
-  CreatedAt    DateTime       @default(now())
-  UpdatedAt    DateTime       @updatedAt
+  CreatedAt    DateTime         @default(now())
+  UpdatedAt    DateTime         @updatedAt
   eventDetails String?
   Sport        String
-  isExternal   Boolean        @default(false)
-  isInternal   Boolean        @default(false)
+  isExternal   Boolean          @default(false)
+  isInternal   Boolean          @default(false)
   userId       String
-  attendees    studentEvent[]
+  students     studentprofile[] @relation("StudentEvents")
+  StudentEvent StudentEvent[]
 }
 
 model studentprofile {
@@ -53,16 +54,17 @@ model studentprofile {
   UpdatedAt              DateTime       @updatedAt
   userId                 String
   imageUrl               String?
-  events                 studentEvent[]
+  events                 events[]       @relation("StudentEvents")
+  StudentEvent           StudentEvent[]
 }
 
-model studentEvent {
-  eventId        Int
-  studentId      Int
-  event          events         @relation(fields: [eventId], references: [id])
-  studentProfile studentprofile @relation(fields: [studentId], references: [id])
+model StudentEvent {
+  student   studentprofile @relation(fields: [studentId], references: [id])
+  studentId Int
+  event     events         @relation(fields: [eventId], references: [id])
+  eventId   Int
 
-  @@id([eventId, studentId])
+  @@id([studentId, eventId])
 }
 
 model coachprofile {

@@ -5,17 +5,12 @@ import Button from "../Button/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useGlobalState } from "@/app/context/globalProvider";
-import Select from "react-select/base";
+import Select from "react-select";
 
 // props avaialable
 interface Props {
   event?: any;
   submitState: "create" | "edit";
-}
-
-interface StudentOption {
-  value: number;
-  label: string;
 }
 
 // event: object || null
@@ -43,6 +38,7 @@ function CreateContent(props: Props) {
   const { allEvents, closeModal } = useGlobalState();
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
   const [studentOptions, setStudentOptions] = useState<StudentOption[]>([]);
+  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -62,7 +58,9 @@ function CreateContent(props: Props) {
     fetchStudents();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: {
+    target: { name: any; value: any; type: any; checked: any };
+  }) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
       // For checkboxes, use checked value
@@ -128,39 +126,43 @@ function CreateContent(props: Props) {
       userId,
     };
 
-    if (submitState === "edit") {
-      // handleEdit(event);
-      try {
-        console.log("Sending PATCH request for event ID:", event.id);
-        console.log("Data being sent:", event);
-        const response = await axios.patch(`/api/events/${event.id}/`, event);
+    try {
+      let eventId = id;
 
-        console.log("Server response:", response.data);
+      // Handle 'edit' state
+      if (submitState === "edit") {
+        const updateResponse = await axios.patch(
+          `/api/events/${eventId}`,
+          event
+        );
         toast.success("Event updated successfully!");
-        allEvents(); // displays updated events after updating
-      } catch (error) {
-        handleAxiosError(error);
+      } else {
+        // Handle 'create' state
+        const createResponse = await axios.post("/api/events", event);
+        eventId = createResponse.data.id; // Set the eventId with the new ID returned from the POST request
+        toast.success("Event created successfully!");
       }
-    } else {
-      try {
-        const response = await axios.post("/api/events", event);
-        const eventId = response.data.id;
 
+      // Check if any students were selected
+      if (selectedStudents.length > 0) {
+        // Construct student IDs array from selected student options
+        const studentIds = selectedStudents.map((student) => student.value);
+
+        // Post to studentEvent endpoint to link students with the new event
         await axios.post("/api/studentEvent", {
           eventId: eventId,
-          studentIds: selectedStudents,
+          studentIds,
         });
-
-        toast.success("Event created and students tagged successfully!");
-        allEvents();
-        closeModal();
-      } catch (error) {
-        toast.error("Error creating event or tagging students");
+        toast.success("Students tagged successfully!");
       }
-    }
-    closeModal();
-  };
 
+      allEvents(); // Refresh the list of events
+      closeModal(); // Close the modal
+    } catch (error) {
+      console.error("Error during event creation/editing:", error);
+      toast.error("Error processing your request");
+    }
+  };
   // function handleAxiosError(error: any, action: string = "updating") {
   //   console.error(`Failed to ${action} the event:`, error);
   //   if (error.response && error.response.data) {
@@ -220,6 +222,24 @@ function CreateContent(props: Props) {
         <h1 className="text-4xl font-bold mb-4">Event Details</h1>{" "}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="input-control my-custom-input-control bg-dark-500">
+          <label
+            htmlFor="student-selector"
+            className="my-custom-label text-white"
+          >
+            Tag Students
+          </label>
+          <Select
+            id="student-selector"
+            options={studentOptions}
+            isMulti
+            onChange={(selectedOptions) =>
+              setSelectedStudents(selectedOptions.map((option) => option.value))
+            }
+            className="my-custom-select text-black bg-dark-700"
+            classNamePrefix="my-custom-select"
+          />
+        </div>
         <div className="input-control">
           <label htmlFor="name">Name</label>
           <input
@@ -232,16 +252,7 @@ function CreateContent(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-        <Select
-          options={studentOptions}
-          isMulti
-          onChange={(selected) =>
-            setSelectedStudents(selected.map((s) => s.value))
-          }
-          onMenuOpen={() => {}}
-          className="basic-multi-select"
-          classNamePrefix="select"
-        />
+
         <div className="flex">
           <div className="input-control">
             <label htmlFor="startDate" className="block">
