@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useGlobalState } from "@/app/context/globalProvider";
 import StudentProfileContent from "../StudentContent/StudentContent";
+import Select from "react-select";
 
 interface Props {
   studentProfile?: any;
@@ -92,6 +93,32 @@ function CreateProfile(props: Props) {
   const [id, setId] = useState(studentProfile ? studentProfile.id : "");
   const { fetchAllStudentProfile, closeModal } = useGlobalState();
 
+  const [events, setEvents] = useState<{ value: number; label: string }[]>([]);
+  const [selectedEventIds, setSelectedEventIds] = useState<number[]>([]);
+  const [eventOptions, setEventOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
+
+  // Assuming you fetch events somewhere in your component or get them passed down as props:
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get("/api/events");
+        const options = response.data.map((event) => ({
+          value: event.id,
+          label: event.name,
+        }));
+        setEventOptions(options);
+        if (submitState === "edit" && studentProfile && studentProfile.events) {
+          setSelectedEventIds(studentProfile.events.map((e: any) => e.id));
+        }
+      } catch (error) {
+        toast.error("Failed to load events");
+      }
+    };
+
+    fetchEvents();
+  }, [studentProfile, submitState]);
   // Handle change function for form fields
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -204,6 +231,64 @@ function CreateProfile(props: Props) {
       setUserId(studentProfile.userId);
     }
   }, [submitState, studentProfile]);
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      if (submitState === "edit" && studentProfile) {
+        setfirstName(studentProfile.firstName);
+        setmiddleName(studentProfile.middleName);
+        setlastName(studentProfile.lastName);
+        setContactNumber(studentProfile.contactNumber);
+        setBirthdate(studentProfile.birthDate);
+        setNationality(studentProfile.nationality);
+        setWeight(studentProfile.weight);
+        setHeight(studentProfile.height);
+        setSport(studentProfile.sport);
+        setbloodType(studentProfile.bloodType);
+        setAcademicYear(studentProfile.academicYear);
+        setIsMale(studentProfile.isMale);
+        setIsFemale(studentProfile.isFemale);
+        setyrStartedPlaying(studentProfile.yrStartedPlaying);
+        setMothersName(studentProfile.mothersName);
+        setFathersName(studentProfile.fathersName);
+        setGuardiansName(studentProfile.guardiansName);
+        setCourseAndYear(studentProfile.courseAndYear);
+        setEmergencyContactNumber(studentProfile.emergencyContactNumber);
+        setEmergencyContactPerson(studentProfile.emergencyContactPerson);
+        setEmail(studentProfile.email);
+        setHomeAddress(studentProfile.homeAddress);
+        setRemarks(studentProfile.remarks);
+        setStatusIsActive(studentProfile.statusIsActive);
+        setStatusIsInactive(studentProfile.statusIsInactive);
+        setUserId(studentProfile.userId);
+
+        if (studentProfile.events && studentProfile.events.length > 0) {
+          setSelectedEventIds(
+            studentProfile.events.map((s: { id: number }) => s.id)
+          );
+        }
+      } else if (submitState === "create") {
+        try {
+          // Assume you need to fetch a default event or some data when creating a new event
+          const response = await axios.get(
+            "/api/studentProfiling?studentId=123"
+          ); // Example API call
+          if (response.data) {
+            console.log("Fetched student data:", response.data);
+            // Set state with fetched data
+          }
+        } catch (error) {
+          console.error("Error fetching student details:", error);
+          toast.error("Failed to fetch student details");
+        }
+      }
+    };
+
+    fetchStudentDetails();
+  }, [studentProfile, submitState]);
+
+  useEffect(() => {
+    console.log("Updated eventOptions state:", eventOptions);
+  }, [eventOptions]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -236,7 +321,15 @@ function CreateProfile(props: Props) {
       remarks,
       userId,
       id,
+      eventIds: selectedEventIds,
     };
+
+    console.log("Selected Events on submit:", selectedEventIds);
+    if (selectedEventIds.some((eventId) => typeof eventId !== "number")) {
+      console.error("Invalid event entries detected:", selectedEventIds);
+      toast.error("Invalid event data detected.");
+      return; // Stop execution to avoid further errors
+    }
     //to touch pa lang
     //determine if mag create ng new event or mag update
     if (submitState === "edit") {
@@ -348,11 +441,43 @@ function CreateProfile(props: Props) {
       handleAxiosError(error);
     }
   };
+
+  const displayEvents = () => {
+    return selectedEventIds.map((eventId, index) => {
+      const event = eventOptions.find((e) => e.value === eventId);
+      return event ? (
+        <li key={index}>
+          {event.label} (ID: {event.value})
+        </li>
+      ) : null; // Handle the case where an event might not be found
+    });
+  };
+
   return (
     <CreatestudentStyled onSubmit={handleSubmit}>
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Add a Student Profile</h1>
+        <h1 className="text-4xl font-bold mb-4">Student Details</h1>
       </div>
+      {submitState === "edit" && (
+        <>
+          <h2>Selected Events</h2>
+        </>
+      )}
+      <Select
+        options={eventOptions}
+        isMulti
+        value={eventOptions.filter((option) =>
+          selectedEventIds.includes(option.value)
+        )}
+        onChange={(options) =>
+          setSelectedEventIds(
+            options ? options.map((option) => option.value) : []
+          )
+        }
+        className="my-custom-select text-black bg-dark-700"
+        classNamePrefix="my-custom-select"
+      />
+
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
           <label htmlFor="name"> First Name: </label>

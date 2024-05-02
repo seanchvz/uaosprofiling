@@ -46,11 +46,11 @@ export async function PATCH(
         const { id: studentprofileId } = params;
 
         if (!studentprofileId) {
-            return new NextResponse("Missing Coach Profile ID", { status: 400 });
+            return new NextResponse("Missing Student Profile ID", { status: 400 });
         }
 
         if (isNaN(+studentprofileId)) {
-            return new NextResponse("Invalid Coach Profile ID", { status: 400 });
+            return new NextResponse("Invalid Student Profile ID", { status: 400 });
         }
 
         const body = await req.json();
@@ -82,9 +82,13 @@ export async function PATCH(
             statusIsInactive,
             remarks,
             id,
+            eventIds,
         } = body;
 
         // Perform the update operation
+        if (!Array.isArray(eventIds)) {
+            return new NextResponse("Invalid event IDs", { status: 400 });
+        }
 
         const updatedStudentProfile = await prisma.studentprofile.update({
             where: { id: +studentprofileId },
@@ -115,7 +119,13 @@ export async function PATCH(
                 statusIsInactive,
                 remarks,
                 id,
+                events: {
+                    set: eventIds.map(id => ({ id })) // Replace existing connections with new ones
+                }
             },
+            include: {
+                events: true // Include connected events in the response for verification
+            }
         });
 
         console.log("Profile Updated: ", updatedStudentProfile);

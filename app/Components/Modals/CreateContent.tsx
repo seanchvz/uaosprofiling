@@ -36,14 +36,13 @@ function CreateContent(props: Props) {
   const [userId, setUserId] = useState(event ? event.userId : "");
   const [id, setId] = useState(event ? event.id : "");
   const { allEvents, closeModal } = useGlobalState();
-  // const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
-  // const [studentOptions, setStudentOptions] = useState<StudentOption[]>([]);
-  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+
   // Specify the type for useState to be an array of numbers
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
   const [studentOptions, setStudentOptions] = useState<
     { value: number; label: string }[]
   >([]);
+
   useEffect(() => {
     // Fetching student options for the select dropdown
     const fetchStudents = async () => {
@@ -226,20 +225,6 @@ function CreateContent(props: Props) {
     }
   };
 
-  // function handleAxiosError(error: any, action: string = "updating") {
-  //   console.error(`Failed to ${action} the event:`, error);
-  //   if (error.response && error.response.data) {
-  //     console.error("Server error details:", error.response.data);
-  //     const errorMessage =
-  //       error.response.data.error || "Unexpected server error";
-  //     toast.error(`Error ${action} event: ${errorMessage}`);
-  //   } else if (error.message) {
-  //     console.error("Network or other error:", error.message);
-  //     toast.error(`Error ${action} event: ${error.message}`);
-  //   } else {
-  //     toast.error(`Error ${action} event: Unknown error`);
-  //   }
-  // }
   interface EventData {
     id: string;
     name?: string;
@@ -296,26 +281,26 @@ function CreateContent(props: Props) {
       <div className="mb-8">
         {" "}
         <h1 className="text-4xl font-bold mb-4">Event Details</h1>{" "}
-        {submitState === "edit" && (
-          <>
-            <h2>Selected Students</h2>
-          </>
-        )}
-        <Select
-          options={studentOptions}
-          isMulti
-          value={studentOptions.filter((option) =>
-            selectedStudents.includes(option.value)
-          )}
-          onChange={(options) =>
-            setSelectedStudents(
-              options ? options.map((option) => option.value) : []
-            )
-          }
-          className="my-custom-select text-black bg-dark-700"
-          classNamePrefix="my-custom-select"
-        />
       </div>
+      {submitState === "edit" && (
+        <>
+          <h2>Selected Students</h2>
+        </>
+      )}
+      <Select
+        options={studentOptions}
+        isMulti
+        value={studentOptions.filter((option) =>
+          selectedStudents.includes(option.value)
+        )}
+        onChange={(options) =>
+          setSelectedStudents(
+            options ? options.map((option) => option.value) : []
+          )
+        }
+        className="my-custom-select text-black bg-dark-700"
+        classNamePrefix="my-custom-select"
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="input-control my-custom-input-control bg-dark-500">
           {/* 

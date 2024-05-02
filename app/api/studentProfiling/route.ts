@@ -38,6 +38,7 @@ export async function POST(req: Request) {
             homeAddress,
             statusIsActive,
             statusIsInactive,
+            eventIds,
         } = await req.json();
 
         // Check if firstName, lastName, and email are provided
@@ -103,7 +104,13 @@ export async function POST(req: Request) {
                 statusIsInactive: statusIsInactive,
                 remarks: remarks,
                 userId: userId,
+                events: {
+                    connect: eventIds.map((id: string) => ({ id }))
+                }
             },
+            include: {
+                events: true // Include connected events in the response
+            }
         });
 
 
