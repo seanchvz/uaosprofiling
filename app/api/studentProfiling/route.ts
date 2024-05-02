@@ -136,6 +136,9 @@ export async function GET(req: Request) {
             where: {
                 userId,
             },
+            include: {
+                events: true // Include the students in the response for verification
+            }
         });
 
         console.log("STUDENT: ", student);

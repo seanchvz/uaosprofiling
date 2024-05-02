@@ -177,6 +177,7 @@ function CreateContent(props: Props) {
     // to see if they are selected
     console.log("Current selectedStudents:", selectedStudents);
   }, [selectedStudents]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

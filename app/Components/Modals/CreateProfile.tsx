@@ -290,6 +290,11 @@ function CreateProfile(props: Props) {
     console.log("Updated eventOptions state:", eventOptions);
   }, [eventOptions]);
 
+  useEffect(() => {
+    // to see if they are selected
+    console.log("Current selectedEventIds:", selectedEventIds);
+  }, [selectedEventIds]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
