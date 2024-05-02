@@ -36,9 +36,39 @@ function CreateContent(props: Props) {
   const [userId, setUserId] = useState(event ? event.userId : "");
   const [id, setId] = useState(event ? event.id : "");
   const { allEvents, closeModal } = useGlobalState();
-  const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
-  const [studentOptions, setStudentOptions] = useState<StudentOption[]>([]);
+  // const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+  // const [studentOptions, setStudentOptions] = useState<StudentOption[]>([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  // Specify the type for useState to be an array of numbers
+  const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+  const [studentOptions, setStudentOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
+  useEffect(() => {
+    // Fetching student options for the select dropdown
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get("/api/studentProfiling");
+        const options = response.data.map((student) => ({
+          value: student.id,
+          label: `${student.firstName} ${student.lastName}`,
+        }));
+        setStudentOptions(options);
+      } catch (error) {
+        console.error("Failed to fetch students:", error);
+        toast.error("Failed to load student data.");
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
+  useEffect(() => {
+    if (submitState === "edit" && event && event.students) {
+      // Set initially selected students from the event data
+      setSelectedStudents(event.students.map((student: any) => student.id));
+    }
+  }, [event, submitState]);
 
   const handleChange = (e: {
     target: { name: any; value: any; type: any; checked: any };
@@ -93,23 +123,56 @@ function CreateContent(props: Props) {
   }, [submitState, event]);
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get("/api/studentProfiling");
-        setStudentOptions(
-          response.data.map((student: any) => ({
-            value: student.id,
-            label: `${student.firstName} ${student.lastName}`,
-          }))
-        );
-      } catch (error) {
-        toast.error("Error fetching students");
+    const fetchEventDetails = async () => {
+      if (submitState === "edit" && event) {
+        // Use existing event details if in 'edit' mode
+        setName(event.name);
+        setStartDate(new Date(event.startDate).toISOString().split("T")[0]);
+        setEndDate(new Date(event.endDate).toISOString().split("T")[0]);
+        setSport(event.Sport);
+        setEventDetails(event.eventDetails);
+        setIsExternal(event.isExternal);
+        setIsInternal(event.isInternal);
+        setSelectedStudents(event.students.map((s: { id: number }) => s.id));
+      } else if (submitState === "create") {
+        try {
+          // Assume you need to fetch a default event or some data when creating a new event
+          const response = await axios.get("/api/events?eventId=123"); // Example API call
+          if (response.data) {
+            console.log("Fetched event data:", response.data);
+            // Set state with fetched data
+          }
+        } catch (error) {
+          console.error("Error fetching event details:", error);
+          toast.error("Failed to fetch event details");
+        }
       }
     };
-    console.log("Selected Students:", selectedStudents);
 
-    fetchStudents();
-  }, []);
+    fetchEventDetails();
+  }, [event, submitState]);
+  useEffect(() => {
+    console.log("Updated studentOptions state:", studentOptions);
+  }, [studentOptions]);
+
+  // Initialize form data when editing an existing event
+  useEffect(() => {
+    if (submitState === "edit" && event) {
+      setName(event.name);
+      setStartDate(new Date(event.startDate).toISOString().split("T")[0]);
+      setEndDate(new Date(event.endDate).toISOString().split("T")[0]);
+      setSport(event.Sport);
+      setEventDetails(event.eventDetails);
+      setIsExternal(event.isExternal);
+      setIsInternal(event.isInternal);
+      setUserId(event.userId);
+      setId(event.id);
+
+      if (event.students && event.students.length > 0) {
+        setSelectedStudents(event.students.map((student: any) => student.id));
+      }
+    }
+  }, [submitState, event]); // Ensure this hook is sensitive to changes in 'submitState' and 'event'
 
   useEffect(() => {
     // to see if they are selected
@@ -214,31 +277,50 @@ function CreateContent(props: Props) {
     }
   };
 
+  const displayStudents = () => {
+    return selectedStudents.map((studentId, index) => {
+      const student = studentOptions.find(
+        (option) => option.value === studentId
+      );
+      return student ? (
+        <li key={index}>
+          {student.label} (ID: {student.value})
+        </li>
+      ) : null; // Handle the case where student might not be found
+    });
+  };
+
   return (
     <CreateContentStyled onSubmit={handleSubmit} className="mx-auto max-w-lg">
       {" "}
       <div className="mb-8">
         {" "}
         <h1 className="text-4xl font-bold mb-4">Event Details</h1>{" "}
+        {submitState === "edit" && (
+          <>
+            <h2>Selected Students</h2>
+          </>
+        )}
+        <Select
+          options={studentOptions}
+          isMulti
+          value={studentOptions.filter((option) =>
+            selectedStudents.includes(option.value)
+          )}
+          onChange={(options) =>
+            setSelectedStudents(
+              options ? options.map((option) => option.value) : []
+            )
+          }
+          className="my-custom-select text-black bg-dark-700"
+          classNamePrefix="my-custom-select"
+        />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="input-control my-custom-input-control bg-dark-500">
-          <label
-            htmlFor="student-selector"
-            className="my-custom-label text-white"
-          >
-            Tag Students
-          </label>
-          <Select
-            id="student-selector"
-            options={studentOptions}
-            isMulti
-            onChange={(selectedOptions) =>
-              setSelectedStudents(selectedOptions.map((option) => option.value))
-            }
-            className="my-custom-select text-black bg-dark-700"
-            classNamePrefix="my-custom-select"
-          />
+          {/* 
+className="my-custom-select text-black bg-dark-700"
+            classNamePrefix="my-custom-select" */}
         </div>
         <div className="input-control">
           <label htmlFor="name">Name</label>

@@ -85,6 +85,9 @@ export async function GET(req: Request) {
             where: {
                 userId,
             },
+            include: {
+                students: true // Include the students in the response for verification
+            }
         });
         //   console.log("EVENTS: ", events);
         return NextResponse.json(event);
