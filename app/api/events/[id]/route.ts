@@ -28,7 +28,6 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     }
 
 }
-
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
         // Authentication check
@@ -37,9 +36,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
-        console.log('Params:', params);
 
-        const { id: eventId } = params
+        console.log('Params:', params);
+        const { id: eventId } = params;
 
         if (!eventId) {
             return new NextResponse("Missing Event ID", { status: 400 });
@@ -50,69 +49,88 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const body = await req.json();
-        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = body;
+        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal, studentIds } = body;
+
+        if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
+            return new NextResponse("Invalid student IDs", { status: 400 });
+        }
 
         // Perform the update operation
         const updatedEvent = await prisma.events.update({
             where: { id: +eventId },
-            data: { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal },
+            data: {
+                name,
+                startDate,
+                endDate,
+                Sport,
+                eventDetails,
+                isExternal,
+                isInternal,
+                students: {
+                    set: studentIds.map(id => ({ id })) // Use 'set' to replace existing relationships
+                }
+            },
+            include: {
+                students: true // Include the students in the response for verification
+            }
         });
 
         console.log("Event Updated: ", updatedEvent);
-        return new NextResponse("Event Updated: ", { status: 200 });
+        return new NextResponse(JSON.stringify(updatedEvent), { status: 200 }); // Ensure to return JSON stringified response
     } catch (error) {
         console.error('Error updating event:', error);
-        return new NextResponse("Error updating event");
+        return new NextResponse("Error updating event", { status: 500 });
     }
 }
 
-// Function to add a student to an event
-export async function addStudentToEvent(req: NextApiRequest, res: NextApiResponse) {
-    const { userId } = auth();
-    if (!userId) {
-        return NextResponse.json({ error: "Unauthorized", status: 401 });
-    }
 
-    const { eventId, studentId } = await req.json();
+// // Function to add a student to an event
+// export async function addStudentToEvent(req: NextApiRequest, res: NextApiResponse) {
+//     const { userId } = auth();
+//     if (!userId) {
+//         return NextResponse.json({ error: "Unauthorized", status: 401 });
+//     }
 
-    try {
-        const link = await prisma.studentEvent.create({
-            data: {
-                eventId: eventId,
-                studentId: studentId,
-            },
-        });
-        return NextResponse.json(link);
-    } catch (error) {
-        console.log("Error adding student to event: ", error);
-        return NextResponse.json({ error: "Error adding student to event", status: 500 });
-    }
-}
+//     const { eventId, studentId } = await req.json();
 
-// Function to remove a student from an event
-export async function removeStudentFromEvent(req: NextApiRequest, res: NextApiResponse) {
-    const { userId } = auth();
-    if (!userId) {
-        return NextResponse.json({ error: "Unauthorized", status: 401 });
-    }
+//     try {
+//         const link = await prisma.studentEvent.create({
+//             data: {
+//                 eventId: eventId,
+//                 studentId: studentId,
+//             },
+//         });
+//         return NextResponse.json(link);
+//     } catch (error) {
+//         console.log("Error adding student to event: ", error);
+//         return NextResponse.json({ error: "Error adding student to event", status: 500 });
+//     }
+// }
 
-    const { eventId, studentId } = await req.json();
+// // Function to remove a student from an event
+// export async function removeStudentFromEvent(req: NextApiRequest, res: NextApiResponse) {
+//     const { userId } = auth();
+//     if (!userId) {
+//         return NextResponse.json({ error: "Unauthorized", status: 401 });
+//     }
 
-    try {
-        const unlink = await prisma.studentEvent.delete({
-            where: {
-                eventId_studentId: {
-                    eventId: eventId,
-                    studentId: studentId,
-                },
-            },
-        });
-        return NextResponse.json(unlink);
-    } catch (error) {
-        console.log("Error removing student from event: ", error);
-        return NextResponse.json({ error: "Error removing student from event", status: 500 });
-    }
-}
+//     const { eventId, studentId } = await req.json();
+
+//     try {
+//         const unlink = await prisma.studentEvent.delete({
+//             where: {
+//                 eventId_studentId: {
+//                     eventId: eventId,
+//                     studentId: studentId,
+//                 },
+//             },
+//         });
+//         return NextResponse.json(unlink);
+//     } catch (error) {
+//         console.log("Error removing student from event: ", error);
+//         return NextResponse.json({ error: "Error removing student from event", status: 500 });
+//     }
+// }
 
 // // Function to list all students for a specific event
 // export async function getStudentsForEvent(req: NextApiRequest, res: NextApiResponse) {
