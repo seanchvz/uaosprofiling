@@ -19,6 +19,10 @@ function Dashboard({ name, events }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
 
+  useEffect(() => {
+    allEvents();
+  }, []);
+
   // Open modal specifically for creating a new event
   const handleOpenCreateModal = () => {
     setModalState("create");
