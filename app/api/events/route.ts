@@ -10,17 +10,16 @@ import { auth } from "@clerk/nextjs";
  * @param req - The request object.
  * @param res - The response object.
  * @returns A JSON response containing the created event or an error message.
- */
-export async function POST(req: Request, res: NextApiResponse) {
+ */export async function POST(req: Request, res: NextApiResponse) {
     try {
         const { userId } = auth();
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal } = await req.json();
+        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal, studentIds } = await req.json();
 
-        if (!name || !startDate || !endDate) {
+        if (!name || !startDate || !endDate || !studentIds) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
@@ -33,11 +32,16 @@ export async function POST(req: Request, res: NextApiResponse) {
                 status: 400,
             });
         }
-        // console.log(name, startDate, endDate, SportId, eventDetails);
+
+        if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid student IDs",
+                status: 400,
+            });
+        }
+
         const formattedStartDate = new Date(startDate).toISOString();
         const formattedEndDate = new Date(endDate).toISOString();
-
-
 
         const event = await prisma.events.create({
             data: {
@@ -49,13 +53,18 @@ export async function POST(req: Request, res: NextApiResponse) {
                 isExternal: isExternal,
                 isInternal: isInternal,
                 userId: userId,
+                students: {
+                    connect: studentIds.map(id => ({ id }))
+                }
             },
+            include: {
+                students: true // Include the students in the response for verification
+            }
         });
+
         console.log("Received data:", req.body);
         console.log("Sending event data:", event);
 
-
-        console.log(event);
         return NextResponse.json(event);
     } catch (error) {
         console.log("Error Creating Event: ", error);

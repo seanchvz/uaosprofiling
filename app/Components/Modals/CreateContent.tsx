@@ -40,24 +40,6 @@ function CreateContent(props: Props) {
   const [studentOptions, setStudentOptions] = useState<StudentOption[]>([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get("/api/studentProfiling");
-        setStudentOptions(
-          response.data.map((student: any) => ({
-            value: student.id,
-            label: `${student.firstName} ${student.lastName}`,
-          }))
-        );
-      } catch (error) {
-        toast.error("Error fetching students");
-      }
-    };
-
-    fetchStudents();
-  }, []);
-
   const handleChange = (e: {
     target: { name: any; value: any; type: any; checked: any };
   }) => {
@@ -110,59 +92,77 @@ function CreateContent(props: Props) {
     }
   }, [submitState, event]);
 
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get("/api/studentProfiling");
+        setStudentOptions(
+          response.data.map((student: any) => ({
+            value: student.id,
+            label: `${student.firstName} ${student.lastName}`,
+          }))
+        );
+      } catch (error) {
+        toast.error("Error fetching students");
+      }
+    };
+    console.log("Selected Students:", selectedStudents);
+
+    fetchStudents();
+  }, []);
+
+  useEffect(() => {
+    // to see if they are selected
+    console.log("Current selectedStudents:", selectedStudents);
+  }, [selectedStudents]);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Format dates to ISO string for proper server-side handling
-    const event = {
-      id,
+    const formattedEvent = {
+      id, // Assuming 'id' is either set or undefined based on create or edit
       name,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
+      startDate: new Date(startDate).toISOString(), // Ensure date is in ISO format
+      endDate: new Date(endDate).toISOString(),
       Sport,
       eventDetails,
       isExternal,
       isInternal,
-      userId,
+      userId, // Assuming this is the ID of the user creating or editing the event
+      studentIds: selectedStudents, // Include selected student IDs
     };
 
-    try {
-      let eventId = id;
+    console.log("Selected Students on submit:", selectedStudents);
+    if (selectedStudents.some((studentId) => typeof studentId !== "number")) {
+      console.error("Invalid student entries detected:", selectedStudents);
+      toast.error("Invalid student data detected.");
+      return; // Stop execution to avoid further errors
+    }
 
-      // Handle 'edit' state
-      if (submitState === "edit") {
+    try {
+      if (submitState === "edit" && id) {
+        // Handle 'edit' state
         const updateResponse = await axios.patch(
-          `/api/events/${eventId}`,
-          event
+          `/api/events/${id}`,
+          formattedEvent
         );
         toast.success("Event updated successfully!");
+        console.log("Update response:", updateResponse.data);
       } else {
         // Handle 'create' state
-        const createResponse = await axios.post("/api/events", event);
-        eventId = createResponse.data.id; // Set the eventId with the new ID returned from the POST request
+        const createResponse = await axios.post("/api/events", formattedEvent);
         toast.success("Event created successfully!");
+        console.log("Create response:", createResponse.data);
       }
 
-      // Check if any students were selected
-      if (selectedStudents.length > 0) {
-        // Construct student IDs array from selected student options
-        const studentIds = selectedStudents.map((student) => student.value);
-
-        // Post to studentEvent endpoint to link students with the new event
-        await axios.post("/api/studentEvent", {
-          eventId: eventId,
-          studentIds,
-        });
-        toast.success("Students tagged successfully!");
-      }
-
-      allEvents(); // Refresh the list of events
-      closeModal(); // Close the modal
+      allEvents(); // This function should refresh the list of events, assumed to be defined elsewhere
+      closeModal(); // Close the modal or form, assumed to be defined elsewhere
     } catch (error) {
       console.error("Error during event creation/editing:", error);
       toast.error("Error processing your request");
     }
   };
+
   // function handleAxiosError(error: any, action: string = "updating") {
   //   console.error(`Failed to ${action} the event:`, error);
   //   if (error.response && error.response.data) {
