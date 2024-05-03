@@ -34,7 +34,8 @@ interface Props {
 
 const roleColors = {
   basketballmen: "#192BC2",
-  basketballwomen: "#D90368",
+  basketballwomen3x3: "#D90368",
+  basketballwomen5x5: "#D90368",
   volleyballmen: "#276FBF",
   volleyballwomen: "#DA70D6",
   badmintonmen: "#D90368",
@@ -43,7 +44,10 @@ const roleColors = {
   taekwondo: "#000000",
   chess: "#00CED1",
   swimming: "#1E90FF",
-  football: "#FF6347",
+  footballmen: "#FF6347",
+  footballwomen: "#FF6347",
+  strengthandconditioning: "#000000",
+  specialprojects: "#000000",
   valorant: "#FF4500",
   dota: "#DA70D6",
   mobilelegends: "#0038ff",

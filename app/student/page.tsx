@@ -78,7 +78,16 @@ function Page({ name, studentprofile }: Props) {
             <option value="all">All Sports</option>
             <optgroup label="Basketball">
               <option value="basketball men">Basketball Men</option>
-              <option value="basketball Women">Basketball Women</option>
+              <option value="basketball women 3x3">
+                Basketball Women (3X3)
+              </option>
+              <option value="basketball women 5x5">
+                Basketball Women (5X5)
+              </option>
+            </optgroup>
+            <optgroup label="Football">
+              <option value="football men">Football Men</option>
+              <option value="football women">Football Women</option>
             </optgroup>
             <optgroup label="Volleyball">
               <option value="volleyball men">Volleyball Men</option>
@@ -93,11 +102,14 @@ function Page({ name, studentprofile }: Props) {
               <option value="dota">DoTA</option>
               <option value="mobile legends">Mobile Legends</option>
             </optgroup>
-            <option value="tabletennis">Table Tennis</option>
+            <option value="table tennis">Table Tennis</option>
             <option value="taekwondo">Taekwondo</option>
             <option value="chess">Chess</option>
-            <option value="swimming">Swimming</option>
-            <option value="football">Football</option>
+            <option value="swimming">Swimming Mixed</option>
+            <option value="strength and conditioning">
+              Strength and Conditioning
+            </option>
+            <option value="special projects">Special Projects Mixed</option>
 
             {/* Add more sports as needed */}
           </select>

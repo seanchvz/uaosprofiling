@@ -86,6 +86,7 @@ export async function PATCH(
         } = body;
 
         // Perform the update operation
+        //If events is the event is not an array, if statement is executed
         if (!Array.isArray(eventIds)) {
             return new NextResponse("Invalid event IDs", { status: 400 });
         }
@@ -119,10 +120,12 @@ export async function PATCH(
                 statusIsInactive,
                 remarks,
                 id,
+                // Creating new Array of objects with id property
                 events: {
                     set: eventIds.map(id => ({ id })) // Replace existing connections with new ones
                 }
             },
+            // Include related 'events' in the response for verification of successful update
             include: {
                 events: true // Include connected events in the response for verification
             }

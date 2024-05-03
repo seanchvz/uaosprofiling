@@ -11,12 +11,12 @@ import {
 } from "./Icons";
 
 const menu = [
-  {
-    id: 3,
-    title: "Dashboard",
-    icon: home,
-    link: "/events",
-  },
+  // {
+  //   id: 3,
+  //   title: "Dashboard",
+  //   icon: home,
+  //   link: "/events",
+  // },
   {
     id: 1,
     title: "Events",

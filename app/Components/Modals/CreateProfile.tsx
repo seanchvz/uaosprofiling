@@ -121,79 +121,82 @@ function CreateProfile(props: Props) {
   }, [studentProfile, submitState]);
   // Handle change function for form fields
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      if (name === "isMale") setIsMale(checked);
-      if (name === "isFemale") setIsFemale(checked);
-      if (name === "statusIsActive") setStatusIsActive(checked);
-      if (name === "statusIsInactive") setStatusIsInactive(checked);
+    const { name, checked } = e.target;
+
+    if (name === "statusIsActive") {
+      setStatusIsActive(checked); // Set active status based on checkbox
+      if (checked) setStatusIsInactive(false); // Automatically uncheck inactive if active is checked
+    } else if (name === "statusIsInactive") {
+      setStatusIsInactive(checked); // Set inactive status based on checkbox
+      if (checked) setStatusIsActive(false); // Automatically uncheck active if inactive is checked
     } else {
+      // Handling for other input types remains the same
       switch (name) {
         case "firstName":
-          setfirstName(value);
+          setfirstName(checked);
           break;
         case "middleName":
-          setmiddleName(value);
+          setmiddleName(checked);
           break;
         case "lastName":
-          setlastName(value);
+          setlastName(checked);
           break;
         case "contactNumber":
-          setContactNumber(value);
+          setContactNumber(checked);
           break;
         case "sport":
-          setSport(value);
+          setSport(checked);
           break;
         case "birthDate":
-          setBirthdate(value);
+          setBirthdate(checked);
           break;
         case "nationality":
-          setNationality(value);
+          setNationality(checked);
           break;
         case "weight":
-          setWeight(value);
+          setWeight(checked);
           break;
         case "height":
-          setHeight(value);
+          setHeight(checked);
           break;
         case "bloodType":
-          setbloodType(value);
+          setbloodType(checked);
           break;
         case "academicYear":
-          setAcademicYear(value);
+          setAcademicYear(checked);
           break;
         case "yrStartedPlaying":
-          setyrStartedPlaying(value);
+          setyrStartedPlaying(checked);
           break;
         case "mothersName":
-          setMothersName(value);
+          setMothersName(checked);
           break;
         case "fathersName":
-          setFathersName(value);
+          setFathersName(checked);
           break;
         case "guardiansName":
-          setGuardiansName(value);
+          setGuardiansName(checked);
           break;
         case "courseAndYear":
-          setCourseAndYear(value);
+          setCourseAndYear(checked);
           break;
         case "emergencyContactNumber":
-          setEmergencyContactNumber(value);
+          setEmergencyContactNumber(checked);
           break;
         case "emergencyContactPerson":
-          setEmergencyContactPerson(value);
+          setEmergencyContactPerson(checked);
           break;
         case "email":
-          setEmail(value);
+          setEmail(checked);
           break;
         case "homeAddress":
-          setHomeAddress(value);
+          setHomeAddress(checked);
           break;
         case "remarks":
-          setRemarks(value);
+          setRemarks(checked);
           break;
         case "userId":
-          setUserId(value);
+          setUserId(checked);
           break;
         default:
           break;
@@ -597,7 +600,7 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="bloodType"> bloodType </label>
+          <label htmlFor="bloodType"> Blood Type </label>
           <input
             type="text"
             id="bloodType"
@@ -634,7 +637,7 @@ function CreateProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-        <span className="text-white">Gender</span>
+        <span className="text-white">Sex</span>
         <div className="flex">
           <div className="input-control flex justify-between">
             <label
@@ -643,11 +646,12 @@ function CreateProfile(props: Props) {
             >
               <span className="mr-10 text-white">Male</span>
               <input
-                type="checkbox"
+                type="radio"
                 id="isMale"
                 checked={isMale}
                 onChange={handleChange}
-                name="isMale"
+                name="gender"
+                value="male"
                 className="hidden"
               />
               <span
@@ -671,11 +675,12 @@ function CreateProfile(props: Props) {
             >
               <span className="mr-2 text-white">Female</span>
               <input
-                type="checkbox"
+                type="radio"
                 id="isFemale"
                 checked={isFemale}
                 onChange={handleChange}
-                name="isFemale"
+                name="gender"
+                value="female"
                 className="hidden"
               />
               <span
