@@ -121,7 +121,7 @@ function CreateProfile(props: Props) {
   }, [studentProfile, submitState]);
   // Handle change function for form fields
   const handleChange = (e) => {
-    const { name, checked } = e.target;
+    const { name, checked, value } = e.target;
 
     if (name === "statusIsActive") {
       setStatusIsActive(checked); // Set active status based on checkbox
@@ -133,70 +133,70 @@ function CreateProfile(props: Props) {
       // Handling for other input types remains the same
       switch (name) {
         case "firstName":
-          setfirstName(checked);
+          setfirstName(value);
           break;
         case "middleName":
-          setmiddleName(checked);
+          setmiddleName(value);
           break;
         case "lastName":
-          setlastName(checked);
+          setlastName(value);
           break;
         case "contactNumber":
-          setContactNumber(checked);
+          setContactNumber(value);
           break;
         case "sport":
-          setSport(checked);
+          setSport(value);
           break;
         case "birthDate":
-          setBirthdate(checked);
+          setBirthdate(value);
           break;
         case "nationality":
-          setNationality(checked);
+          setNationality(value);
           break;
         case "weight":
-          setWeight(checked);
+          setWeight(value);
           break;
         case "height":
-          setHeight(checked);
+          setHeight(value);
           break;
         case "bloodType":
-          setbloodType(checked);
+          setbloodType(value);
           break;
         case "academicYear":
-          setAcademicYear(checked);
+          setAcademicYear(value);
           break;
         case "yrStartedPlaying":
-          setyrStartedPlaying(checked);
+          setyrStartedPlaying(value);
           break;
         case "mothersName":
-          setMothersName(checked);
+          setMothersName(value);
           break;
         case "fathersName":
-          setFathersName(checked);
+          setFathersName(value);
           break;
         case "guardiansName":
-          setGuardiansName(checked);
+          setGuardiansName(value);
           break;
         case "courseAndYear":
-          setCourseAndYear(checked);
+          setCourseAndYear(value);
           break;
         case "emergencyContactNumber":
-          setEmergencyContactNumber(checked);
+          setEmergencyContactNumber(value);
           break;
         case "emergencyContactPerson":
-          setEmergencyContactPerson(checked);
+          setEmergencyContactPerson(value);
           break;
         case "email":
-          setEmail(checked);
+          setEmail(value);
           break;
         case "homeAddress":
-          setHomeAddress(checked);
+          setHomeAddress(value);
           break;
         case "remarks":
-          setRemarks(checked);
+          setRemarks(value);
           break;
         case "userId":
-          setUserId(checked);
+          setUserId(value);
           break;
         default:
           break;
