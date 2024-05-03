@@ -39,6 +39,11 @@ const roleColors = {
   isExternal: "#E03616",
   academicYear: "#F2BB05",
 };
+
+const getSportColor = (Sport) => {
+  const key = Sport ? Sport.replace(/\s+/g, "").toLowerCase() : "";
+  return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
+};
 //added handleEdit as a prop but for now it doesnt return anything
 function EventItem({
   name,
@@ -63,11 +68,8 @@ function EventItem({
       <h1 style={{ marginBottom: "5px" }}>{name}</h1>
       <div className="tags" style={{ marginTop: "5px" }}>
         {/* Tag for the sport */}
-        <Tag
-          style={{ marginRight: "10px" }}
-          color={roleColors[Sport.replace(/\s+/g, "").toLowerCase()]}
-        >
-          {Sport}
+        <Tag style={{ marginRight: "10px" }} color={getSportColor(Sport)}>
+          {Sport || "Unknown Sport"}
         </Tag>
 
         {/* Conditional rendering of tags based on the event being internal or external */}

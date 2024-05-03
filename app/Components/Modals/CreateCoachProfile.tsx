@@ -333,16 +333,52 @@ function CreateCoachProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="sport">Sport</label>
-          <input
-            type="text"
+          <label htmlFor="sport" className="block">
+            Sport
+          </label>
+          <select
             id="sport"
-            value={sport}
             name="sport"
+            value={sport}
             onChange={handleChange}
-            placeholder="e.g. Volleyball Women"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
+            className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          >
+            <option value="">Select Sport</option>
+            <optgroup label="Basketball">
+              <option value="basketball men">Basketball Men</option>
+              <option value="basketball women 3x3">
+                Basketball Women (3X3)
+              </option>
+              <option value="basketball women 5x5">
+                Basketball Women (5X5)
+              </option>
+            </optgroup>
+            <optgroup label="Football">
+              <option value="football men">Football Men</option>
+              <option value="football women">Football Women</option>
+            </optgroup>
+            <optgroup label="Volleyball">
+              <option value="volleyball men">Volleyball Men</option>
+              <option value="volleyball women">Volleyball Women</option>
+            </optgroup>
+            <optgroup label="Badminton">
+              <option value="badminton women">Badminton Women</option>
+              <option value="badminton men">Badminton Men</option>
+            </optgroup>
+            <optgroup label="ESport">
+              <option value="valorant">Valorant</option>
+              <option value="dota">DoTA</option>
+              <option value="mobile legends">Mobile Legends</option>
+            </optgroup>
+            <option value="table tennis">Table Tennis</option>
+            <option value="taekwondo">Taekwondo</option>
+            <option value="chess">Chess</option>
+            <option value="swimming">Swimming Mixed</option>
+            <option value="strength and conditioning">
+              Strength and Conditioning
+            </option>
+            <option value="special projects">Special Projects Mixed</option>
+          </select>
         </div>
 
         <div className="input-control">

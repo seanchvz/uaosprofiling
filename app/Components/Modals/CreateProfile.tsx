@@ -478,7 +478,16 @@ function CreateProfile(props: Props) {
       </div>
       {submitState === "edit" && (
         <>
-          <h2>Selected Events</h2>
+          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+            Tagged Events
+          </h2>
+        </>
+      )}
+      {submitState === "create" && (
+        <>
+          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+            Tag an Event to Student
+          </h2>
         </>
       )}
       <Select
@@ -505,7 +514,7 @@ function CreateProfile(props: Props) {
             value={firstName}
             name="firstName"
             onChange={handleChange}
-            placeholder="Enter First Name"
+            placeholder="e.g. Juan"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -517,7 +526,7 @@ function CreateProfile(props: Props) {
             value={middleName}
             name="middleName"
             onChange={handleChange}
-            placeholder="Enter Middle Name"
+            placeholder="e.g. Dela"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -529,7 +538,7 @@ function CreateProfile(props: Props) {
             value={lastName}
             name="lastName"
             onChange={handleChange}
-            placeholder="Enter Last Name"
+            placeholder="e.g. Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -538,16 +547,51 @@ function CreateProfile(props: Props) {
           <label htmlFor="sport" className="block">
             Sport
           </label>
-          <input
-            type="text"
+          <select
             id="sport"
-            value={sport}
             name="sport"
+            value={sport}
             onChange={handleChange}
-            placeholder="e.g. Basketball Men"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
+            className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          >
+            <option value="">Select Sport</option>
+            <optgroup label="Basketball">
+              <option value="basketball men">Basketball Men</option>
+              <option value="basketball women 3x3">
+                Basketball Women (3X3)
+              </option>
+              <option value="basketball women 5x5">
+                Basketball Women (5X5)
+              </option>
+            </optgroup>
+            <optgroup label="Football">
+              <option value="football men">Football Men</option>
+              <option value="football women">Football Women</option>
+            </optgroup>
+            <optgroup label="Volleyball">
+              <option value="volleyball men">Volleyball Men</option>
+              <option value="volleyball women">Volleyball Women</option>
+            </optgroup>
+            <optgroup label="Badminton">
+              <option value="badminton women">Badminton Women</option>
+              <option value="badminton men">Badminton Men</option>
+            </optgroup>
+            <optgroup label="ESport">
+              <option value="valorant">Valorant</option>
+              <option value="dota">DoTA</option>
+              <option value="mobile legends">Mobile Legends</option>
+            </optgroup>
+            <option value="table tennis">Table Tennis</option>
+            <option value="taekwondo">Taekwondo</option>
+            <option value="chess">Chess</option>
+            <option value="swimming">Swimming Mixed</option>
+            <option value="strength and conditioning">
+              Strength and Conditioning
+            </option>
+            <option value="special projects">Special Projects Mixed</option>
+          </select>
         </div>
+
         <div className="input-control">
           <label htmlFor="contactNumber"> Contact Number </label>
           <input
@@ -556,7 +600,7 @@ function CreateProfile(props: Props) {
             value={contactNumber}
             name="contactNumber"
             onChange={handleChange}
-            placeholder="e.g. 0987654321 "
+            placeholder="e.g. 09121231234 "
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -570,12 +614,6 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
-          {/* type="checkbox"
-                id="statusIsActive"
-                checked={statusIsActive}
-                onChange={handleChange}
-                name="statusIsActive"
-                className="hidden" */}
         </div>
 
         <div className="input-control">
@@ -586,7 +624,7 @@ function CreateProfile(props: Props) {
             value={nationality}
             name="nationality"
             onChange={handleChange}
-            placeholder="Enter Nationality"
+            placeholder="e.g. Filipino"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -598,7 +636,7 @@ function CreateProfile(props: Props) {
             value={weight}
             name="weight"
             onChange={handleChange}
-            placeholder="e.g. 50"
+            placeholder="e.g. 50.5"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -610,7 +648,7 @@ function CreateProfile(props: Props) {
             value={height}
             name="height"
             onChange={handleChange}
-            placeholder="e.g. 192"
+            placeholder="e.g. 167.3"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -728,7 +766,7 @@ function CreateProfile(props: Props) {
             value={mothersName}
             name="mothersName"
             onChange={handleChange}
-            placeholder=" Mother's name "
+            placeholder="e.g. Juanita Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -740,7 +778,7 @@ function CreateProfile(props: Props) {
             value={fathersName}
             name="fathersName"
             onChange={handleChange}
-            placeholder=" Fathers's name "
+            placeholder="e.g. Jose Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -752,7 +790,7 @@ function CreateProfile(props: Props) {
             value={guardiansName}
             name="guardiansName"
             onChange={handleChange}
-            placeholder="Guardian's name"
+            placeholder="e.g. Bella Delos Santos"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -777,7 +815,7 @@ function CreateProfile(props: Props) {
             value={emergencyContactNumber}
             name="emergencyContactNumber"
             onChange={handleChange}
-            placeholder="Enter Emergency Contact Number"
+            placeholder="e.g. 09876543212"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -792,7 +830,7 @@ function CreateProfile(props: Props) {
             value={emergencyContactPerson}
             name="emergencyContactPerson"
             onChange={handleChange}
-            placeholder="Enter Emergency Contact Person"
+            placeholder="e.g. Juanita Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -805,7 +843,7 @@ function CreateProfile(props: Props) {
             value={email}
             name="email"
             onChange={handleChange}
-            placeholder="Email"
+            placeholder="juan@gmail.com"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -888,7 +926,7 @@ function CreateProfile(props: Props) {
             id="remarks"
             value={remarks}
             onChange={handleChange}
-            placeholder="Enter Student remarks"
+            placeholder="e.g. Has history of heart problems"
             name="remarks"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
             rows={4}

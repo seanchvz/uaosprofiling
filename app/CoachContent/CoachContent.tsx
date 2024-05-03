@@ -56,6 +56,11 @@ const roleColors = {
   academicYear: "#fda600",
 };
 
+const getSportColor = (sport) => {
+  const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
+  return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
+};
+
 function CoachContent({
   name,
   contactNumber,
@@ -98,11 +103,8 @@ function CoachContent({
         >
           {statusIsFulltime ? "Full Time" : "Part Time"}
         </Tag>
-        <Tag
-          style={{ marginRight: "10px" }}
-          color={roleColors[sport.replace(/\s+/g, "").toLowerCase()]}
-        >
-          {sport}
+        <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
+          {sport || "Unknown Sport"}
         </Tag>
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
       </div>
