@@ -49,12 +49,6 @@ function CreateProfile(props: Props) {
   const [academicYear, setAcademicYear] = useState(
     studentProfile ? studentProfile.AcademicYear : ""
   );
-  const [isMale, setIsMale] = useState(
-    studentProfile ? studentProfile.isMale : false
-  );
-  const [isFemale, setIsFemale] = useState(
-    studentProfile ? studentProfile.isFemale : false
-  );
   const [yrStartedPlaying, setyrStartedPlaying] = useState(
     studentProfile ? studentProfile.yrStartedPlaying : ""
   );
@@ -85,6 +79,9 @@ function CreateProfile(props: Props) {
   const [remarks, setRemarks] = useState(
     studentProfile ? studentProfile.Remarks : ""
   );
+
+  const [isMale, setIsMale] = useState(false);
+  const [isFemale, setIsFemale] = useState(false);
   const [statusIsActive, setStatusIsActive] = useState(false);
   const [statusIsInactive, setStatusIsInactive] = useState(false);
   const [userId, setUserId] = useState(
@@ -121,86 +118,93 @@ function CreateProfile(props: Props) {
   }, [studentProfile, submitState]);
   // Handle change function for form fields
   const handleChange = (e) => {
-    const { name, checked, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
-    if (name === "statusIsActive") {
-      setStatusIsActive(checked); // Set active status based on checkbox
-      if (checked) setStatusIsInactive(false); // Automatically uncheck inactive if active is checked
-    } else if (name === "statusIsInactive") {
-      setStatusIsInactive(checked); // Set inactive status based on checkbox
-      if (checked) setStatusIsActive(false); // Automatically uncheck active if inactive is checked
-    } else {
-      // Handling for other input types remains the same
-      switch (name) {
-        case "firstName":
-          setfirstName(value);
-          break;
-        case "middleName":
-          setmiddleName(value);
-          break;
-        case "lastName":
-          setlastName(value);
-          break;
-        case "contactNumber":
-          setContactNumber(value);
-          break;
-        case "sport":
-          setSport(value);
-          break;
-        case "birthDate":
-          setBirthdate(value);
-          break;
-        case "nationality":
-          setNationality(value);
-          break;
-        case "weight":
-          setWeight(value);
-          break;
-        case "height":
-          setHeight(value);
-          break;
-        case "bloodType":
-          setbloodType(value);
-          break;
-        case "academicYear":
-          setAcademicYear(value);
-          break;
-        case "yrStartedPlaying":
-          setyrStartedPlaying(value);
-          break;
-        case "mothersName":
-          setMothersName(value);
-          break;
-        case "fathersName":
-          setFathersName(value);
-          break;
-        case "guardiansName":
-          setGuardiansName(value);
-          break;
-        case "courseAndYear":
-          setCourseAndYear(value);
-          break;
-        case "emergencyContactNumber":
-          setEmergencyContactNumber(value);
-          break;
-        case "emergencyContactPerson":
-          setEmergencyContactPerson(value);
-          break;
-        case "email":
-          setEmail(value);
-          break;
-        case "homeAddress":
-          setHomeAddress(value);
-          break;
-        case "remarks":
-          setRemarks(value);
-          break;
-        case "userId":
-          setUserId(value);
-          break;
-        default:
-          break;
-      }
+    switch (name) {
+      case "isMale":
+        setIsMale(checked);
+        if (checked) setIsFemale(false); // Uncheck female if male is checked
+        break;
+      case "isFemale":
+        setIsFemale(checked);
+        if (checked) setIsMale(false); // Uncheck male if female is checked
+        break;
+      case "statusIsActive":
+        setStatusIsActive(checked);
+        if (checked) setStatusIsInactive(false);
+        break;
+      case "statusIsInactive":
+        setStatusIsInactive(checked);
+        if (checked) setStatusIsActive(false);
+        break;
+      case "firstName":
+        setfirstName(value);
+        break;
+      case "middleName":
+        setmiddleName(value);
+        break;
+      case "lastName":
+        setlastName(value);
+        break;
+      case "contactNumber":
+        setContactNumber(value);
+        break;
+      case "sport":
+        setSport(value);
+        break;
+      case "birthDate":
+        setBirthdate(value);
+        break;
+      case "nationality":
+        setNationality(value);
+        break;
+      case "weight":
+        setWeight(value);
+        break;
+      case "height":
+        setHeight(value);
+        break;
+      case "bloodType":
+        setbloodType(value);
+        break;
+      case "academicYear":
+        setAcademicYear(value);
+        break;
+      case "yrStartedPlaying":
+        setyrStartedPlaying(value);
+        break;
+      case "mothersName":
+        setMothersName(value);
+        break;
+      case "fathersName":
+        setFathersName(value);
+        break;
+      case "guardiansName":
+        setGuardiansName(value);
+        break;
+      case "courseAndYear":
+        setCourseAndYear(value);
+        break;
+      case "emergencyContactNumber":
+        setEmergencyContactNumber(value);
+        break;
+      case "emergencyContactPerson":
+        setEmergencyContactPerson(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "homeAddress":
+        setHomeAddress(value);
+        break;
+      case "remarks":
+        setRemarks(value);
+        break;
+      case "userId":
+        setUserId(value);
+        break;
+      default:
+        break;
     }
   };
 
@@ -210,7 +214,10 @@ function CreateProfile(props: Props) {
       setmiddleName(studentProfile.middleName);
       setlastName(studentProfile.lastName);
       setContactNumber(studentProfile.contactNumber);
-      setBirthdate(studentProfile.birthDate);
+      const formattedBirthDate = new Date(studentProfile.birthDate)
+        .toISOString()
+        .split("T")[0];
+      setBirthdate(formattedBirthDate);
       setNationality(studentProfile.nationality);
       setWeight(studentProfile.weight);
       setHeight(studentProfile.height);
@@ -241,7 +248,10 @@ function CreateProfile(props: Props) {
         setmiddleName(studentProfile.middleName);
         setlastName(studentProfile.lastName);
         setContactNumber(studentProfile.contactNumber);
-        setBirthdate(studentProfile.birthDate);
+        const formattedBirthDate = new Date(studentProfile.birthDate)
+          .toISOString()
+          .split("T")[0];
+        setBirthdate(formattedBirthDate);
         setNationality(studentProfile.nationality);
         setWeight(studentProfile.weight);
         setHeight(studentProfile.height);
@@ -560,6 +570,12 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
+          {/* type="checkbox"
+                id="statusIsActive"
+                checked={statusIsActive}
+                onChange={handleChange}
+                name="statusIsActive"
+                className="hidden" */}
         </div>
 
         <div className="input-control">
@@ -646,14 +662,21 @@ function CreateProfile(props: Props) {
             >
               <span className="mr-10 text-white">Male</span>
               <input
-                type="radio"
+                type="checkbox"
                 id="isMale"
                 checked={isMale}
                 onChange={handleChange}
-                name="gender"
-                value="male"
+                name="isMale"
+                value="isMale"
                 className="hidden"
               />
+
+              {/* type="checkbox"
+                id="statusIsActive"
+                checked={statusIsActive}
+                onChange={handleChange}
+                name="statusIsActive"
+                className="hidden" */}
               <span
                 className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
                   isMale ? "bg-blue-500" : ""
@@ -675,12 +698,12 @@ function CreateProfile(props: Props) {
             >
               <span className="mr-2 text-white">Female</span>
               <input
-                type="radio"
+                type="checkbox"
                 id="isFemale"
                 checked={isFemale}
                 onChange={handleChange}
-                name="gender"
-                value="female"
+                name="isFemale"
+                value="isFemale"
                 className="hidden"
               />
               <span
