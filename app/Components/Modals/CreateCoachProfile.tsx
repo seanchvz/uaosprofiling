@@ -395,7 +395,9 @@ function CreateCoachProfile(props: Props) {
       </div>
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">
+            Name {!name && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="name"
@@ -407,7 +409,9 @@ function CreateCoachProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">
+            Email {!email && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="email"
             id="email"
@@ -419,7 +423,10 @@ function CreateCoachProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="contactNumber">Contact Number</label>
+          <label htmlFor="contactNumber">
+            Contact Number{" "}
+            {!contactNumber && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="contactNumber"
@@ -432,7 +439,7 @@ function CreateCoachProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="sport" className="block">
+          <label htmlFor="Sport" className="block">
             Sport
           </label>
           <select
@@ -481,7 +488,10 @@ function CreateCoachProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="permanentTeam">Permanent Team</label>
+          <label htmlFor="permanentTeam">
+            Permanent Team{" "}
+            {!permanentTeam && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="permanentTeam"
@@ -493,61 +503,83 @@ function CreateCoachProfile(props: Props) {
           />
         </div>
 
-        <div className="input-control flex justify-between">
-          <label htmlFor="isMale" className="flex items-center cursor-pointer">
-            <span className="mr-2 text-white">Male</span>
-            <input
-              type="checkbox"
-              id="isMale"
-              checked={isMale}
-              onChange={handleChange}
-              name="isMale"
-              className="hidden"
-            />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                isMale ? "bg-blue-500" : ""
+        <div className="flex">
+          <div className="input-control flex justify-between">
+            <label
+              htmlFor="isMale"
+              className={`flex items-center cursor-pointer ${
+                !isMale && !isFemale ? "warning-border" : ""
               }`}
             >
-              <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  isMale ? "translate-x-5" : ""
-                }`}
+              <span className="mr-10 text-white">
+                Male{" "}
+                {!isMale && !isFemale && (
+                  <span className="required-asterisk">*</span>
+                )}
+              </span>
+              <input
+                type="checkbox"
+                id="isMale"
+                checked={isMale}
+                onChange={handleChange}
+                name="isMale"
+                className="hidden"
               />
-            </span>
-          </label>
-        </div>
+              <span
+                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
+                  isMale ? "bg-blue-500" : ""
+                }`}
+              >
+                <span
+                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
+                    isMale ? "translate-x-5" : ""
+                  }`}
+                />
+              </span>
+            </label>
+          </div>
 
-        <div className="input-control flex justify-between">
-          <label
-            htmlFor="isFemale"
-            className="flex items-center cursor-pointer"
-          >
-            <span className="mr-2 text-white">Female</span>
-            <input
-              type="checkbox"
-              id="isFemale"
-              checked={isFemale}
-              onChange={handleChange}
-              name="isFemale"
-              className="hidden"
-            />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                isFemale ? "bg-red-500" : ""
+          <div className="input-control flex justify-between">
+            <label
+              htmlFor="isFemale"
+              className={`flex items-center cursor-pointer ${
+                !isMale && !isFemale ? "warning-border" : ""
               }`}
             >
-              <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  isFemale ? "translate-x-5" : ""
-                }`}
+              <span className="mr-2 text-white">
+                Female{" "}
+                {!isMale && !isFemale && (
+                  <span className="required-asterisk">*</span>
+                )}
+              </span>
+              <input
+                type="checkbox"
+                id="isFemale"
+                checked={isFemale}
+                onChange={handleChange}
+                name="isFemale"
+                className="hidden"
               />
-            </span>
-          </label>
+              <span
+                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
+                  isFemale ? "bg-red-500" : ""
+                }`}
+              >
+                <span
+                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
+                    isFemale ? "translate-x-5" : ""
+                  }`}
+                />
+              </span>
+            </label>
+          </div>
         </div>
       </div>
       <div className="input-control">
-        <label htmlFor="birthDate">Birth Date</label>
+        <label htmlFor="birthDate">
+          Birth Date{" "}
+          {!birthDate && <span className="required-asterisk">*</span>}
+        </label>
         <input
           type="date"
           id="birthDate"
@@ -559,7 +591,10 @@ function CreateCoachProfile(props: Props) {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="nationality">Nationality</label>
+        <label htmlFor="nationality">
+          Nationality{" "}
+          {!nationality && <span className="required-asterisk">*</span>}
+        </label>
         <input
           type="text"
           id="nationality"
@@ -571,8 +606,11 @@ function CreateCoachProfile(props: Props) {
         />
       </div>
       <div className="flex">
-        <div className="input-control mr-4">
-          <label htmlFor="weight">Weight in KG</label>
+        <div className="input-control">
+          <label htmlFor="weight">
+            Weight in KG{" "}
+            {!weight && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="number"
             step="0.01"
@@ -586,7 +624,10 @@ function CreateCoachProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="height">Height in CM</label>
+          <label htmlFor="height">
+            Height in CM{" "}
+            {!height && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="number"
             step="0.01"
@@ -600,7 +641,10 @@ function CreateCoachProfile(props: Props) {
         </div>
       </div>
       <div className="input-control">
-        <label htmlFor="bloodType">Blood Type</label>
+        <label htmlFor="bloodType">
+          Blood Type{" "}
+          {!bloodType && <span className="required-asterisk">*</span>}
+        </label>
         <input
           type="text"
           id="bloodType"
@@ -612,7 +656,10 @@ function CreateCoachProfile(props: Props) {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="academicYear">Academic Year</label>
+        <label htmlFor="academicYear">
+          Academic Year{" "}
+          {!academicYear && <span className="required-asterisk">*</span>}
+        </label>
         <input
           type="text"
           id="academicYear"
@@ -627,9 +674,16 @@ function CreateCoachProfile(props: Props) {
         <div className="input-control flex justify-between mr-4">
           <label
             htmlFor="statusIsFulltime"
-            className="flex items-center cursor-pointer"
+            className={`flex items-center cursor-pointer ${
+              !statusIsFulltime && !statusIsParttime ? "warning-border" : ""
+            }`}
           >
-            <span className="mr-2 text-white">Full-time</span>
+            <span className="mr-2 text-white">
+              Full-time{" "}
+              {!statusIsFulltime && !statusIsParttime && (
+                <span className="required-asterisk">*</span>
+              )}
+            </span>
             <input
               type="checkbox"
               id="statusIsFulltime"
@@ -655,9 +709,16 @@ function CreateCoachProfile(props: Props) {
         <div className="input-control flex justify-between ml-4">
           <label
             htmlFor="statusIsParttime"
-            className="flex items-center cursor-pointer"
+            className={`flex items-center cursor-pointer ${
+              !statusIsFulltime && !statusIsParttime ? "warning-border" : ""
+            }`}
           >
-            <span className="mr-2 text-white">Part-time</span>
+            <span className="mr-2 text-white">
+              Part-time{" "}
+              {!statusIsFulltime && !statusIsParttime && (
+                <span className="required-asterisk">*</span>
+              )}
+            </span>
             <input
               type="checkbox"
               id="statusIsParttime"
@@ -681,7 +742,10 @@ function CreateCoachProfile(props: Props) {
         </div>
       </div>
       <div className="input-control">
-        <label htmlFor="emergencyContact">Emergency Contact Number</label>
+        <label htmlFor="emergencyContact">
+          Emergency Contact Number{" "}
+          {!emergencyContact && <span className="required-asterisk">*</span>}
+        </label>
         <input
           type="text"
           id="emergencyContact"
@@ -693,7 +757,12 @@ function CreateCoachProfile(props: Props) {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="emergencyContactPerson">Emergency Contact Person</label>
+        <label htmlFor="emergencyContactPerson">
+          Emergency Contact Person{" "}
+          {!emergencyContactPerson && (
+            <span className="required-asterisk">*</span>
+          )}
+        </label>
         <input
           type="text"
           id="emergencyContactPerson"
@@ -705,7 +774,10 @@ function CreateCoachProfile(props: Props) {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="resumeUrl">Resume URL</label>
+        <label htmlFor="resumeUrl">
+          Resume URL{" "}
+          {!resumeUrl && <span className="required-asterisk">*</span>}
+        </label>
         <input
           type="text"
           id="resumeUrl"
@@ -717,17 +789,15 @@ function CreateCoachProfile(props: Props) {
         />
       </div>
       <div className="input-control">
-        <label htmlFor="remarks" className="block">
-          Remarks
-        </label>
+        <label htmlFor="remarks"> Remarks </label>
         <textarea
           id="remarks"
           value={remarks}
           name="remarks"
           onChange={handleChange}
-          placeholder="e.g. Dual Sport: Badminton and Volleyball"
+          placeholder="e.g. Has history of heart problems"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          rows={2}
+          rows={4}
         ></textarea>
       </div>
       <div>
@@ -763,6 +833,11 @@ const CreateCoachProfileStyled = styled.form`
           font-weight: 600;
           margin-bottom: 50px; // Increase the margin-bottom for the title
         }
+
+        .required-asterisk {
+          color: red;
+        }
+        
         
         color: ${(props) => props.theme.colorGrey1};
         

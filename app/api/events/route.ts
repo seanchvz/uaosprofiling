@@ -40,6 +40,7 @@ import { auth } from "@clerk/nextjs";
             });
         }
 
+
         const formattedStartDate = new Date(startDate).toISOString();
         const formattedEndDate = new Date(endDate).toISOString();
 

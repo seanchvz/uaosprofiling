@@ -352,7 +352,9 @@ className="my-custom-select text-black bg-dark-700"
             classNamePrefix="my-custom-select" */}
         </div>
         <div className="input-control">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">
+            Name {!name && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="name"
@@ -366,8 +368,9 @@ className="my-custom-select text-black bg-dark-700"
 
         <div className="flex">
           <div className="input-control">
-            <label htmlFor="startDate" className="block">
-              Start Date
+            <label htmlFor="startDate">
+              Start Date{" "}
+              {!startDate && <span className="required-asterisk">*</span>}
             </label>
             <input
               type="date"
@@ -379,8 +382,9 @@ className="my-custom-select text-black bg-dark-700"
             />
           </div>
           <div className="input-control">
-            <label htmlFor="endDate" className="block">
-              End Date
+            <label htmlFor="endDate">
+              End Date{" "}
+              {!endDate && <span className="required-asterisk">*</span>}
             </label>
             <input
               type="date"
@@ -441,8 +445,9 @@ className="my-custom-select text-black bg-dark-700"
           </select>
         </div>
         <div className="input-control">
-          <label htmlFor="eventDetails" className="block">
-            Event Details
+          <label htmlFor="eventDetails">
+            Event Details{" "}
+            {!eventDetails && <span className="required-asterisk">*</span>}
           </label>
           <textarea
             id="eventDetails"
@@ -457,9 +462,16 @@ className="my-custom-select text-black bg-dark-700"
         <div className="input-control flex justify-between">
           <label
             htmlFor="isExternal"
-            className="flex items-center cursor-pointer"
+            className={`flex items-center cursor-pointer ${
+              !isExternal && !isInternal ? "warning-border" : ""
+            }`}
           >
-            <span className="mr-2 text-white">Is External</span>{" "}
+            <span className="mr-2 text-white">
+              Is External{" "}
+              {!isExternal && !isInternal && (
+                <span className="required-asterisk">*</span>
+              )}
+            </span>
             <input
               id="isExternal"
               type="checkbox"
@@ -473,8 +485,6 @@ className="my-custom-select text-black bg-dark-700"
                 isExternal ? "bg-red-500" : ""
               }`}
             >
-              {" "}
-              {/* Updated classNames */}
               <span
                 className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
                   isExternal ? "translate-x-5" : ""
@@ -485,9 +495,16 @@ className="my-custom-select text-black bg-dark-700"
 
           <label
             htmlFor="isInternal"
-            className="flex items-center cursor-pointer"
+            className={`flex items-center cursor-pointer ${
+              !isExternal && !isInternal ? "warning-border" : ""
+            }`}
           >
-            <span className="mr-2 text-white">Is Internal</span>{" "}
+            <span className="mr-2 text-white">
+              Is Internal{" "}
+              {!isExternal && !isInternal && (
+                <span className="required-asterisk">*</span>
+              )}
+            </span>
             <input
               id="isInternal"
               type="checkbox"
@@ -501,8 +518,6 @@ className="my-custom-select text-black bg-dark-700"
                 isInternal ? "bg-green-500" : ""
               }`}
             >
-              {" "}
-              {/* Updated classNames */}
               <span
                 className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
                   isInternal ? "translate-x-5" : ""
@@ -535,6 +550,14 @@ const CreateContentStyled = styled.form`
   .input-control {
     margin: 0.5rem 0;
   }
+
+  .required-asterisk {
+    color: red;
+  }
+
+  // .warning-border {
+  //   border: 2px solid red;
+  // }
 
   label {
     margin-bottom: 0.5rem;

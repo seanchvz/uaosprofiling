@@ -421,10 +421,7 @@ function CreateProfile(props: Props) {
       toast.error("Please select a status.");
       return;
     }
-    if (!remarks) {
-      toast.error("Please enter remarks.");
-      return;
-    }
+
     if (!selectedEventIds.length) {
       toast.error("Please select at least one event.");
       return;
@@ -626,7 +623,10 @@ function CreateProfile(props: Props) {
 
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
-          <label htmlFor="name"> First Name: </label>
+          <label htmlFor="firstName">
+            First Name:{" "}
+            {!firstName && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="firstName"
@@ -650,7 +650,10 @@ function CreateProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="lastName"> Last Name: </label>
+          <label htmlFor="lastName">
+            Last Name:{" "}
+            {!lastName && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="lastName"
@@ -712,31 +715,41 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="contactNumber"> Contact Number </label>
+          <label htmlFor="contactNumber">
+            Contact Number{" "}
+            {!contactNumber && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="contactNumber"
             value={contactNumber}
             name="contactNumber"
             onChange={handleChange}
-            placeholder="e.g. 09121231234 "
+            placeholder="e.g. 09121231234"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
         <div className="input-control">
-          <label htmlFor="birthDate"> Birth Date </label>
+          <label htmlFor="birthDate">
+            Birth Date{" "}
+            {!birthDate && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="date"
             id="birthDate"
             value={birthDate}
             name="birthDate"
             onChange={handleChange}
+            placeholder="Enter Birth Date"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
 
         <div className="input-control">
-          <label htmlFor="nationality"> Nationality </label>
+          <label htmlFor="nationality">
+            Nationality{" "}
+            {!nationality && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="nationality"
@@ -747,33 +760,44 @@ function CreateProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-        <div className="input-control">
-          <label htmlFor="weight"> Weight in KG </label>
-          <input
-            type="text"
-            id="weight"
-            value={weight}
-            name="weight"
-            onChange={handleChange}
-            placeholder="e.g. 50.5"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-        <div className="input-control">
-          <label htmlFor="height"> Height in CM </label>
-          <input
-            type="text"
-            id="height"
-            value={height}
-            name="height"
-            onChange={handleChange}
-            placeholder="e.g. 167.3"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
+        <div className="flex">
+          <div className="input-control">
+            <label htmlFor="weight">
+              Weight in KG{" "}
+              {!weight && <span className="required-asterisk">*</span>}
+            </label>
+            <input
+              type="number"
+              id="weight"
+              name="weight"
+              value={weight}
+              onChange={handleChange}
+              placeholder="eg. 45.7"
+              className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            />
+          </div>
+          <div className="input-control">
+            <label htmlFor="height">
+              Height in CM{" "}
+              {!height && <span className="required-asterisk">*</span>}
+            </label>
+            <input
+              type="number"
+              id="height"
+              name="height"
+              value={height}
+              onChange={handleChange}
+              placeholder="eg. 156.3"
+              className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            />
+          </div>
         </div>
 
         <div className="input-control">
-          <label htmlFor="bloodType"> Blood Type </label>
+          <label htmlFor="bloodType">
+            Blood Type{" "}
+            {!bloodType && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="bloodType"
@@ -786,7 +810,10 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="bloodType"> Academic Year </label>
+          <label htmlFor="academicYear">
+            Academic Year{" "}
+            {!academicYear && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="academicYear"
@@ -799,13 +826,16 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="name"> Year started playing: </label>
+          <label htmlFor="yrStartedPlaying">
+            Year started playing:{" "}
+            {!yrStartedPlaying && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="yrStartedPlaying"
             value={yrStartedPlaying}
-            onChange={handleChange}
             name="yrStartedPlaying"
+            onChange={handleChange}
             placeholder="e.g. 2021"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
@@ -815,19 +845,24 @@ function CreateProfile(props: Props) {
           <div className="input-control flex justify-between">
             <label
               htmlFor="isMale"
-              className="flex items-center cursor-pointer"
+              className={`flex items-center cursor-pointer ${
+                !isMale && !isFemale ? "warning-border" : ""
+              }`}
             >
-              <span className="mr-10 text-white">Male</span>
+              <span className="mr-10 text-white">
+                Male{" "}
+                {!isMale && !isFemale && (
+                  <span className="required-asterisk">*</span>
+                )}
+              </span>
               <input
                 type="checkbox"
                 id="isMale"
                 checked={isMale}
                 onChange={handleChange}
                 name="isMale"
-                value="isMale"
                 className="hidden"
               />
-
               <span
                 className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
                   isMale ? "bg-blue-500" : ""
@@ -845,16 +880,22 @@ function CreateProfile(props: Props) {
           <div className="input-control flex justify-between">
             <label
               htmlFor="isFemale"
-              className="flex items-center cursor-pointer"
+              className={`flex items-center cursor-pointer ${
+                !isMale && !isFemale ? "warning-border" : ""
+              }`}
             >
-              <span className="mr-2 text-white">Female</span>
+              <span className="mr-2 text-white">
+                Female{" "}
+                {!isMale && !isFemale && (
+                  <span className="required-asterisk">*</span>
+                )}
+              </span>
               <input
                 type="checkbox"
                 id="isFemale"
                 checked={isFemale}
                 onChange={handleChange}
                 name="isFemale"
-                value="isFemale"
                 className="hidden"
               />
               <span
@@ -872,7 +913,10 @@ function CreateProfile(props: Props) {
           </div>
         </div>
         <div className="input-control">
-          <label htmlFor="mothersName"> Mother's Name </label>
+          <label htmlFor="mothersName">
+            Mother's Name{" "}
+            {!mothersName && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="mothersName"
@@ -883,8 +927,12 @@ function CreateProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
+
         <div className="input-control">
-          <label htmlFor="fathersName"> Father's Name </label>
+          <label htmlFor="fathersName">
+            Father's Name{" "}
+            {!fathersName && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="fathersName"
@@ -908,7 +956,10 @@ function CreateProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="courseAndYear"> Course and Year </label>
+          <label htmlFor="courseAndYear">
+            Course and Year{" "}
+            {!courseAndYear && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="courseAndYear"
@@ -921,7 +972,12 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="emergencyContact">Emergency Contact Number</label>
+          <label htmlFor="emergencyContactNumber">
+            Emergency Contact Number{" "}
+            {!emergencyContactNumber && (
+              <span className="required-asterisk">*</span>
+            )}
+          </label>
           <input
             type="text"
             id="emergencyContactNumber"
@@ -935,7 +991,10 @@ function CreateProfile(props: Props) {
 
         <div className="input-control">
           <label htmlFor="emergencyContactPerson">
-            Emergency Contact Person
+            Emergency Contact Person{" "}
+            {!emergencyContactPerson && (
+              <span className="required-asterisk">*</span>
+            )}
           </label>
           <input
             type="text"
@@ -949,7 +1008,10 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="email"> Email Address </label>
+          <label htmlFor="email">
+            Email Address{" "}
+            {!email && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="email"
@@ -961,7 +1023,10 @@ function CreateProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="email"> Home Address </label>
+          <label htmlFor="homeAddress">
+            Home Address{" "}
+            {!homeAddress && <span className="required-asterisk">*</span>}
+          </label>
           <input
             type="text"
             id="homeAddress"
@@ -978,9 +1043,16 @@ function CreateProfile(props: Props) {
           <div className="input-control flex justify-between mr-4">
             <label
               htmlFor="statusIsActive"
-              className="flex items-center cursor-pointer"
+              className={`flex items-center cursor-pointer ${
+                !statusIsActive && !statusIsInactive ? "warning-border" : ""
+              }`}
             >
-              <span className="mr-2 text-white">Active</span>
+              <span className="mr-2 text-white">
+                Active
+                {!statusIsActive && !statusIsInactive && (
+                  <span className="required-asterisk">*</span>
+                )}
+              </span>
               <input
                 type="checkbox"
                 id="statusIsActive"
@@ -1006,9 +1078,16 @@ function CreateProfile(props: Props) {
           <div className="input-control flex justify-between ml-4">
             <label
               htmlFor="statusIsInactive"
-              className="flex items-center cursor-pointer"
+              className={`flex items-center cursor-pointer ${
+                !statusIsActive && !statusIsInactive ? "warning-border" : ""
+              }`}
             >
-              <span className="mr-2 text-white">Inactive</span>
+              <span className="mr-2 text-white">
+                Inactive
+                {!statusIsActive && !statusIsInactive && (
+                  <span className="required-asterisk">*</span>
+                )}
+              </span>
               <input
                 type="checkbox"
                 id="statusIsInactive"
@@ -1032,15 +1111,13 @@ function CreateProfile(props: Props) {
           </div>
         </div>
         <div className="input-control">
-          <label htmlFor="remarks" className="block">
-            Remarks
-          </label>
+          <label htmlFor="remarks"> Remarks </label>
           <textarea
             id="remarks"
             value={remarks}
+            name="remarks"
             onChange={handleChange}
             placeholder="e.g. Has history of heart problems"
-            name="remarks"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
             rows={4}
           ></textarea>
@@ -1077,6 +1154,11 @@ padding: 20px;
   font-weight: 600;
   margin-bottom: 50px; // Increase the margin-bottom for the title
 }
+
+.required-asterisk {
+  color: red;
+}
+
 
 color: ${(props) => props.theme.colorGrey1};
 
