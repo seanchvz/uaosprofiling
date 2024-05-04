@@ -183,6 +183,40 @@ function CreateContent(props: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    let isConfirmed = true; // Assume user confirms by default for create
+    if (submitState === "edit") {
+      isConfirmed = window.confirm(
+        "Are you sure you want to update this event?"
+      );
+    }
+
+    if (!isConfirmed) {
+      return; // Early return if the user cancels the action
+    }
+
+    // Check if required fields are filled
+    // Validation check for each field
+    if (!name) {
+      toast.error("Please enter a name.");
+      return;
+    }
+    if (!startDate) {
+      toast.error("Please enter a start date.");
+      return;
+    }
+    if (!endDate) {
+      toast.error("Please enter an end date.");
+      return;
+    }
+    if (!Sport) {
+      toast.error("Please specify a sport.");
+      return;
+    }
+    if (!eventDetails) {
+      toast.error("Please enter event details.");
+      return;
+    }
+
     // Format dates to ISO string for proper server-side handling
     const formattedEvent = {
       id, // Assuming 'id' is either set or undefined based on create or edit
@@ -243,6 +277,13 @@ function CreateContent(props: Props) {
     if (!event.id) {
       toast.error("Event ID is missing");
       return;
+    }
+    // Confirmation dialog
+    const isConfirmed = window.confirm(
+      "Are you sure you want to update this event?"
+    );
+    if (!isConfirmed) {
+      return; // Early return if the user cancels the action
     }
 
     try {

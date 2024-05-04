@@ -311,6 +311,125 @@ function CreateProfile(props: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    let isConfirmed = true; // Assume user confirms by default for create
+    if (submitState === "edit") {
+      isConfirmed = window.confirm(
+        "Are you sure you want to update this profile?"
+      );
+    }
+
+    if (!isConfirmed) {
+      return; // Early return if the user cancels the action
+    }
+
+    // Validation checks for student profile fields
+    if (!firstName) {
+      toast.error("Please enter a first name.");
+      return;
+    }
+    if (!lastName) {
+      toast.error("Please enter a last name.");
+      return;
+    }
+
+    if (!sport) {
+      toast.error("Please specify a sport.");
+      return;
+    }
+    if (!contactNumber) {
+      toast.error("Please enter a contact number.");
+      return;
+    }
+    if (contactNumber.length !== 11 || !/^\d+$/.test(contactNumber)) {
+      toast.error("The contact number must be exactly 11 digits.");
+      return;
+    }
+
+    if (!birthDate) {
+      toast.error("Please enter a birth date.");
+      return;
+    }
+    if (!nationality) {
+      toast.error("Please enter a nationality.");
+      return;
+    }
+
+    if (!bloodType) {
+      toast.error("Please enter a blood type.");
+      return;
+    }
+    if (weight === undefined) {
+      // Assuming weight could be 0, which is valid
+      toast.error("Please enter a weight.");
+      return;
+    }
+    if (height === undefined) {
+      // Assuming height could be 0, which is valid
+      toast.error("Please enter a height.");
+      return;
+    }
+
+    if (!academicYear) {
+      toast.error("Please enter an academic year.");
+      return;
+    }
+    if (isMale === undefined && isFemale === undefined) {
+      toast.error("Please select a gender.");
+      return;
+    }
+    if (!yrStartedPlaying) {
+      toast.error("Please enter the year started playing.");
+      return;
+    }
+    if (!mothersName) {
+      toast.error("Please enter mother's name.");
+      return;
+    }
+    if (!fathersName) {
+      toast.error("Please enter father's name.");
+      return;
+    }
+
+    if (!courseAndYear) {
+      toast.error("Please enter course and year.");
+      return;
+    }
+    if (!emergencyContactNumber) {
+      toast.error("Please enter an emergency contact number.");
+      return;
+    }
+    if (
+      emergencyContactNumber.length !== 11 ||
+      !/^\d+$/.test(emergencyContactNumber)
+    ) {
+      toast.error("The emergency number must be exactly 11 digits.");
+      return;
+    }
+    if (!emergencyContactPerson) {
+      toast.error("Please enter an emergency contact person.");
+      return;
+    }
+    if (!email) {
+      toast.error("Please enter an email.");
+      return;
+    }
+    if (!homeAddress) {
+      toast.error("Please enter a home address.");
+      return;
+    }
+    if (statusIsActive === undefined && statusIsInactive === undefined) {
+      toast.error("Please select a status.");
+      return;
+    }
+    if (!remarks) {
+      toast.error("Please enter remarks.");
+      return;
+    }
+    if (!selectedEventIds.length) {
+      toast.error("Please select at least one event.");
+      return;
+    }
+
     const studentProfile = {
       firstName,
       middleName,

@@ -104,7 +104,7 @@ function CoachContent({
           {statusIsFulltime ? "Full Time" : "Part Time"}
         </Tag>
         <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
-          {sport || "Unknown Sport"}
+          {sport || "No Sport"}
         </Tag>
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
       </div>
@@ -128,11 +128,18 @@ function CoachContent({
         <button
           className="delete"
           onClick={() => {
-            deleteCoachProfile(id);
+            if (
+              window.confirm(
+                "Are you sure you want to delete this coach profile?"
+              )
+            ) {
+              deleteCoachProfile(id);
+            }
           }}
         >
           {trash}
         </button>
+
         {/* <button className="completed">External</button> */}
       </div>
     </CoachContentStyled>

@@ -117,7 +117,7 @@ function StudentProfileContent({
           {statusIsActive ? "Active" : "Inactive"}
         </Tag>
         <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
-          {sport || "Unknown Sport"}
+          {sport || "No Sport"}
         </Tag>
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
       </div>
@@ -130,7 +130,17 @@ function StudentProfileContent({
         <button className="edit" onClick={handleEdit}>
           {edit}
         </button>
-        <button className="delete" onClick={() => deleteStudentProfile(id)}>
+        <button
+          className="delete"
+          onClick={() => {
+            const isConfirmed = window.confirm(
+              "Are you sure you want to delete this profile?"
+            );
+            if (isConfirmed) {
+              deleteStudentProfile(id);
+            }
+          }}
+        >
           {trash}
         </button>
       </div>

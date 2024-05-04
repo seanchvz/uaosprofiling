@@ -69,7 +69,7 @@ function EventItem({
       <div className="tags" style={{ marginTop: "5px" }}>
         {/* Tag for the sport */}
         <Tag style={{ marginRight: "10px" }} color={getSportColor(Sport)}>
-          {Sport || "Unknown Sport"}
+          {Sport || "No Sport"}
         </Tag>
 
         {/* Conditional rendering of tags based on the event being internal or external */}
@@ -95,7 +95,9 @@ function EventItem({
         <button
           className="delete"
           onClick={() => {
-            deleteEvent(id);
+            if (window.confirm("Are you sure you want to delete this event?")) {
+              deleteEvent(id);
+            }
           }}
         >
           {trash}
