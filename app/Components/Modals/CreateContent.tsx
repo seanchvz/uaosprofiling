@@ -73,29 +73,31 @@ function CreateContent(props: Props) {
     target: { name: any; value: any; type: any; checked: any };
   }) => {
     const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      // For checkboxes, use checked value
-      if (name === "isExternal") setIsExternal(checked);
-      if (name === "isInternal") setIsInternal(checked);
-    } else {
-      // For other inputs, use value
-      switch (name) {
-        case "name":
-          setName(value);
-          break;
-        case "startDate":
-          setStartDate(value);
-          break;
-        case "endDate":
-          setEndDate(value);
-          break;
-        case "Sport":
-          setSport(value);
-          break;
-        case "eventDetails":
-          setEventDetails(value);
-          break;
-      }
+
+    switch (name) {
+      case "isExternal":
+        setIsExternal(checked);
+        if (checked) setIsInternal(false); // Uncheck internal if external is checked
+        break;
+      case "isInternal":
+        setIsInternal(checked);
+        if (checked) setIsExternal(false); // Uncheck external if internal is checked
+        break;
+      case "name":
+        setName(value);
+        break;
+      case "startDate":
+        setStartDate(value);
+        break;
+      case "endDate":
+        setEndDate(value);
+        break;
+      case "Sport":
+        setSport(value);
+        break;
+      case "eventDetails":
+        setEventDetails(value);
+        break;
     }
   };
 

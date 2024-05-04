@@ -709,12 +709,6 @@ function CreateProfile(props: Props) {
                 className="hidden"
               />
 
-              {/* type="checkbox"
-                id="statusIsActive"
-                checked={statusIsActive}
-                onChange={handleChange}
-                name="statusIsActive"
-                className="hidden" */}
               <span
                 className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
                   isMale ? "bg-blue-500" : ""

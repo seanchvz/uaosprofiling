@@ -20,6 +20,7 @@ model events {
   isInternal   Boolean          @default(false)
   userId       String
   students     studentprofile[] @relation("StudentEvents")
+  coaches      coachprofile[]
   StudentEvent StudentEvent[]
 }
 
@@ -91,6 +92,7 @@ model coachprofile {
   CreatedAt              DateTime @default(now())
   UpdatedAt              DateTime @updatedAt
   userId                 String
+  events                 events[]
 }
 
 model inventoryitem {

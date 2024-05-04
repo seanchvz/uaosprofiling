@@ -66,22 +66,33 @@ function CreateCoachProfile(props: Props) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      // For checkboxes, use checked value
-      if (name === "isMale") setIsMale(checked);
-      if (name === "isFemale") setIsFemale(checked);
-      if (name === "statusIsFulltime") setStatusIsFulltime(checked);
-      if (name === "statusIsParttime") setStatusIsParttime(checked);
-    } else {
-      // Convert numeric values from input and handle possible NaN (Not a Number)
-      const floatValue = parseFloat(value);
-      const isFloatNaN = isNaN(floatValue);
 
+    if (type === "checkbox") {
+      switch (name) {
+        case "isMale":
+          setIsMale(checked);
+          if (checked) setIsFemale(false); // Uncheck female if male is checked
+          break;
+        case "isFemale":
+          setIsFemale(checked);
+          if (checked) setIsMale(false); // Uncheck male if female is checked
+          break;
+        case "statusIsFulltime":
+          setStatusIsFulltime(checked);
+          if (checked) setStatusIsParttime(false); // Uncheck part-time if full-time is checked
+          break;
+        case "statusIsParttime":
+          setStatusIsParttime(checked);
+          if (checked) setStatusIsFulltime(false); // Uncheck full-time if part-time is checked
+          break;
+      }
+    } else {
+      // For input type "text" or others, handling numeric and text inputs
       switch (name) {
         case "weight":
         case "height":
-          // Only update the state if the floatValue is a valid number
-          if (!isFloatNaN) {
+          const floatValue = parseFloat(value);
+          if (!isNaN(floatValue)) {
             if (name === "weight") setWeight(floatValue);
             if (name === "height") setHeight(floatValue);
           }
@@ -125,11 +136,12 @@ function CreateCoachProfile(props: Props) {
         case "remarks":
           setRemarks(value);
           break;
-        // default:
-        //   console.log("Unhandled field: ", name);
+        default:
+          console.log("Unhandled field: ", name);
       }
     }
   };
+
   useEffect(() => {
     if (submitState === "edit" && coachProfile) {
       setName(coachProfile.name);
@@ -303,7 +315,7 @@ function CreateCoachProfile(props: Props) {
             value={name}
             name="name"
             onChange={handleChange}
-            placeholder="Enter Fullname"
+            placeholder="e.g. Juan Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -315,7 +327,7 @@ function CreateCoachProfile(props: Props) {
             value={email}
             name="email"
             onChange={handleChange}
-            placeholder="Enter Email"
+            placeholder="e.g. juan@gmail.com"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -327,7 +339,7 @@ function CreateCoachProfile(props: Props) {
             value={contactNumber}
             name="contactNumber"
             onChange={handleChange}
-            placeholder="Enter Contact Number"
+            placeholder="e.g. 09123456789"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -389,7 +401,7 @@ function CreateCoachProfile(props: Props) {
             value={permanentTeam}
             name="permanentTeam"
             onChange={handleChange}
-            placeholder="Enter Permanent Team"
+            placeholder="e.g. DACS"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -467,7 +479,7 @@ function CreateCoachProfile(props: Props) {
           value={nationality}
           name="nationality"
           onChange={handleChange}
-          placeholder="Enter Nationality"
+          placeholder="e.g. Filipino"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -520,7 +532,7 @@ function CreateCoachProfile(props: Props) {
           value={academicYear}
           name="academicYear"
           onChange={handleChange}
-          placeholder="Enter Academic Year"
+          placeholder="e.g. 2023-Present"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -589,7 +601,7 @@ function CreateCoachProfile(props: Props) {
           value={emergencyContact}
           name="emergencyContact"
           onChange={handleChange}
-          placeholder="Enter Emergency Contact"
+          placeholder="e.g. 09123456789"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -601,7 +613,7 @@ function CreateCoachProfile(props: Props) {
           value={emergencyContactPerson}
           name="emergencyContactPerson"
           onChange={handleChange}
-          placeholder="Enter Emergency Contact Person"
+          placeholder="e.g. Juanita Dela Cruz"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -613,7 +625,7 @@ function CreateCoachProfile(props: Props) {
           value={resumeUrl}
           name="resumeUrl"
           onChange={handleChange}
-          placeholder="Enter Resume URL"
+          placeholder="URL of Resume"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
@@ -626,7 +638,7 @@ function CreateCoachProfile(props: Props) {
           value={remarks}
           name="remarks"
           onChange={handleChange}
-          placeholder="Enter Coach Remarks"
+          placeholder="e.g. Dual Sport: Badminton and Volleyball"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           rows={2}
         ></textarea>

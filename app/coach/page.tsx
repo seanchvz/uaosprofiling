@@ -183,7 +183,7 @@ function Page({ name, coachprofile }: Props) {
             />
           ))
         ) : (
-          <p>No events found.</p>
+          <p>No coach profiles found.</p>
         )}
       </div>
     </CoachStyled>
