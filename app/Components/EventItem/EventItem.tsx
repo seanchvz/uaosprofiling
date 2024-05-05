@@ -95,7 +95,10 @@ function EventItem({
         <button
           className="delete"
           onClick={() => {
-            if (window.confirm("Are you sure you want to delete this event?")) {
+            const isConfirmed = window.confirm(
+              "Are you sure you want to delete this event?"
+            );
+            if (isConfirmed) {
               deleteEvent(id);
             }
           }}
