@@ -69,6 +69,7 @@ function CreateContent(props: Props) {
     }
   }, [event, submitState]);
 
+  //change events on form inputs in a React component.
   const handleChange = (e: {
     target: { name: any; value: any; type: any; checked: any };
   }) => {
@@ -100,7 +101,7 @@ function CreateContent(props: Props) {
         break;
     }
   };
-
+  //
   useEffect(() => {
     if (submitState === "edit" && event) {
       setName(event.name);
@@ -122,7 +123,7 @@ function CreateContent(props: Props) {
       setUserId(event.userId);
     }
   }, [submitState, event]);
-
+  //
   useEffect(() => {
     const fetchEventDetails = async () => {
       if (submitState === "edit" && event) {
@@ -152,6 +153,8 @@ function CreateContent(props: Props) {
 
     fetchEventDetails();
   }, [event, submitState]);
+
+  //
   useEffect(() => {
     console.log("Updated studentOptions state:", studentOptions);
   }, [studentOptions]);
@@ -262,49 +265,49 @@ function CreateContent(props: Props) {
     }
   };
 
-  interface EventData {
-    id: string;
-    name?: string;
-    startDate?: Date;
-    endDate?: Date;
-    Sport?: string;
-    eventDetails?: string;
-    isExternal?: boolean;
-    isInternal?: boolean;
-  }
+  // interface EventData {
+  //   id: string;
+  //   name?: string;
+  //   startDate?: Date;
+  //   endDate?: Date;
+  //   Sport?: string;
+  //   eventDetails?: string;
+  //   isExternal?: boolean;
+  //   isInternal?: boolean;
+  // }
 
-  const handleEdit = async (event: EventData) => {
-    if (!event.id) {
-      toast.error("Event ID is missing");
-      return;
-    }
-    // Confirmation dialog
-    const isConfirmed = window.confirm(
-      "Are you sure you want to update this event?"
-    );
-    if (!isConfirmed) {
-      return; // Early return if the user cancels the action
-    }
+  // const handleEdit = async (event: EventData) => {
+  //   if (!event.id) {
+  //     toast.error("Event ID is missing");
+  //     return;
+  //   }
+  //   // Confirmation dialog
+  //   const isConfirmed = window.confirm(
+  //     "Are you sure you want to update this event?"
+  //   );
+  //   if (!isConfirmed) {
+  //     return; // Early return if the user cancels the action
+  //   }
 
-    try {
-      console.log("Sending PATCH request for event ID:", event.id);
-      console.log("Data being sent:", event);
+  //   try {
+  //     console.log("Sending PATCH request for event ID:", event.id);
+  //     console.log("Data being sent:", event);
 
-      // Destructure the event to separate id from other data
-      const { id, ...updateData } = event;
+  //     // Destructure the event to separate id from other data
+  //     const { id, ...updateData } = event;
 
-      const response = await axios.patch(`/api/events/${id}`, updateData);
+  //     const response = await axios.patch(`/api/events/${id}`, updateData);
 
-      console.log("Server response:", response.data);
-      if (response.data && response.data.error) {
-        toast.error(response.data.error);
-      } else {
-        toast.success("Event updated successfully!");
-      }
-    } catch (error) {
-      handleAxiosError(error);
-    }
-  };
+  //     console.log("Server response:", response.data);
+  //     if (response.data && response.data.error) {
+  //       toast.error(response.data.error);
+  //     } else {
+  //       toast.success("Event updated successfully!");
+  //     }
+  //   } catch (error) {
+  //     handleAxiosError(error);
+  //   }
+  // };
 
   const displayStudents = () => {
     return selectedStudents.map((studentId, index) => {
