@@ -31,9 +31,9 @@ function Page({ name, studentprofile }: Props) {
   };
 
   const filteredStudentProfile = studentprofile.filter((studentProfile) => {
-    const matchesName = studentProfile.lastName
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const existingFullName =
+      `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
+    const matchesName = existingFullName.includes(searchTerm.toLowerCase());
     const matchesSport =
       selectedSport === "all" ||
       studentProfile.sport.toLowerCase() === selectedSport.toLowerCase();
@@ -117,7 +117,7 @@ function Page({ name, studentprofile }: Props) {
           </select>
           <input
             type="text"
-            placeholder="Search Profile Lastnames..."
+            placeholder="Search Profiles..."
             value={searchTerm}
             onChange={handleSearchChange}
             style={{
