@@ -198,7 +198,7 @@ function CreateCoachProfile(props: Props) {
     );
 
     if (isDuplicate) {
-      toast.error("A coach with the same name already exists.");
+      toast.error("A coach with the same name already exists!");
       return;
     }
 
