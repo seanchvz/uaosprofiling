@@ -64,6 +64,22 @@ function CreateCoachProfile(props: Props) {
   const [id, setId] = useState(coachProfile ? coachProfile.id : "");
   const { fetchAllCoachProfile, closeModal } = useGlobalState();
 
+  const [coachProfiles, setCoachProfiles] = useState([]);
+  // Fetch all coach profiles
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const response = await axios.get("/api/coachProfiling");
+        setCoachProfiles(response.data); // Store coach profiles in state
+      } catch (error) {
+        console.error("Failed to fetch coach profiles:", error);
+        toast.error("Failed to load coach profiles.");
+      }
+    };
+
+    fetchProfiles();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -174,6 +190,17 @@ function CreateCoachProfile(props: Props) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Check for duplicate name, excluding the current coach profile if editing
+    const isDuplicate = coachProfiles.some(
+      (coachProfile) =>
+        coachProfile.name === name && (!id || coachProfile.id !== id)
+    );
+
+    if (isDuplicate) {
+      toast.error("A coach with the same name already exists.");
+      return;
+    }
 
     let isConfirmed = true; // Assume user confirms by default for create
     if (submitState === "edit") {

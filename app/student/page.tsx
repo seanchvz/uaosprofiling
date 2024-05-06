@@ -24,6 +24,8 @@ function Page({ name, studentprofile }: Props) {
     openModal();
   };
 
+  // Handles the search input field
+  // This function updates the searchTerm state whenever the user types into the search input field.
   const handleSearchChange = (studentProfile) => {
     setSearchTerm(studentProfile.target.value);
   };

@@ -43,6 +43,22 @@ function CreateContent(props: Props) {
     { value: number; label: string }[]
   >([]);
 
+  const [eventsList, setEventsList] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get("/api/events"); // Adjust the URL as needed
+        setEventsList(response.data); // Assuming the data is directly an array of events
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+        toast.error("Failed to load events data.");
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   useEffect(() => {
     // Fetching student options for the select dropdown
     const fetchStudents = async () => {
@@ -186,6 +202,18 @@ function CreateContent(props: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Check for a duplicate name in the events list
+    const isDuplicate = eventsList.some(
+      (event) => event.name === name && (!id || event.id !== id)
+    );
+
+    if (isDuplicate) {
+      toast.error("An event with the same name already exists.");
+      return;
+    }
+
+    // const duplicateName=(name: string): boolean =>
+
     let isConfirmed = true; // Assume user confirms by default for create
     if (submitState === "edit") {
       isConfirmed = window.confirm(
@@ -219,6 +247,17 @@ function CreateContent(props: Props) {
       toast.error("Please enter event details.");
       return;
     }
+
+    // const duplicateName = (name: string): boolean => {
+    //   return event.some((events: { name: string }) => events.name === name);
+    // };
+
+    // // Check for duplicate name
+    // if (duplicateName(name)) {
+    //   console.error("An item with the same name already exists.");
+    //   alert("An item with the same name already exists.");
+    //   return;
+    // }
 
     // Format dates to ISO string for proper server-side handling
     const formattedEvent = {
