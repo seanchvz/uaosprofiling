@@ -370,7 +370,16 @@ function CreateContent(props: Props) {
       </div>
       {submitState === "edit" && (
         <>
-          <h2>Selected Students</h2>
+          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+            Tagged Student-Athletes
+          </h2>
+        </>
+      )}
+      {submitState === "create" && (
+        <>
+          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+            Tag a Student-Athlete to an Event
+          </h2>
         </>
       )}
       <Select
