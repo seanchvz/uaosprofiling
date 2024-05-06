@@ -96,6 +96,20 @@ function CreateProfile(props: Props) {
     { value: number; label: string }[]
   >([]);
 
+  const [students, setStudents] = useState([]);
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const { data } = await axios.get("/api/studentProfiling");
+        setStudents(data); // Assuming the API returns an array of student profiles
+      } catch (error) {
+        toast.error("Failed to load student profiles.");
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
   // Assuming you fetch events somewhere in your component or get them passed down as props:
   useEffect(() => {
     const fetchEvents = async () => {
@@ -310,6 +324,23 @@ function CreateProfile(props: Props) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Construct the full name from the current state
+    const fullName = `${firstName} ${middleName} ${lastName}`.toLowerCase();
+
+    // Check for duplicates: Ensure no other student has the same full name unless it's the same student being edited
+    const isDuplicate = students.some((studentProfile) => {
+      const existingFullName =
+        `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
+
+      // Check if there is another student with the same full name and a different ID
+      return fullName === existingFullName && studentProfile.id !== id;
+    });
+
+    if (isDuplicate) {
+      toast.error("A student with the same full name already exists.");
+      return;
+    }
 
     let isConfirmed = true; // Assume user confirms by default for create
     if (submitState === "edit") {

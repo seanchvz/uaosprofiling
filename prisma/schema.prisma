@@ -26,7 +26,7 @@ model events {
 
 model studentprofile {
   id                     Int            @id @default(autoincrement())
-  firstName              String         @unique(map: "StudentProfile_firstName_key")
+  firstName              String
   middleName             String
   lastName               String
   contactNumber          String
