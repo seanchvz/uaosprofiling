@@ -52,9 +52,9 @@ function CreateCoachProfile(props: Props) {
   const [statusIsParttime, setStatusIsParttime] = useState(
     coachProfile ? coachProfile.statusIsParttime : false
   );
-  const [resumeUrl, setResumeUrl] = useState(
-    coachProfile ? coachProfile.resumeUrl : ""
-  );
+  // const [resumeUrl, setResumeUrl] = useState(
+  //   coachProfile ? coachProfile.resumeUrl : ""
+  // );
   const [email, setEmail] = useState(coachProfile ? coachProfile.email : "");
   const [remarks, setRemarks] = useState(
     coachProfile ? coachProfile.remarks : ""
@@ -63,6 +63,7 @@ function CreateCoachProfile(props: Props) {
   const [userId, setUserId] = useState(coachProfile ? coachProfile.userId : "");
   const [id, setId] = useState(coachProfile ? coachProfile.id : "");
   const { fetchAllCoachProfile, closeModal } = useGlobalState();
+  const [resumeUrl, setResumeUrl] = useState("");
 
   const [coachProfiles, setCoachProfiles] = useState([]);
   // Fetch all coach profiles
@@ -806,7 +807,7 @@ function CreateCoachProfile(props: Props) {
           {!resumeUrl && <span className="required-asterisk">*</span>}
         </label>
         <input
-          type="text"
+          type="url"
           id="resumeUrl"
           value={resumeUrl}
           name="resumeUrl"
@@ -814,6 +815,18 @@ function CreateCoachProfile(props: Props) {
           placeholder="URL of Resume"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
+        {resumeUrl && (
+          <a
+            href={resumeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out inline-block"
+            role="button"
+            aria-label="View Resume"
+          >
+            View Resume
+          </a>
+        )}
       </div>
       <div className="input-control">
         <label htmlFor="remarks"> Remarks </label>
