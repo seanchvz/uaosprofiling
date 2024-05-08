@@ -83,9 +83,9 @@ export async function GET(req: Request) {
         }
 
         const event = await prisma.events.findMany({
-            where: {
-                userId,
-            },
+            // where: {
+            //     userId,
+            // },
             include: {
                 students: true // Include the students in the response for verification
             }

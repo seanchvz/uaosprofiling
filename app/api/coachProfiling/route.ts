@@ -80,9 +80,9 @@ export async function GET(req: Request) {
         }
 
         const coachProfile = await prisma.coachprofile.findMany({
-            where: {
-                userId,
-            },
+            // where: {
+            //     userId,
+            // },
         });
         console.log("Coach Profiles: ", coachProfile);
         return NextResponse.json(coachProfile);

@@ -35,13 +35,14 @@ const menu = [
     icon: coach,
     link: "/CoachScreen",
   },
+
+  // {
+  //   id: 4,
+  //   title: "Inventory",
+  //   icon: inventory,
+  //   link: "/InventoryScreen",
+  // },
   /* 
-  {
-    id: 4,
-    title: "Inventory",
-    icon: inventory,
-    link: "/InventoryScreen",
-  },
   {
     id: 6,
     title: "Borrowing",

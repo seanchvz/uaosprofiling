@@ -148,12 +148,12 @@ const EventItemStyled = styled.div`
 
   .date {
     margin-top: auto;
-    margin-bottom: 0.5rem; /* Add margin to the bottom of the date */
+    margin-bottom: 0;
   }
 
   .dateend {
-    margin-right: auto;
-    margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
+    margin-right: 0;
+    margin-bottom: 0;
   }
 
   .event-footer {

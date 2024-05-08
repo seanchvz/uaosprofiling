@@ -453,10 +453,10 @@ function CreateProfile(props: Props) {
       return;
     }
 
-    if (!selectedEventIds.length) {
-      toast.error("Please select at least one event.");
-      return;
-    }
+    // if (!selectedEventIds.length) {
+    //   toast.error("Please select at least one event.");
+    //   return;
+    // }
 
     const studentProfile = {
       firstName,

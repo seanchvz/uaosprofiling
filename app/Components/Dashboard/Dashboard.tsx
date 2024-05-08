@@ -206,8 +206,8 @@ const DashboardStyled = styled.main`
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    width: 22rem;
-    height: 4rem;
+    width: 19.7rem;
+    height: 3rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
     cursor: pointer;
