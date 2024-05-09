@@ -73,7 +73,7 @@ function Page({ name, studentprofile }: Props) {
         </StudentModal>
       )}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
+        <h1 style={{ fontSize: "clamp(1.5rem, 1.5vw, 2rem)", fontWeight: 800 }}>
           {name}
         </h1>
         <div style={{ display: "flex", alignItems: "center" }}>

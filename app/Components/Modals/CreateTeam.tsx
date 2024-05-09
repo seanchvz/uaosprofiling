@@ -95,7 +95,7 @@ function CreateTeam(props: Props) {
         setSelectedStudents(team.students.map((s: { id: number }) => s.id));
       } else if (submitState === "create") {
         try {
-          const response = await axios.get(`/api/teams/${team.id}`); // Fetch more detailed data if necessary
+          const response = await axios.get("/api/teams?teamId=123"); // Fetch more detailed data if necessary
           console.log("Fetched team data:", response.data);
           if (response.data) {
             console.log("Fetched tean data:", response.data);

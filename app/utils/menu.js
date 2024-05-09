@@ -38,7 +38,7 @@ const menu = [
 
   {
     id: 4,
-    title: "Teams",
+    title: "Team Management",
     icon: inventory,
     link: "/TeamScreen",
   },
