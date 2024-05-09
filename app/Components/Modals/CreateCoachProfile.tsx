@@ -243,10 +243,6 @@ function CreateCoachProfile(props: Props) {
       toast.error("Please enter the coach's first name.");
       return;
     }
-    if (middleName) {
-      toast.error("Please enter the coach's middle name.");
-      return;
-    }
     if (!lastName) {
       toast.error("Please enter the coach's last name.");
       return;

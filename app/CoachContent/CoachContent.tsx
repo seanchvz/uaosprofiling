@@ -100,8 +100,8 @@ function CoachContent({
   // Card Contents
   return (
     <CoachContentStyled theme={theme}>
-      <h1 style={{ marginBottom: "5px" }}>{lastName}, {firstName} {middleName}</h1>
-      
+      <h1 style={{ marginBottom: "5px" }}>{firstName}</h1>
+     
       <div className="tags">
         <Tag
           style={{ marginBottom: "10px" }}
