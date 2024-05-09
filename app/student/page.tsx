@@ -22,7 +22,6 @@ function Page({ name, studentprofile }: Props) {
   const [selectedSport, setSelectedSport] = useState("all");
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
-
   const handleOpenCreateModal = () => {
     setModalState("create");
     setSelectedStudent(undefined); // Ensure no event data is passed into the creation form
@@ -33,15 +32,12 @@ function Page({ name, studentprofile }: Props) {
   // This function updates the searchTerm state whenever the user types into the search input field.
   const handleSearchInput = (studentprofile) => {
     setSearchTerm(studentprofile.target.value);
-  }
+  };
 
   const filteredStudentYear = studentprofile.filter((studentprofile) => {
-    const existingYear = 
-    `${studentprofile.yrStartedPlaying}`.toLowerCase();
+    const existingYear = `${studentprofile.yrStartedPlaying}`.toLowerCase();
     const matchesYear = existingYear.includes(searchYear.toLowerCase());
-    console.log(
-      `Year: ${studentprofile.yrStartedPlaying}`
-    );
+    console.log(`Year: ${studentprofile.yrStartedPlaying}`);
     return matchesYear;
   });
   const handleSearchChange = (studentProfile) => {
@@ -154,7 +150,7 @@ function Page({ name, studentprofile }: Props) {
               textAlign: "left", // align text to the left
             }}
           />
-<input
+          <input
             type="text"
             placeholder="Search by Year Started Playing..."
             value={searchYear}
@@ -184,7 +180,8 @@ function Page({ name, studentprofile }: Props) {
 
       <div className="inventoryitem grid mt-5">
         {filteredStudentProfile.length && filteredStudentYear.length > 0 ? (
-          filteredStudentProfile.map && filteredStudentYear.map ((studentProfile) => (
+          filteredStudentProfile.map &&
+          filteredStudentYear.map((studentProfile) => (
             <StudentProfileContent
               handleEdit={() => {
                 setModalState("edit");

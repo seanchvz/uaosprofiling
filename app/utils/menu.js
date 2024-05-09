@@ -36,12 +36,12 @@ const menu = [
     link: "/CoachScreen",
   },
 
-  // {
-  //   id: 4,
-  //   title: "Inventory",
-  //   icon: inventory,
-  //   link: "/InventoryScreen",
-  // },
+  {
+    id: 4,
+    title: "Teams",
+    icon: inventory,
+    link: "/TeamScreen",
+  },
   /* 
   {
     id: 6,

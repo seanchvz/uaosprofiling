@@ -24,6 +24,15 @@ model events {
   StudentEvent StudentEvent[]
 }
 
+model team {
+  id        Int              @id @default(autoincrement())
+  students  studentprofile[] @relation("TeamMembers")
+  sport     String
+  teamName  String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
 model studentprofile {
   id                     Int            @id @default(autoincrement())
   firstName              String
@@ -59,6 +68,7 @@ model studentprofile {
   imageUrl               String?
   events                 events[]       @relation("StudentEvents")
   StudentEvent           StudentEvent[]
+  teams                  team[]         @relation("TeamMembers")
 }
 
 model StudentEvent {
