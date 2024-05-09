@@ -16,7 +16,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { sport, teamName, studentIds } = await req.json();
+        const { sport, teamName, studentIds, eventIds } = await req.json();
 
         if (!teamName) {
             return NextResponse.json({
@@ -38,10 +38,14 @@ export async function POST(req: Request) {
                 teamName,
                 students: {
                     connect: studentIds.map(id => ({ id }))
+                },
+                events: {
+                    connect: eventIds.map((id: string) => ({ id }))
                 }
             },
             include: {
-                students: true
+                students: true,
+                events: true
             }
         });
 
@@ -66,7 +70,8 @@ export async function GET() {
 
         const teams = await prisma.team.findMany({
             include: {
-                students: true
+                students: true,
+                events: true
             }
         });
 

@@ -22,6 +22,7 @@ model events {
   students     studentprofile[] @relation("StudentEvents")
   coaches      coachprofile[]
   StudentEvent StudentEvent[]
+  teams        team[]           @relation("TeamEvents")
 }
 
 model team {
@@ -31,6 +32,7 @@ model team {
   teamName  String
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
+  events    events[]         @relation("TeamEvents")
 }
 
 model studentprofile {
