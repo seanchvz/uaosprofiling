@@ -12,7 +12,9 @@ interface Props {
 
 function CreateCoachProfile(props: Props) {
   const { coachProfile, submitState } = props;
-  const [name, setName] = useState(coachProfile ? coachProfile.name : "");
+  const [firstname, setfirstName] = useState(coachProfile ? coachProfile.firstName : "");
+  const [middlename, setmiddleName] = useState(coachProfile ? coachProfile.middleName : "");
+  const [lastname, setlastName] = useState(coachProfile ? coachProfile.lastName : "");
   const [contactNumber, setContactNumber] = useState(
     coachProfile ? coachProfile.contactNumber : ""
   );
@@ -38,8 +40,8 @@ function CreateCoachProfile(props: Props) {
   const [nationality, setNationality] = useState(
     coachProfile ? coachProfile.nationality : ""
   );
-  const [weight, setWeight] = useState(coachProfile ? coachProfile.weight : "");
-  const [height, setHeight] = useState(coachProfile ? coachProfile.height : "");
+  const [weight, setWeight] = useState(coachProfile ? coachProfile.weight : 0);
+  const [height, setHeight] = useState(coachProfile ? coachProfile.height : 0);
   const [bloodType, setBloodType] = useState(
     coachProfile ? coachProfile.bloodType : ""
   );
@@ -114,8 +116,14 @@ function CreateCoachProfile(props: Props) {
             if (name === "height") setHeight(floatValue);
           }
           break;
-        case "name":
-          setName(value);
+        case "firstName":
+          setfirstName(value);
+          break;
+          case "middleName":
+          setmiddleName(value);
+          break;
+          case "lastName":
+          setlastName(value);
           break;
         case "contactNumber":
           setContactNumber(value);
@@ -161,8 +169,9 @@ function CreateCoachProfile(props: Props) {
 
   useEffect(() => {
     if (submitState === "edit" && coachProfile) {
-      setName(coachProfile.name);
-
+      setfirstName(coachProfile.firstName);
+      setmiddleName(coachProfile.middleName);
+      setlastName(coachProfile.lastName);
       const formattedBirthDate = new Date(coachProfile.birthDate)
         .toISOString()
         .split("T")[0];
@@ -195,7 +204,7 @@ function CreateCoachProfile(props: Props) {
     // Check for duplicate name, excluding the current coach profile if editing
     const isDuplicate = coachProfiles.some(
       (coachProfile) =>
-        coachProfile.name === name && (!id || coachProfile.id !== id)
+        coachProfile.lastname === lastname && (!id || coachProfile.id !== id)
     );
 
     if (isDuplicate) {
@@ -215,8 +224,8 @@ function CreateCoachProfile(props: Props) {
     }
 
     // Validation checks for coach profile fields
-    if (!name) {
-      toast.error("Please enter the coach's name.");
+    if (!firstname) {
+      toast.error("Please enter the coach's first name.");
       return;
     }
     if (!email) {
@@ -293,7 +302,9 @@ function CreateCoachProfile(props: Props) {
     // Construct the coachProfile object with all the state values
     const coachProfile = {
       id,
-      name,
+      firstname,
+      middlename,
+      lastname,
       contactNumber,
       sport,
       permanentTeam,
@@ -361,7 +372,9 @@ function CreateCoachProfile(props: Props) {
 
   interface CoachData {
     id: string;
-    name: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
     contactNumber: string;
     sport: string;
     permanentTeam: string;
@@ -424,13 +437,41 @@ function CreateCoachProfile(props: Props) {
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
           <label htmlFor="name">
-            Name {!name && <span className="required-asterisk">*</span>}
+            First Name {!firstname && <span className="required-asterisk">*</span>}
           </label>
           <input
             type="text"
-            id="name"
-            value={name}
-            name="name"
+            id="fistname"
+            value={firstname}
+            name="firstname"
+            onChange={handleChange}
+            placeholder="e.g. Juan Dela Cruz"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+        <div className="input-control">
+          <label htmlFor="name">
+            Middle Name
+          </label>
+          <input
+            type="text"
+            id="middlename"
+            value={middlename}
+            name="middleName"
+            onChange={handleChange}
+            placeholder="e.g. Juan Dela Cruz"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+        <div className="input-control">
+          <label htmlFor="name">
+            Last Name {!lastname && <span className="required-asterisk">*</span>}
+          </label>
+          <input
+            type="text"
+            id="lastname"
+            value={lastname}
+            name="lastname"
             onChange={handleChange}
             placeholder="e.g. Juan Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
@@ -641,6 +682,7 @@ function CreateCoachProfile(props: Props) {
           </label>
           <input
             type="number"
+            step="0.01"
             id="weight"
             name="weight"
             value={weight}
@@ -657,6 +699,7 @@ function CreateCoachProfile(props: Props) {
           </label>
           <input
             type="number"
+            step="0.01"
             id="height"
             name="height"
             value={height}
