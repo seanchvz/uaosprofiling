@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model events {
+  id           Int              @id @default(autoincrement())
+  name         String
+  startDate    DateTime
+  endDate      DateTime
+  CreatedAt    DateTime         @default(now())
+  UpdatedAt    DateTime         @updatedAt
+  eventDetails String?
+  Sport        String
+  isExternal   Boolean          @default(false)
+  isInternal   Boolean          @default(false)
+  userId       String
+  students     studentprofile[] @relation("StudentEvents")
+  coaches      coachprofile[]
+  StudentEvent StudentEvent[]
+}
+
+model studentprofile {
+  id                     Int            @id @default(autoincrement())
+  firstName              String
+  middleName             String
+  lastName               String
+  contactNumber          String
+  landLineNumber         String
+  sport                  String?
+  birthDate              String
+  nationality            String
+  weight                 String?
+  height                 String?
+  bloodType              String?
+  academicYear           String
+  isMale                 Boolean        @default(false)
+  isFemale               Boolean        @default(false)
+  yrStartedPlaying       String
+  mothersName            String?
+  fathersName            String?
+  guardiansName          String?
+  courseAndYear          String
+  emergencyContactPerson String
+  emergencyContactNumber String
+  email                  String         @unique(map: "StudentProfile_email_key")
+  homeAddress            String
+  statusIsActive         Boolean        @default(false)
+  statusIsInactive       Boolean        @default(false)
+  remarks                String?
+  CreatedAt              DateTime       @default(now())
+  UpdatedAt              DateTime       @updatedAt
+  userId                 String
+  imageUrl               String?
+  events                 events[]       @relation("StudentEvents")
+  StudentEvent           StudentEvent[]
+}
+
+model StudentEvent {
+  student   studentprofile @relation(fields: [studentId], references: [id])
+  studentId Int
+  event     events         @relation(fields: [eventId], references: [id])
+  eventId   Int
+
+  @@id([studentId, eventId])
+}
+
+model coachprofile {
+  id                     Int      @id @default(autoincrement())
+  firstName              String
+  middleName             String
+  lastName               String
+  contactNumber          String
+  landLineNumber         String
+  sport                  String
+  permanentTeam          String
+  isMale                 Boolean  @default(false)
+  isFemale               Boolean  @default(false)
+  emergencyContact       String
+  emergencyContactPerson String
+  birthDate              DateTime
+  nationality            String
+  weight                 Float?
+  height                 Float?
+  bloodType              String?
+  academicYear           String
+  statusIsFulltime       Boolean  @default(false)
+  statusIsParttime       Boolean  @default(false)
+  resumeUrl              String?
+  email                  String
+  remarks                String?
+  CreatedAt              DateTime @default(now())
+  UpdatedAt              DateTime @updatedAt
+  userId                 String
+  events                 events[]
+}
+
+model inventoryitem {
+  id          Int      @id @default(autoincrement())
+  item        String
+  quantity    Int
+  supplier    String
+  stockinDate DateTime
+  userId      String
+}
