@@ -22,17 +22,6 @@ model events {
   students     studentprofile[] @relation("StudentEvents")
   coaches      coachprofile[]
   StudentEvent StudentEvent[]
-  teams        team[]           @relation("EventTeams")
-}
-
-model team {
-  id        Int              @id @default(autoincrement())
-  event     events           @relation(fields: [eventId], references: [id], name: "EventTeams")
-  eventId   Int
-  students  studentprofile[] @relation("TeamMembers")
-  teamName  String
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
 }
 
 model studentprofile {
@@ -41,6 +30,7 @@ model studentprofile {
   middleName             String
   lastName               String
   contactNumber          String
+  landLineNumber         String
   sport                  String?
   birthDate              String
   nationality            String
@@ -61,6 +51,7 @@ model studentprofile {
   homeAddress            String
   statusIsActive         Boolean        @default(false)
   statusIsInactive       Boolean        @default(false)
+  QPI                    String?
   remarks                String?
   CreatedAt              DateTime       @default(now())
   UpdatedAt              DateTime       @updatedAt
@@ -68,7 +59,6 @@ model studentprofile {
   imageUrl               String?
   events                 events[]       @relation("StudentEvents")
   StudentEvent           StudentEvent[]
-  teams                  team[]         @relation("TeamMembers")
 }
 
 model StudentEvent {
@@ -82,8 +72,11 @@ model StudentEvent {
 
 model coachprofile {
   id                     Int      @id @default(autoincrement())
-  name                   String
+  firstName              String
+  middleName             String
+  lastName               String
   contactNumber          String
+  landLineNumber         String
   sport                  String
   permanentTeam          String
   isMale                 Boolean  @default(false)
