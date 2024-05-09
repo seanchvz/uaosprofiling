@@ -59,7 +59,8 @@ import { auth } from "@clerk/nextjs";
                 }
             },
             include: {
-                students: true // Include the students in the response for verification
+                students: true,
+                teams: true // Include the students in the response for verification
             }
         });
 
@@ -82,12 +83,19 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
+        const whereClause = {
+            userId: userId
+        };
+
         const event = await prisma.events.findMany({
+            where: whereClause,
             // where: {
             //     userId,
             // },
+
             include: {
-                students: true // Include the students in the response for verification
+                students: true,
+                // teams: true
             }
         });
         //   console.log("EVENTS: ", events);

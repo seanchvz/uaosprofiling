@@ -71,7 +71,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 }
             },
             include: {
-                students: true // Include the students in the response for verification
+                students: true,
+                // teams: true // Include the students in the response for verification
             }
         });
 

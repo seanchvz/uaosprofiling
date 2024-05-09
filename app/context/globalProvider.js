@@ -9,6 +9,7 @@ import { InventoryItemService } from "./lib/InventoryItemService";
 import { EventsService } from "./lib/EventsService";
 import { CoachProfileService } from "./lib/CoachProfileService";
 import { StudentProfileService } from "./lib/StudentProfileService";
+import { TeamService } from "./lib/TeamService";
 import { student } from "../utils/Icons";
 import { useClerk } from "@clerk/clerk-react";
 
@@ -35,6 +36,15 @@ export const GlobalProvider = ({ children }) => {
   const { coachprofile, fetchAllCoachProfile } = CoachProfileService({});
 
   const { studentprofile, fetchAllStudentProfile } = StudentProfileService({});
+
+  const { teams, fetchAllTeams, deleteTeam, updateTeam } = TeamService({}); // Assuming you implement TeamService
+
+  useEffect(() => {
+    if (user) {
+      allEvents();
+      fetchAllTeams();
+    }
+  }, [user]);
 
   /**
    * Opens the modal.
@@ -199,6 +209,10 @@ export const GlobalProvider = ({ children }) => {
         deleteStudentProfile,
         patchCoachProfile,
         patchStudentProfile,
+        teams,
+        fetchAllTeams,
+        deleteTeam,
+        updateTeam,
         // isExternalEvents,
       }}
     >
