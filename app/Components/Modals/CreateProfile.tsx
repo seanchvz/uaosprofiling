@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FunctionComponent } from "react";
 import styled from "styled-components"; // Import styled-components// Assuming Button component exists
-import { add } from "@/app/utils/Icons"; // Assuming Icons are imported
+import { add, student } from "@/app/utils/Icons"; // Assuming Icons are imported
 import Button from "../Button/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -28,6 +28,9 @@ function CreateProfile(props: Props) {
   const [contactNumber, setContactNumber] = useState(
     studentProfile ? studentProfile.contactNumber : ""
   );
+  const [landLineNumber, setLandLineNumber] = useState(
+    studentProfile ? studentProfile.landLineNumber : ""
+  );
   const [birthDate, setBirthdate] = useState(
     studentProfile ? studentProfile.Birthdate : ""
   );
@@ -42,6 +45,9 @@ function CreateProfile(props: Props) {
   );
   const [sport, setSport] = useState(
     studentProfile ? studentProfile.sport : ""
+  );
+  const [secondSport, setsecondSport] = useState(
+    studentProfile ? studentProfile.secondSport : ""
   );
   const [bloodType, setbloodType] = useState(
     studentProfile ? studentProfile.bloodType : ""
@@ -166,6 +172,9 @@ function CreateProfile(props: Props) {
       case "sport":
         setSport(value);
         break;
+      case "secondSport":
+        setsecondSport(value);
+        break;
       case "birthDate":
         setBirthdate(value);
         break;
@@ -228,6 +237,7 @@ function CreateProfile(props: Props) {
       setmiddleName(studentProfile.middleName);
       setlastName(studentProfile.lastName);
       setContactNumber(studentProfile.contactNumber);
+      setLandLineNumber(studentProfile.landLineNumber);
       const formattedBirthDate = new Date(studentProfile.birthDate)
         .toISOString()
         .split("T")[0];
@@ -236,6 +246,7 @@ function CreateProfile(props: Props) {
       setWeight(studentProfile.weight);
       setHeight(studentProfile.height);
       setSport(studentProfile.sport);
+      setsecondSport(studentProfile.secondSport);
       setbloodType(studentProfile.bloodType);
       setAcademicYear(studentProfile.academicYear);
       setIsMale(studentProfile.isMale);
@@ -262,6 +273,7 @@ function CreateProfile(props: Props) {
         setmiddleName(studentProfile.middleName);
         setlastName(studentProfile.lastName);
         setContactNumber(studentProfile.contactNumber);
+        setLandLineNumber(studentProfile.landLineNumber);
         const formattedBirthDate = new Date(studentProfile.birthDate)
           .toISOString()
           .split("T")[0];
@@ -270,6 +282,7 @@ function CreateProfile(props: Props) {
         setWeight(studentProfile.weight);
         setHeight(studentProfile.height);
         setSport(studentProfile.sport);
+        setsecondSport(studentProfile.secondSport);
         setbloodType(studentProfile.bloodType);
         setAcademicYear(studentProfile.academicYear);
         setIsMale(studentProfile.isMale);
@@ -371,11 +384,17 @@ function CreateProfile(props: Props) {
       toast.error("Please enter a contact number.");
       return;
     }
+    if (landLineNumber === undefined) {
+      toast.error("Please enter a land line number.");
+      return;
+    }
     if (contactNumber.length !== 11 || !/^\d+$/.test(contactNumber)) {
       toast.error("The contact number must be exactly 11 digits.");
       return;
     }
-
+    if (landLineNumber.length !== 10 || !/^\d+$/.test(landLineNumber)) {
+      toast.error("The land line number must be exactly 10 digits.");
+    }
     if (!birthDate) {
       toast.error("Please enter a birth date.");
       return;
@@ -463,11 +482,13 @@ function CreateProfile(props: Props) {
       middleName,
       lastName,
       contactNumber,
+      landLineNumber,
       birthDate,
       nationality,
       weight,
       height,
       sport,
+      secondSport,
       bloodType,
       academicYear,
       isMale,
@@ -554,11 +575,13 @@ function CreateProfile(props: Props) {
     middleName: string;
     lastName: string;
     contactNumber: string;
+    landLineNumber: string;
     birthDate: string;
     nationality: string;
     weight?: number;
     height?: number;
     sport?: string;
+    secondSport?: string;
     bloodType?: string;
     academicYear: string;
     isMale: boolean;
@@ -746,6 +769,55 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
+          <label htmlFor="sport" className="block">
+           Second Sport
+          </label>
+          <select
+            id="secondSport"
+            name="secondSport"
+            value={secondSport}
+            onChange={handleChange}
+            className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          >
+            <option value="">Select Second Sport</option>
+            <optgroup label="Basketball">
+              <option value="basketball men">Basketball Men</option>
+              <option value="basketball women 3x3">
+                Basketball Women (3X3)
+              </option>
+              <option value="basketball women 5x5">
+                Basketball Women (5X5)
+              </option>
+            </optgroup>
+            <optgroup label="Football">
+              <option value="football men">Football Men</option>
+              <option value="football women">Football Women</option>
+            </optgroup>
+            <optgroup label="Volleyball">
+              <option value="volleyball men">Volleyball Men</option>
+              <option value="volleyball women">Volleyball Women</option>
+            </optgroup>
+            <optgroup label="Badminton">
+              <option value="badminton women">Badminton Women</option>
+              <option value="badminton men">Badminton Men</option>
+            </optgroup>
+            <optgroup label="ESport">
+              <option value="valorant">Valorant</option>
+              <option value="dota">DoTA</option>
+              <option value="mobile legends">Mobile Legends</option>
+            </optgroup>
+            <option value="table tennis">Table Tennis</option>
+            <option value="taekwondo">Taekwondo</option>
+            <option value="chess">Chess</option>
+            <option value="swimming">Swimming Mixed</option>
+            <option value="strength and conditioning">
+              Strength and Conditioning
+            </option>
+            <option value="special projects">Special Projects Mixed</option>
+          </select>
+        </div>
+
+        <div className="input-control">
           <label htmlFor="contactNumber">
             Contact Number{" "}
             {!contactNumber && <span className="required-asterisk">*</span>}
@@ -757,6 +829,20 @@ function CreateProfile(props: Props) {
             name="contactNumber"
             onChange={handleChange}
             placeholder="e.g. 09121231234"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+        <div className="input-control">
+          <label htmlFor="landLineNumber">
+            Land Line Number{" "}
+          </label>
+          <input
+            type="text"
+            id="landLineNumber"
+            value={landLineNumber}
+            name="landLineNumber"
+            onChange={handleChange}
+            placeholder="e.g. 012-123-1234"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
