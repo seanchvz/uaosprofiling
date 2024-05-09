@@ -1,128 +1,121 @@
 import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs";
+import { NextApiRequest, NextApiResponse } from "next/dist/shared/lib/utils";
 import { NextResponse } from "next/server";
 
-
 /**
- * Handles the POST request for creating a coach profile.
+ * Deletes a coach profile.
  * @param req - The request object.
- * @returns A JSON response containing the created coach profile or an error message.
+ * @param params - The parameters object containing the `id` of the coach profile to delete.
+ * @returns A NextResponse object with the deleted coach profile or an error message.
  */
-export async function POST(req: Request) {
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
     try {
-        const { userId } = auth();
+        const { userId } = await auth();
+
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized", status: 401 });
+            return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { name, remarks, contactNumber, sport, permanentTeam, isMale, isFemale, emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email } = await req.json();
+        const id = parseInt(params.id); // Parse id as number
 
-        if (!name || !contactNumber || !sport || !permanentTeam || !nationality || !academicYear || !emergencyContact || !emergencyContactPerson) {
-            return NextResponse.json({
-                error: "Missing required fields",
-                status: 400,
-            });
-        }
-        if (name.length < 2) {
-            return NextResponse.json({
-                error: "The item name must be at least 2 characters long",
-                status: 400,
-            });
-        }
-        const formattedBirthDate = new Date(birthDate).toISOString(); // Parse the stockinDate value if necessary
-
-        const coachProfile = await prisma.coachprofile.create({
-            data: {
-                name: name,
-                contactNumber: contactNumber,
-                sport: sport,
-                permanentTeam: permanentTeam,
-                isMale: isMale,
-                isFemale: isFemale,
-                emergencyContact: emergencyContact,
-                emergencyContactPerson: emergencyContactPerson,
-                birthDate: formattedBirthDate,
-                nationality: nationality,
-                weight: weight,
-                height: height,
-                bloodType: bloodType,
-                academicYear: academicYear,
-                statusIsFulltime: statusIsFulltime,
-                statusIsParttime: statusIsParttime,
-                resumeUrl: resumeUrl,
-                email: email,
-                remarks: remarks,
-                userId: userId,
+        const coachProfile = await prisma.coachprofile.delete({
+            where: {
+                id,
             },
         });
-        console.log(coachProfile);
-        return NextResponse.json(coachProfile);
 
+        console.log("Coach Profile Deleted: ", coachProfile);
 
+        return new NextResponse(JSON.stringify(coachProfile), { status: 200 });
     } catch (error) {
-        console.log("Error Creating Coach Profile ", error);
-        return NextResponse.json({ error: "Error Creating Coach Profile", status: 500 });
-
+        console.log("Error Deleting Coach Profile: ", error);
+        return new NextResponse(JSON.stringify({ error: "Error deleting Coach" }), { status: 500 });
     }
-
 }
 
-/**
- * Retrieves coach profiles for a specific user.
- * @param req - The request object.
- * @returns A JSON response containing the coach profiles.
- */
-export async function GET(req: Request) {
+
+
+
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
-        const { userId } = auth();
+        const { userId } = await auth();
+
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized", status: 401 });
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+        const { id: coachprofileId } = params
+
+        if (!coachprofileId) {
+            return new NextResponse("Missing Coach Profile ID", { status: 400 });
         }
 
-        const coachProfile = await prisma.coachprofile.findMany({
-            // where: {
-            //     userId,
-            // },
+        if (isNaN(+coachprofileId)) {
+            return new NextResponse("Invalid Coach Profile ID", { status: 400 });
+        }
+
+        const body = await req.json();
+
+        const {
+            firstName,
+            middleName,
+            lastName,
+            contactNumber,
+            landLineNumber,
+            sport,
+            permanentTeam,
+            isMale,
+            isFemale,
+            emergencyContact,
+            emergencyContactPerson,
+            birthDate,
+            nationality,
+            weight,
+            height,
+            bloodType,
+            academicYear,
+            statusIsFulltime,
+            statusIsParttime,
+            resumeUrl,
+            email,
+            remarks,
+        } = body;
+
+        // Perform the update operation
+
+        const updatedCoachProfile = await prisma.coachprofile.update({
+            where: { id: +coachprofileId },
+            data: {
+                firstName,
+                middleName,
+                lastName,
+                contactNumber,
+                landLineNumber,
+                sport,
+                permanentTeam,
+                isMale,
+                isFemale,
+                emergencyContact,
+                emergencyContactPerson,
+                birthDate,
+                nationality,
+                weight,
+                height,
+                bloodType,
+                academicYear,
+                statusIsFulltime,
+                statusIsParttime,
+                resumeUrl,
+                email,
+                remarks,
+            },
         });
-        console.log("Coach Profiles: ", coachProfile);
-        return NextResponse.json(coachProfile);
+
+        console.log("Profile Updated: ", updatedCoachProfile);
+        return new NextResponse("Coach Updated: ", { status: 200 });
     } catch (error) {
-        console.error("ERROR GETTING COACH PROFILES: ", error);
-        return NextResponse.json({ error: "Error getting coach profiles", status: 500 });
+        console.error('Error updating coach:', error);
+        return new NextResponse("Error updating coach");
     }
 }
-
-export async function PUT(req: Request) {
-    const { userId } = auth();
-    try {
-
-    } catch (error) {
-        console.log("Error Updating Coach Proffile: ", error);
-        return NextResponse.json({ error: "Error Updating Coach Proffile", status: 500 });
-
-    }
-
-}
-
-export async function DELETE(req: Request) {
-    try {
-
-    } catch (error) {
-        console.log("Error deleting Coach Profile: ", error);
-        return NextResponse.json({ error: "Error Deleting Coach Profile", status: 500 });
-
-    }
-
-}
-
-export async function PATCH(req: Request) {
-    try {
-
-    } catch (error) {
-        console.log("Error Updating Profile: ", error);
-        return NextResponse.json({ error: "Error Updating Profile", status: 500 });
-
-    }
-}
-
 
