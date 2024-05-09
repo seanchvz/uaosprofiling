@@ -57,8 +57,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         const body = await req.json();
 
         const {
-            name,
+            firstName,
+            middleName,
+            lastName,
             contactNumber,
+            landLineNumber,
             sport,
             permanentTeam,
             isMale,
@@ -83,8 +86,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         const updatedCoachProfile = await prisma.coachprofile.update({
             where: { id: +coachprofileId },
             data: {
-                name,
+                firstName,
+                middleName,
+                lastName,
                 contactNumber,
+                landLineNumber,
                 sport,
                 permanentTeam,
                 isMale,
