@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FunctionComponent } from "react";
 import styled from "styled-components"; // Import styled-components// Assuming Button component exists
-import { add, student } from "@/app/utils/Icons"; // Assuming Icons are imported
+import { add } from "@/app/utils/Icons"; // Assuming Icons are imported
 import Button from "../Button/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -29,7 +29,7 @@ function CreateProfile(props: Props) {
     studentProfile ? studentProfile.contactNumber : ""
   );
   const [landLineNumber, setLandLineNumber] = useState(
-    studentProfile ? studentProfile.landLineNumber : ""
+    studentProfile ? studentProfile.landlineNumber : ""
   );
   const [birthDate, setBirthdate] = useState(
     studentProfile ? studentProfile.Birthdate : ""
@@ -45,9 +45,6 @@ function CreateProfile(props: Props) {
   );
   const [sport, setSport] = useState(
     studentProfile ? studentProfile.sport : ""
-  );
-  const [secondSport, setsecondSport] = useState(
-    studentProfile ? studentProfile.secondSport : ""
   );
   const [bloodType, setbloodType] = useState(
     studentProfile ? studentProfile.bloodType : ""
@@ -85,7 +82,9 @@ function CreateProfile(props: Props) {
   const [remarks, setRemarks] = useState(
     studentProfile ? studentProfile.Remarks : ""
   );
+  const [QPI, setQPI] = useState(studentProfile ? studentProfile.QPI : "");
 
+  const [hasDeficiency, setHasDeficiency] = useState(false);
   const [isMale, setIsMale] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
   const [statusIsActive, setStatusIsActive] = useState(false);
@@ -115,6 +114,17 @@ function CreateProfile(props: Props) {
 
     fetchStudents();
   }, []);
+
+  //qpi checker
+  const handleGradeChange = (e) => {
+    const QPI = e.target.value;
+    setQPI(QPI); // Update the QPI state
+    if (parseFloat(QPI) < 2) {
+      setHasDeficiency(true);
+    } else {
+      setHasDeficiency(false);
+    }
+  };
 
   // Assuming you fetch events somewhere in your component or get them passed down as props:
   useEffect(() => {
@@ -169,11 +179,11 @@ function CreateProfile(props: Props) {
       case "contactNumber":
         setContactNumber(value);
         break;
+      case "landLineNumber":
+        setLandLineNumber(value);
+        break;
       case "sport":
         setSport(value);
-        break;
-      case "secondSport":
-        setsecondSport(value);
         break;
       case "birthDate":
         setBirthdate(value);
@@ -220,6 +230,9 @@ function CreateProfile(props: Props) {
       case "homeAddress":
         setHomeAddress(value);
         break;
+      case "QPI":
+        setQPI(value);
+        break;
       case "remarks":
         setRemarks(value);
         break;
@@ -246,7 +259,6 @@ function CreateProfile(props: Props) {
       setWeight(studentProfile.weight);
       setHeight(studentProfile.height);
       setSport(studentProfile.sport);
-      setsecondSport(studentProfile.secondSport);
       setbloodType(studentProfile.bloodType);
       setAcademicYear(studentProfile.academicYear);
       setIsMale(studentProfile.isMale);
@@ -260,6 +272,7 @@ function CreateProfile(props: Props) {
       setEmergencyContactPerson(studentProfile.emergencyContactPerson);
       setEmail(studentProfile.email);
       setHomeAddress(studentProfile.homeAddress);
+      setQPI(studentProfile.QPI);
       setRemarks(studentProfile.remarks);
       setStatusIsActive(studentProfile.statusIsActive);
       setStatusIsInactive(studentProfile.statusIsInactive);
@@ -282,7 +295,6 @@ function CreateProfile(props: Props) {
         setWeight(studentProfile.weight);
         setHeight(studentProfile.height);
         setSport(studentProfile.sport);
-        setsecondSport(studentProfile.secondSport);
         setbloodType(studentProfile.bloodType);
         setAcademicYear(studentProfile.academicYear);
         setIsMale(studentProfile.isMale);
@@ -296,6 +308,7 @@ function CreateProfile(props: Props) {
         setEmergencyContactPerson(studentProfile.emergencyContactPerson);
         setEmail(studentProfile.email);
         setHomeAddress(studentProfile.homeAddress);
+        setQPI(studentProfile.QPI);
         setRemarks(studentProfile.remarks);
         setStatusIsActive(studentProfile.statusIsActive);
         setStatusIsInactive(studentProfile.statusIsInactive);
@@ -325,6 +338,13 @@ function CreateProfile(props: Props) {
 
     fetchStudentDetails();
   }, [studentProfile, submitState]);
+
+  useEffect(() => {
+    if (studentProfile) {
+      setHasDeficiency(parseFloat(studentProfile.QPI) < 2);
+      // Set other state from the profile
+    }
+  }, [studentProfile]);
 
   useEffect(() => {
     console.log("Updated eventOptions state:", eventOptions);
@@ -384,16 +404,9 @@ function CreateProfile(props: Props) {
       toast.error("Please enter a contact number.");
       return;
     }
-    if (landLineNumber === undefined) {
-      toast.error("Please enter a land line number.");
-      return;
-    }
     if (contactNumber.length !== 11 || !/^\d+$/.test(contactNumber)) {
       toast.error("The contact number must be exactly 11 digits.");
       return;
-    }
-    if (landLineNumber.length !== 10 || !/^\d+$/.test(landLineNumber)) {
-      toast.error("The land line number must be exactly 10 digits.");
     }
     if (!birthDate) {
       toast.error("Please enter a birth date.");
@@ -467,6 +480,10 @@ function CreateProfile(props: Props) {
       toast.error("Please enter a home address.");
       return;
     }
+    if (!QPI) {
+      toast.error("Please enter student's QPI.");
+      return;
+    }
     if (statusIsActive === undefined && statusIsInactive === undefined) {
       toast.error("Please select a status.");
       return;
@@ -488,7 +505,6 @@ function CreateProfile(props: Props) {
       weight,
       height,
       sport,
-      secondSport,
       bloodType,
       academicYear,
       isMale,
@@ -505,6 +521,8 @@ function CreateProfile(props: Props) {
       statusIsActive,
       statusIsInactive,
       remarks,
+      QPI,
+      hasDeficiency,
       userId,
       id,
       eventIds: selectedEventIds,
@@ -581,7 +599,6 @@ function CreateProfile(props: Props) {
     weight?: number;
     height?: number;
     sport?: string;
-    secondSport?: string;
     bloodType?: string;
     academicYear: string;
     isMale: boolean;
@@ -598,6 +615,7 @@ function CreateProfile(props: Props) {
     statusIsActive: boolean;
     statusIsInactive: boolean;
     remarks?: string;
+    QPI: string;
     userId: string;
     id: string;
   }
@@ -769,55 +787,6 @@ function CreateProfile(props: Props) {
         </div>
 
         <div className="input-control">
-          <label htmlFor="sport" className="block">
-           Second Sport
-          </label>
-          <select
-            id="secondSport"
-            name="secondSport"
-            value={secondSport}
-            onChange={handleChange}
-            className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
-          >
-            <option value="">Select Second Sport</option>
-            <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women 3x3">
-                Basketball Women (3X3)
-              </option>
-              <option value="basketball women 5x5">
-                Basketball Women (5X5)
-              </option>
-            </optgroup>
-            <optgroup label="Football">
-              <option value="football men">Football Men</option>
-              <option value="football women">Football Women</option>
-            </optgroup>
-            <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
-            </optgroup>
-            <optgroup label="Badminton">
-              <option value="badminton women">Badminton Women</option>
-              <option value="badminton men">Badminton Men</option>
-            </optgroup>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
-            <option value="table tennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming Mixed</option>
-            <option value="strength and conditioning">
-              Strength and Conditioning
-            </option>
-            <option value="special projects">Special Projects Mixed</option>
-          </select>
-        </div>
-
-        <div className="input-control">
           <label htmlFor="contactNumber">
             Contact Number{" "}
             {!contactNumber && <span className="required-asterisk">*</span>}
@@ -833,16 +802,14 @@ function CreateProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="landLineNumber">
-            Land Line Number{" "}
-          </label>
+          <label htmlFor="contactNumber">Land Line Number </label>
           <input
             type="text"
-            id="landLineNumber"
+            id="  landLineNumber"
             value={landLineNumber}
             name="landLineNumber"
             onChange={handleChange}
-            placeholder="e.g. 012-123-1234"
+            placeholder="e.g. 00-000-0000"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -1228,26 +1195,45 @@ function CreateProfile(props: Props) {
           </div>
         </div>
         <div className="input-control">
-          <label htmlFor="remarks"> Remarks </label>
-          <textarea
-            id="remarks"
-            value={remarks}
-            name="remarks"
-            onChange={handleChange}
-            placeholder="e.g. Has history of heart problems"
+          <label htmlFor="homeAddress">
+            QPI {!QPI && <span className="required-asterisk">*</span>}
+          </label>
+          <input
+            type="text"
+            id="QPI"
+            value={QPI}
+            name="QPI"
+            onChange={handleGradeChange}
+            placeholder="e.g. 2"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-            rows={4}
-          ></textarea>
+          />
         </div>
+        <label htmlFor="remarks"> Remarks </label>
+        <textarea
+          id="remarks"
+          value={remarks}
+          name="remarks"
+          onChange={handleChange}
+          placeholder="e.g. Has history of heart problems"
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          rows={4}
+        ></textarea>
+      </div>
+      <div>
+        {hasDeficiency && (
+          <div style={{ color: "red", marginTop: "10px", fontWeight: "bold" }}>
+            Warning: This student is not eligible to play due to a low QPI.
+          </div>
+        )}
+      </div>
 
-        <div className="submit-btn mt-4 flex justify-center">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
-          >
-            {submitState === "edit" ? "Update Profile" : "Create Profile"}
-          </button>
-        </div>
+      <div className="submit-btn mt-4 flex justify-center">
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
+        >
+          {submitState === "edit" ? "Update Profile" : "Create Profile"}
+        </button>
       </div>
     </CreatestudentStyled>
   );
