@@ -10,6 +10,7 @@ interface Props {
   middleName: string;
   lastName: string;
   contactNumber: string;
+  landLineNumber: string;
   birthDate: string;
   sport: string;
   nationality: string;
@@ -27,11 +28,13 @@ interface Props {
   emergencyContactPerson: string;
   emergencyContactNumber: string;
   email: string;
+  QPI: string;
   homeAddress: string;
   statusIsActive: boolean;
   statusIsInactive: boolean;
   remarks: string | null;
   userId: string;
+  hasDeficiency: boolean;
   handleEdit: () => void;
 }
 
@@ -57,8 +60,8 @@ const roleColors = {
   statusIsActive: "#228B22",
   statusIsInactive: "#E03616",
   academicYear: "#fda600",
+  qpi: "#ff0f0f",
 };
-
 function StudentProfileContent({
   handleEdit,
   id,
@@ -84,7 +87,9 @@ function StudentProfileContent({
   emergencyContactNumber,
   email,
   homeAddress,
+  QPI,
   statusIsActive,
+  hasDeficiency,
   statusIsInactive,
   remarks,
   userId,
@@ -95,6 +100,7 @@ function StudentProfileContent({
     month: "long",
     day: "numeric",
   };
+  const qpiNumber = parseFloat(QPI);
 
   return (
     <StudentContentStyled theme={theme}>
@@ -113,7 +119,7 @@ function StudentProfileContent({
               : roleColors.statusIsInactive
           }
         >
-          {statusIsInactive ? "Full Time" : "Part Time"}
+          {statusIsActive ? "Full Time" : "Part Time"}
         </Tag>
         <Tag
           style={{ marginRight: "10px" }}
@@ -122,6 +128,15 @@ function StudentProfileContent({
           {sport}
         </Tag>
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
+        <Tag color={roleColors.qpi}>{QPI}</Tag>
+      </div>
+
+      <div>
+        {hasDeficiency && (
+          <div style={{ color: "red", marginTop: "10px" }}>
+            Warning: This student is not eligible to play due to a low QPI.
+          </div>
+        )}
       </div>
 
       <p>
@@ -134,7 +149,6 @@ function StudentProfileContent({
       <p className="ContactNumber"> Contact Number: {contactNumber}</p>
       <p className="AcademicYear"> Academic Year: {academicYear}</p>
       <p className="AcademicYear"> Remarks: {remarks}</p>
-
 
       <div className="event-footer">
         <button className="edit" onClick={handleEdit}>
@@ -183,11 +197,12 @@ const StudentContentStyled = styled.div`
     margin-bottom: 0.4rem; /* Add margin to the bottom of the heading */
   }
 
-  .nameContainer h1, .nameContainer h2 {
+  .nameContainer h1,
+  .nameContainer h2 {
     margin: 0.2rem 0; /* adjust as needed */
   }
 
- h2 {
+  h2 {
     margin-bottom: 0.5rem; // adjust this value to change the spacing
   }
 
@@ -217,25 +232,35 @@ const StudentContentStyled = styled.div`
       }
     }
 
+    .deficiency-alert p {
+      color: #721c24; // Red text for warning
+      background-color: #f8d7da; // Light red background
+      border: 1px solid #f5c6cb; // Light red border
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
     .edit {
       margin-left: auto;
     }
     .statusIsActive,
     .statusIsInactive {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  border: 2px solid #299758; 
-  border-radius: 0.8rem;
-}
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border: 2px solid #299758;
+      border-radius: 0.8rem;
+    }
 
-.statusIsInactive {
-  border-color: #fe6854; 
-}
+    .statusIsInactive {
+      border-color: #fe6854;
+    }
 
-  .sport {
-    background: #002b88 !important;
-    border-radius: 10px;
-    padding: 0.5rem 1rem; 
+    .sport {
+      background: #002b88 !important;
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+    }
   }
 `;
 

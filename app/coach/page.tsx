@@ -6,6 +6,7 @@ import { useGlobalState } from "../context/globalProvider";
 import CreateCoachProfile from "../Components/Modals/CreateCoachProfile";
 import CoachModal from "../Components/Modals/CoachModal";
 import CoachContent from "../CoachContent/CoachContent";
+import ViewCoachModal from "../Components/Modals/ViewCoachModal";
 
 interface Props {
   name: string;
@@ -26,6 +27,8 @@ function Page({ name, coachprofile }: Props) {
   const [selectedCoachProfile, setSelectedCoachProfile] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+
+
 
   // Open modal specifically for creating a new event
   const handleOpenCreateModal = () => {
@@ -56,6 +59,7 @@ function Page({ name, coachprofile }: Props) {
     fetchAllCoachProfile();
   }, []);
   return (
+    
     <CoachStyled theme={theme}>
       {modal && (
         <CoachModal>
@@ -65,6 +69,7 @@ function Page({ name, coachprofile }: Props) {
           />
         </CoachModal>
       )}
+
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
           {name}

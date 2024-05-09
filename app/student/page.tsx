@@ -218,6 +218,7 @@ function Page({ name, studentprofile }: Props) {
               statusIsInactive={studentProfile.statusIsInactive}
               userId={studentProfile.userId}
               remarks={studentProfile.remarks}
+              QPI={studentProfile.QPI}
               id={studentProfile.id}
             />
           ))

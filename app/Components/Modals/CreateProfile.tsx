@@ -82,7 +82,9 @@ function CreateProfile(props: Props) {
   const [remarks, setRemarks] = useState(
     studentProfile ? studentProfile.Remarks : ""
   );
+  const [QPI, setQPI] = useState(studentProfile ? studentProfile.QPI : "");
 
+  const [hasDeficiency, setHasDeficiency] = useState(false);
   const [isMale, setIsMale] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
   const [statusIsActive, setStatusIsActive] = useState(false);
@@ -112,6 +114,17 @@ function CreateProfile(props: Props) {
 
     fetchStudents();
   }, []);
+
+  //qpi checker
+  const handleGradeChange = (e) => {
+    const QPI = e.target.value;
+    setQPI(QPI); // Update the QPI state
+    if (parseFloat(QPI) < 2) {
+      setHasDeficiency(true);
+    } else {
+      setHasDeficiency(false);
+    }
+  };
 
   // Assuming you fetch events somewhere in your component or get them passed down as props:
   useEffect(() => {
@@ -217,6 +230,9 @@ function CreateProfile(props: Props) {
       case "homeAddress":
         setHomeAddress(value);
         break;
+      case "QPI":
+        setQPI(value);
+        break;
       case "remarks":
         setRemarks(value);
         break;
@@ -256,6 +272,7 @@ function CreateProfile(props: Props) {
       setEmergencyContactPerson(studentProfile.emergencyContactPerson);
       setEmail(studentProfile.email);
       setHomeAddress(studentProfile.homeAddress);
+      setQPI(studentProfile.QPI);
       setRemarks(studentProfile.remarks);
       setStatusIsActive(studentProfile.statusIsActive);
       setStatusIsInactive(studentProfile.statusIsInactive);
@@ -291,6 +308,7 @@ function CreateProfile(props: Props) {
         setEmergencyContactPerson(studentProfile.emergencyContactPerson);
         setEmail(studentProfile.email);
         setHomeAddress(studentProfile.homeAddress);
+        setQPI(studentProfile.QPI);
         setRemarks(studentProfile.remarks);
         setStatusIsActive(studentProfile.statusIsActive);
         setStatusIsInactive(studentProfile.statusIsInactive);
@@ -320,6 +338,13 @@ function CreateProfile(props: Props) {
 
     fetchStudentDetails();
   }, [studentProfile, submitState]);
+
+  useEffect(() => {
+    if (studentProfile) {
+      setHasDeficiency(parseFloat(studentProfile.QPI) < 2);
+      // Set other state from the profile
+    }
+  }, [studentProfile]);
 
   useEffect(() => {
     console.log("Updated eventOptions state:", eventOptions);
@@ -455,6 +480,10 @@ function CreateProfile(props: Props) {
       toast.error("Please enter a home address.");
       return;
     }
+    if (!QPI) {
+      toast.error("Please enter student's QPI.");
+      return;
+    }
     if (statusIsActive === undefined && statusIsInactive === undefined) {
       toast.error("Please select a status.");
       return;
@@ -492,6 +521,8 @@ function CreateProfile(props: Props) {
       statusIsActive,
       statusIsInactive,
       remarks,
+      QPI,
+      hasDeficiency,
       userId,
       id,
       eventIds: selectedEventIds,
@@ -584,6 +615,7 @@ function CreateProfile(props: Props) {
     statusIsActive: boolean;
     statusIsInactive: boolean;
     remarks?: string;
+    QPI: string;
     userId: string;
     id: string;
   }
@@ -770,9 +802,7 @@ function CreateProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="contactNumber">
-            Land Line Number{" "}
-          </label>
+          <label htmlFor="contactNumber">Land Line Number </label>
           <input
             type="text"
             id="  landLineNumber"
@@ -1165,26 +1195,45 @@ function CreateProfile(props: Props) {
           </div>
         </div>
         <div className="input-control">
-          <label htmlFor="remarks"> Remarks </label>
-          <textarea
-            id="remarks"
-            value={remarks}
-            name="remarks"
-            onChange={handleChange}
-            placeholder="e.g. Has history of heart problems"
+          <label htmlFor="homeAddress">
+            QPI {!QPI && <span className="required-asterisk">*</span>}
+          </label>
+          <input
+            type="text"
+            id="QPI"
+            value={QPI}
+            name="QPI"
+            onChange={handleGradeChange}
+            placeholder="e.g. 2"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-            rows={4}
-          ></textarea>
+          />
         </div>
+        <label htmlFor="remarks"> Remarks </label>
+        <textarea
+          id="remarks"
+          value={remarks}
+          name="remarks"
+          onChange={handleChange}
+          placeholder="e.g. Has history of heart problems"
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          rows={4}
+        ></textarea>
+      </div>
+      <div>
+        {hasDeficiency && (
+          <div style={{ color: "red", marginTop: "10px", fontWeight: "bold" }}>
+            Warning: This student is not eligible to play due to a low QPI.
+          </div>
+        )}
+      </div>
 
-        <div className="submit-btn mt-4 flex justify-center">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
-          >
-            {submitState === "edit" ? "Update Profile" : "Create Profile"}
-          </button>
-        </div>
+      <div className="submit-btn mt-4 flex justify-center">
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
+        >
+          {submitState === "edit" ? "Update Profile" : "Create Profile"}
+        </button>
       </div>
     </CreatestudentStyled>
   );

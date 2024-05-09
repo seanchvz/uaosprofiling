@@ -51,6 +51,7 @@ model studentprofile {
   homeAddress            String
   statusIsActive         Boolean        @default(false)
   statusIsInactive       Boolean        @default(false)
+  QPI                    String?
   remarks                String?
   CreatedAt              DateTime       @default(now())
   UpdatedAt              DateTime       @updatedAt

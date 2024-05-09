@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useGlobalState } from "../context/globalProvider";
 import styled from "styled-components";
 import { edit, trash } from "../utils/Icons";
+import ViewCoachModal from "../Components/Modals/ViewCoachModal";
 /**
  * Props for the CoachContent component.
  */
@@ -58,6 +59,7 @@ const roleColors = {
   partTime: "#E03616",
   academicYear: "#fda600",
 };
+
 
 const getSportColor = (sport) => {
   const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
