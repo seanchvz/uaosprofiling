@@ -1,9 +1,12 @@
-import { useGlobalState } from "@/app/context/globalProvider";
-import { add, coach } from "@/app/utils/Icons";
+import React, { useEffect, useState, FunctionComponent } from "react";
+import styled from "styled-components"; // Import styled-components// Assuming Button component exists
+import { add } from "@/app/utils/Icons"; // Assuming Icons are imported
+import Button from "../Button/Button";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import styled from "styled-components";
+import { useGlobalState } from "@/app/context/globalProvider";
+import StudentProfileContent from "../StudentContent/StudentContent";
+import Select from "react-select";
 
 interface Props {
   coachProfile?: any;
@@ -12,11 +15,20 @@ interface Props {
 
 function CreateCoachProfile(props: Props) {
   const { coachProfile, submitState } = props;
-  const [firstname, setfirstName] = useState(coachProfile ? coachProfile.firstName : "");
-  const [middlename, setmiddleName] = useState(coachProfile ? coachProfile.middleName : "");
-  const [lastname, setlastName] = useState(coachProfile ? coachProfile.lastName : "");
+  const [firstName, setfirstName] = useState(
+    coachProfile ? coachProfile.firstName : ""
+  );
+  const [middleName, setMiddleName] = useState(
+    coachProfile ? coachProfile.middleName : ""
+  );
+  const [lastName, setLastName] = useState(
+    coachProfile ? coachProfile.lastName : ""
+  );
   const [contactNumber, setContactNumber] = useState(
     coachProfile ? coachProfile.contactNumber : ""
+  );
+  const [landLineNumber, setLandLineNumber] = useState(
+    coachProfile ? coachProfile.landLineNumber : ""
   );
   const [sport, setSport] = useState(coachProfile ? coachProfile.sport : "");
   const [permanentTeam, setPermanentTeam] = useState(
@@ -75,7 +87,6 @@ function CreateCoachProfile(props: Props) {
         const response = await axios.get("/api/coachProfiling");
         setCoachProfiles(response.data); // Store coach profiles in state
       } catch (error) {
-        console.error("Failed to fetch coach profiles:", error);
         toast.error("Failed to load coach profiles.");
       }
     };
@@ -119,14 +130,17 @@ function CreateCoachProfile(props: Props) {
         case "firstName":
           setfirstName(value);
           break;
-          case "middleName":
-          setmiddleName(value);
+        case "middleName":
+          setMiddleName(value);
           break;
-          case "lastName":
-          setlastName(value);
+        case "lastName":
+          setLastName(value);
           break;
         case "contactNumber":
           setContactNumber(value);
+          break;
+        case "landLineNumber":
+          setLandLineNumber(value);
           break;
         case "sport":
           setSport(value);
@@ -170,13 +184,13 @@ function CreateCoachProfile(props: Props) {
   useEffect(() => {
     if (submitState === "edit" && coachProfile) {
       setfirstName(coachProfile.firstName);
-      setmiddleName(coachProfile.middleName);
-      setlastName(coachProfile.lastName);
+      setMiddleName(coachProfile.middleName);
+      setLastName(coachProfile.lastName);
       const formattedBirthDate = new Date(coachProfile.birthDate)
         .toISOString()
         .split("T")[0];
-
       setContactNumber(coachProfile.contactNumber);
+      setLandLineNumber(coachProfile.landLineNumber);
       setSport(coachProfile.sport);
       setPermanentTeam(coachProfile.permanentTeam);
       setIsMale(coachProfile.isMale);
@@ -201,11 +215,12 @@ function CreateCoachProfile(props: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const fullName = `${firstName} ${middleName} ${lastName}`.toLowerCase();
     // Check for duplicate name, excluding the current coach profile if editing
-    const isDuplicate = coachProfiles.some(
-      (coachProfile) =>
-        coachProfile.lastname === lastname && (!id || coachProfile.id !== id)
-    );
+    const isDuplicate = Array.isArray(coachProfiles) && coachProfiles.some((coachProfile) => {
+      const existingFullName = `${coachProfile.firstName} ${coachProfile.middleName} ${coachProfile.lastName}`.toLowerCase();
+      return fullName === existingFullName && coachProfile.id !== id;
+  });
 
     if (isDuplicate) {
       toast.error("A coach with the same name already exists!");
@@ -224,8 +239,12 @@ function CreateCoachProfile(props: Props) {
     }
 
     // Validation checks for coach profile fields
-    if (!firstname) {
+    if (!firstName) {
       toast.error("Please enter the coach's first name.");
+      return;
+    }
+    if (!lastName) {
+      toast.error("Please enter the coach's last name.");
       return;
     }
     if (!email) {
@@ -302,10 +321,11 @@ function CreateCoachProfile(props: Props) {
     // Construct the coachProfile object with all the state values
     const coachProfile = {
       id,
-      firstname,
-      middlename,
-      lastname,
+      firstName,
+      middleName,
+      lastName,
       contactNumber,
+      landLineNumber,
       sport,
       permanentTeam,
       isMale,
@@ -376,6 +396,7 @@ function CreateCoachProfile(props: Props) {
     middleName: string;
     lastName: string;
     contactNumber: string;
+    landLineNumber: string;
     sport: string;
     permanentTeam: string;
     isMale: boolean;
@@ -437,13 +458,13 @@ function CreateCoachProfile(props: Props) {
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
           <label htmlFor="name">
-            First Name {!firstname && <span className="required-asterisk">*</span>}
+           First Name {!firstName && <span className="required-asterisk">*</span>}
           </label>
           <input
             type="text"
-            id="fistname"
-            value={firstname}
-            name="firstname"
+            id="firstName"
+            value={firstName}
+            name="firstName"
             onChange={handleChange}
             placeholder="e.g. Juan Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
@@ -455,25 +476,25 @@ function CreateCoachProfile(props: Props) {
           </label>
           <input
             type="text"
-            id="middlename"
-            value={middlename}
+            id="middleName"
+            value={middleName}
             name="middleName"
             onChange={handleChange}
-            placeholder="e.g. Juan Dela Cruz"
+            placeholder="e.g. Buen"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
         <div className="input-control">
           <label htmlFor="name">
-            Last Name {!lastname && <span className="required-asterisk">*</span>}
+            Last Name {!lastName && <span className="required-asterisk">*</span>}
           </label>
           <input
             type="text"
-            id="lastname"
-            value={lastname}
-            name="lastname"
+            id="lastName"
+            value={lastName}
+            name="lastName"
             onChange={handleChange}
-            placeholder="e.g. Juan Dela Cruz"
+            placeholder="e.g. Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -506,7 +527,18 @@ function CreateCoachProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-
+        <div className="input-control">
+          <label htmlFor="contactNumber">Land Line Number </label>
+          <input
+            type="text"
+            id="landLineNumber"
+            value={landLineNumber}
+            name="landLineNumber"
+            onChange={handleChange}
+            placeholder="e.g. 00-123-1234"
+            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
         <div className="input-control">
           <label htmlFor="Sport" className="block">
             Sport
