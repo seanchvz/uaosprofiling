@@ -1,69 +1,45 @@
-// "use client";
-// import React, { useState } from "react";
-// import styled from "styled-components";
-// import { useGlobalState } from "../context/globalProvider";
-// // A generic modal component you need to create
-// import { plus } from "../utils/Icons";
-// import DashboardModal from "../Components/Modals/DashboardModal";
+"use client";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useGlobalState } from "../context/globalProvider";
+// A generic modal component you need to create
+import { plus } from "../utils/Icons";
+import DashboardModal from "../Components/Modals/DashboardModal";
+import { FaExclamationTriangle } from "react-icons/fa";
 
-// interface Props {
-//   name: string;
-// }
+interface Props {
+  name: string;
+}
 
-// function Dashboard() {
-//   const { theme, openModal, modal } = useGlobalState();
-//   const [modalType, setModalType] = useState("");
+function Dashboard() {
+  const { theme, openModal, modal } = useGlobalState();
+  const [modalType, setModalType] = useState("");
 
-//   const handleOpenModal = (type: React.SetStateAction<string>) => {
-//     setModalType(type);
-//     openModal();
-//   };
+  const handleOpenModal = (type: React.SetStateAction<string>) => {
+    setModalType(type);
+    openModal();
+  };
 
-//   return (
-//     <DashboardStyled theme={theme}>
-//       {modal && <DashboardModal type={modalType} />}
-//       <Header>
-//         <h1>Create New Profiles</h1>
-//         <div>
-//           <Button onClick={() => handleOpenModal("event")}>
-//             {plus} Add New Event
-//           </Button>
-//           <Button onClick={() => handleOpenModal("student")}>
-//             {plus} Create Student Profile
-//           </Button>
-//           <Button onClick={() => handleOpenModal("coach")}>
-//             {plus} Create Coach Profile
-//           </Button>
-//         </div>
-//       </Header>
-//     </DashboardStyled>
-//   );
-// }
+  return (
+    <DashboardStyled theme={theme}>
+      <FaExclamationTriangle size={50} color="red" />
+      <h1>
+        Sign up not allowed, please contact the University Athletics Office
+        Administrator.
+      </h1>
+    </DashboardStyled>
+  );
+}
 
-// const DashboardStyled = styled.div`
-//   padding: 2rem;
-//   background-color: ${(props) => props.theme.background};
-// `;
-
-// const Header = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-bottom: 2rem;
-// `;
-
-// const Button = styled.button`
-//   margin-right: 1rem;
-//   padding: 0.5rem 1rem;
-//   background-color: ${(props) => props.theme.buttonColor};
-//   color: white;
-//   border: none;
-//   border-radius: 5px;
-//   cursor: pointer;
-
-//   &:hover {
-//     background-color: ${(props) => props.theme.buttonHover};
-//   }
-// `;
-
-// export default Dashboard;
+const DashboardStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; // This will make it take the full height of the viewport
+  text-align: center;
+  color: ${(props) =>
+    props.theme.textColor || "white"}; // Uses theme color or default to black
+  background-color: black;
+`;
+export default Dashboard;

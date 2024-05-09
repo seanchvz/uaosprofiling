@@ -38,8 +38,8 @@ function CreateCoachProfile(props: Props) {
   const [nationality, setNationality] = useState(
     coachProfile ? coachProfile.nationality : ""
   );
-  const [weight, setWeight] = useState(coachProfile ? coachProfile.weight : 0);
-  const [height, setHeight] = useState(coachProfile ? coachProfile.height : 0);
+  const [weight, setWeight] = useState(coachProfile ? coachProfile.weight : "");
+  const [height, setHeight] = useState(coachProfile ? coachProfile.height : "");
   const [bloodType, setBloodType] = useState(
     coachProfile ? coachProfile.bloodType : ""
   );
@@ -641,7 +641,6 @@ function CreateCoachProfile(props: Props) {
           </label>
           <input
             type="number"
-            step="0.01"
             id="weight"
             name="weight"
             value={weight}
@@ -658,7 +657,6 @@ function CreateCoachProfile(props: Props) {
           </label>
           <input
             type="number"
-            step="0.01"
             id="height"
             name="height"
             value={height}
