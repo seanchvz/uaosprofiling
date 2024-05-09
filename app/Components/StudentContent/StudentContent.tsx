@@ -131,13 +131,11 @@ function StudentProfileContent({
         <Tag color={roleColors.qpi}>{QPI}</Tag>
       </div>
 
-      <div>
-        {hasDeficiency && (
-          <div style={{ color: "red", marginTop: "10px" }}>
-            Warning: This student is not eligible to play due to a low QPI.
-          </div>
-        )}
-      </div>
+      {hasDeficiency && (
+        <div style={{ color: "red", fontWeight: "bold", marginTop: "10px" }}>
+          Warning: This student is not eligible to play due to a low QPI.
+        </div>
+      )}
 
       <p>
         {" "}

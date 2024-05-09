@@ -55,6 +55,7 @@ export async function PATCH(
 
         const body = await req.json();
 
+        
         const {
             firstName,
             middleName,
