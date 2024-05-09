@@ -9,6 +9,7 @@ import { InventoryItemService } from "./lib/InventoryItemService";
 import { EventsService } from "./lib/EventsService";
 import { CoachProfileService } from "./lib/CoachProfileService";
 import { StudentProfileService } from "./lib/StudentProfileService";
+import { TeamService } from "./lib/TeamService";
 import { student } from "../utils/Icons";
 import { useClerk } from "@clerk/clerk-react";
 
@@ -36,6 +37,7 @@ export const GlobalProvider = ({ children }) => {
 
   const { studentprofile, fetchAllStudentProfile } = StudentProfileService({});
 
+  const { teams, fetchTeams } = TeamService({});
   /**
    * Opens the modal.
    */
@@ -50,10 +52,6 @@ export const GlobalProvider = ({ children }) => {
     setModal(false);
   };
 
-  /**
-   * Deletes an event by its ID.
-   * @param {string} id - The ID of the event to delete.
-   */
   const deleteEvent = async (id) => {
     try {
       const res = await axios.delete(`/api/events/${id}`);
@@ -92,7 +90,44 @@ export const GlobalProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user) allEvents();
+    if (user) fetchTeams();
+  }, [user]);
+
+  const deleteTeam = async (id) => {
+    try {
+      const res = await axios.delete(`/api/teams/${id}`);
+      toast.success("team Deleted");
+
+      fetchTeams();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
+
+  const patchTeam = async (id, updatedTeamData) => {
+    try {
+      const response = await axios.patch(`/api/teams/${id}`, updatedTeamData, {
+        headers: {
+          Authorization: `Bearer ${session.idToken}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      fetchTeams(); // Refresh events data
+      return response.data; // Return updated data
+    } catch (error) {
+      console.error("Error Updating team:", error);
+      toast.error(
+        "Error updating event: " +
+          (error.response?.data.error || "Unexpected error")
+      );
+      throw new Error("Failed to update event"); // Re-throw error for caller to handle if needed
+    }
+  };
+
+  React.useEffect(() => {
+    if (user) fetchTeams();
   }, [user]);
 
   /**
@@ -199,6 +234,10 @@ export const GlobalProvider = ({ children }) => {
         deleteStudentProfile,
         patchCoachProfile,
         patchStudentProfile,
+        fetchTeams,
+        deleteTeam,
+        patchTeam,
+        teams,
         // isExternalEvents,
       }}
     >

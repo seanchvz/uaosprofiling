@@ -304,50 +304,6 @@ function CreateContent(props: Props) {
     }
   };
 
-  // interface EventData {
-  //   id: string;
-  //   name?: string;
-  //   startDate?: Date;
-  //   endDate?: Date;
-  //   Sport?: string;
-  //   eventDetails?: string;
-  //   isExternal?: boolean;
-  //   isInternal?: boolean;
-  // }
-
-  // const handleEdit = async (event: EventData) => {
-  //   if (!event.id) {
-  //     toast.error("Event ID is missing");
-  //     return;
-  //   }
-  //   // Confirmation dialog
-  //   const isConfirmed = window.confirm(
-  //     "Are you sure you want to update this event?"
-  //   );
-  //   if (!isConfirmed) {
-  //     return; // Early return if the user cancels the action
-  //   }
-
-  //   try {
-  //     console.log("Sending PATCH request for event ID:", event.id);
-  //     console.log("Data being sent:", event);
-
-  //     // Destructure the event to separate id from other data
-  //     const { id, ...updateData } = event;
-
-  //     const response = await axios.patch(`/api/events/${id}`, updateData);
-
-  //     console.log("Server response:", response.data);
-  //     if (response.data && response.data.error) {
-  //       toast.error(response.data.error);
-  //     } else {
-  //       toast.success("Event updated successfully!");
-  //     }
-  //   } catch (error) {
-  //     handleAxiosError(error);
-  //   }
-  // };
-
   const displayStudents = () => {
     return selectedStudents.map((studentId, index) => {
       const student = studentOptions.find(
