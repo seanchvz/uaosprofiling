@@ -10,8 +10,9 @@ interface Props {
   middleName: string;
   lastName: string;
   contactNumber: string;
+  landLineNumber: string;
   birthDate: string;
-  sport: string | null;
+  sport: string;
   nationality: string;
   weight: string | null;
   height: string | null;
@@ -27,11 +28,13 @@ interface Props {
   emergencyContactPerson: string;
   emergencyContactNumber: string;
   email: string;
+  QPI: string;
   homeAddress: string;
   statusIsActive: boolean;
   statusIsInactive: boolean;
   remarks: string | null;
   userId: string;
+  hasDeficiency: boolean;
   handleEdit: () => void;
 }
 
@@ -57,13 +60,8 @@ const roleColors = {
   statusIsActive: "#228B22",
   statusIsInactive: "#E03616",
   academicYear: "#fda600",
+  qpi: "#ff0f0f",
 };
-
-const getSportColor = (sport) => {
-  const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
-  return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
-};
-
 function StudentProfileContent({
   handleEdit,
   id,
@@ -89,7 +87,9 @@ function StudentProfileContent({
   emergencyContactNumber,
   email,
   homeAddress,
+  QPI,
   statusIsActive,
+  hasDeficiency,
   statusIsInactive,
   remarks,
   userId,
@@ -100,11 +100,16 @@ function StudentProfileContent({
     month: "long",
     day: "numeric",
   };
+  const qpiNumber = parseFloat(QPI);
 
   return (
     <StudentContentStyled theme={theme}>
-      <h1>{`${lastName}, ${firstName} ${middleName}`}</h1>{" "}
-      {/* Combine names in a single header */}
+      <div className="nameContainer">
+        <h1>{lastName}</h1>
+        <h2>{firstName}</h2>
+        <h2>{middleName}</h2>
+      </div>
+
       <div className="tags">
         <Tag
           style={{ marginBottom: "10px" }}
@@ -114,18 +119,37 @@ function StudentProfileContent({
               : roleColors.statusIsInactive
           }
         >
-          {statusIsActive ? "Active" : "Inactive"}
+          {statusIsActive ? "Full Time" : "Part Time"}
         </Tag>
-        <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
-          {sport || "No Sport"}
+        <Tag
+          style={{ marginRight: "10px" }}
+          color={roleColors[sport.replace(/\s+/g, "").toLowerCase()]}
+        >
+          {sport}
         </Tag>
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
+        <Tag color={roleColors.qpi}>{QPI}</Tag>
       </div>
-      <p className="date">
+
+      <div>
+        {hasDeficiency && (
+          <div style={{ color: "red", marginTop: "10px" }}>
+            Warning: This student is not eligible to play due to a low QPI.
+          </div>
+        )}
+      </div>
+
+      <p>
+        {" "}
         Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
       </p>
-      <p className="contactInfo">Contact Number: {contactNumber}</p>
-      <p className="remarks">Remarks: {remarks}</p>
+      <p className="YearStartedPlaying">
+        Year Started Playing: {yrStartedPlaying}
+      </p>
+      <p className="ContactNumber"> Contact Number: {contactNumber}</p>
+      <p className="AcademicYear"> Academic Year: {academicYear}</p>
+      <p className="AcademicYear"> Remarks: {remarks}</p>
+
       <div className="event-footer">
         <button className="edit" onClick={handleEdit}>
           {edit}
@@ -133,12 +157,7 @@ function StudentProfileContent({
         <button
           className="delete"
           onClick={() => {
-            const isConfirmed = window.confirm(
-              "Are you sure you want to delete this profile?"
-            );
-            if (isConfirmed) {
-              deleteStudentProfile(id);
-            }
+            deleteStudentProfile(id);
           }}
         >
           {trash}
@@ -160,6 +179,7 @@ const Tag = styled.span`
   font-weight: 600;
   text-transform: uppercase;
 `;
+
 const StudentContentStyled = styled.div`
   padding: 1.2rem 1rem;
   border-radius: 1rem;
@@ -174,7 +194,16 @@ const StudentContentStyled = styled.div`
   > h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1rem; /* Add margin to the bottom of the heading */
+    margin-bottom: 0.4rem; /* Add margin to the bottom of the heading */
+  }
+
+  .nameContainer h1,
+  .nameContainer h2 {
+    margin: 0.2rem 0; /* adjust as needed */
+  }
+
+  h2 {
+    margin-bottom: 0.5rem; // adjust this value to change the spacing
   }
 
   .date {
@@ -186,33 +215,52 @@ const StudentContentStyled = styled.div`
     margin-right: auto;
     margin-bottom: 0.5rem; /* Add margin to the bottom of the end date */
   }
+
   .event-footer {
     display: flex;
-    justify-content: flex-start;
-    margin-top: auto;
+    align-items: center;
+    gap: 1.2rem;
 
     button {
-      padding: 0.4rem 1rem;
-      border-radius: 0.8rem;
-      color: white;
-      border: 1px solid white;
+      border: none;
+      outline: none;
       cursor: pointer;
-      margin-right: 10px; // Add this line
 
-      &:last-child {
-        margin-right: 0; // Add this line
-      }
-
-      &.delete {
-        border: 1px solid white;
+      i {
+        font-size: 1.5rem;
+        color: #ffffff;
       }
     }
-  }
 
-  .sport {
-    background: #002b88 !important;
-    border-radius: 10px;
-    padding: 0.5rem 1rem;
+    .deficiency-alert p {
+      color: #721c24; // Red text for warning
+      background-color: #f8d7da; // Light red background
+      border: 1px solid #f5c6cb; // Light red border
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    .edit {
+      margin-left: auto;
+    }
+    .statusIsActive,
+    .statusIsInactive {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border: 2px solid #299758;
+      border-radius: 0.8rem;
+    }
+
+    .statusIsInactive {
+      border-color: #fe6854;
+    }
+
+    .sport {
+      background: #002b88 !important;
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+    }
   }
 `;
 
