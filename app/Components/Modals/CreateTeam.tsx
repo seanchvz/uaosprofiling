@@ -14,7 +14,12 @@ interface Props {
 function CreateTeam(props: Props) {
   const { team, submitState } = props;
   const [teamName, setTeamName] = useState(team ? team.teamName : "");
-  const [sport, setSport] = useState(team ? team.sport : "");
+  const [sportId, setSportId] = useState<number | null>(
+    team ? team.sportId : null
+  );
+  const [sportsOptions, setSportsOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
   const [studentOptions, setStudentOptions] = useState<
     { value: number; label: string }[]
@@ -56,23 +61,73 @@ function CreateTeam(props: Props) {
     fetchStudents();
   }, []);
 
+  // Fetch sports from API
   useEffect(() => {
-    if (submitState === "edit" && team && team.students) {
-      setSelectedStudents(team.students.map((student: any) => student.id));
+    fetchSports();
+  }, []);
+
+  // Function to fetch sports
+  const fetchSports = async () => {
+    try {
+      const response = await axios.get("/api/sports");
+      const sportsData = response.data.map((sport) => ({
+        value: sport.id,
+        label: sport.name,
+      }));
+      console.error("Failed to fetch sports:", sportsData);
+      setSportsOptions(sportsData);
+    } catch (error) {
+      console.error("Failed to fetch sports:", error);
+      toast.error("Failed to load sports data.");
     }
-  }, [team, submitState]);
+  };
+
+  // Function to add a new sport
+  const addNewSport = async () => {
+    const sportName = prompt("Enter the name of the new sport:");
+    if (!sportName) return;
+    try {
+      const response = await axios.post("/api/sports", { name: sportName });
+      if (response.data) {
+        const newSport = {
+          value: response.data.id, // Store as number directly
+          label: response.data.name,
+        };
+        setSportsOptions((prev) => [...prev, newSport]);
+        setSportId(response.data.id); // As a number
+        toast.success("Sport added successfully!");
+      }
+    } catch (error) {
+      console.error("Failed to add sport:", error);
+      toast.error("Failed to add sport.");
+    }
+  };
+
+  const removeSport = async () => {
+    const sportToRemove = sportId;
+    if (!sportToRemove) {
+      toast.error("No sport selected to remove.");
+      return;
+    }
+    try {
+      await axios.delete(`/api/sports/${sportToRemove}`);
+      setSportsOptions(
+        (prev) => prev.filter((option) => option.value !== sportToRemove) // Ensure numeric comparison
+      );
+      setSportId(null);
+      toast.success("Sport removed successfully!");
+    } catch (error) {
+      console.error("Failed to remove sport:", error);
+      toast.error("Failed to remove sport.");
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    switch (name) {
-      case "teamName":
-        setTeamName(value);
-        break;
-      case "sport":
-        setSport(value);
-        break;
+    if (name === "teamName") {
+      setTeamName(value);
     }
   };
 
@@ -80,7 +135,7 @@ function CreateTeam(props: Props) {
     if (submitState === "edit" && team) {
       // Set form fields with existing team details when in 'edit' mode
       setTeamName(team.teamName);
-      setSport(team.sport);
+      //   setSport(team.sport);
       setSelectedStudents(
         team.students.map((student: { id: number }) => student.id)
       );
@@ -91,7 +146,7 @@ function CreateTeam(props: Props) {
     const fetchTeamDetails = async () => {
       if (submitState === "edit" && team) {
         setTeamName(team.teamName);
-        setSport(team.sport);
+        // setSport(team.sport);
         setSelectedStudents(team.students.map((s: { id: number }) => s.id));
       } else if (submitState === "create") {
         try {
@@ -118,7 +173,7 @@ function CreateTeam(props: Props) {
   useEffect(() => {
     if (submitState === "edit" && team) {
       setTeamName(team.teamName);
-      setSport(team.sport);
+      //   setSport(team.sport);
 
       if (team.students && team.students.length > 0) {
         setSelectedStudents(team.students.map((student: any) => student.id));
@@ -134,10 +189,11 @@ function CreateTeam(props: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Ensure that we are using sportId which should be a number or null
     const formattedTeam = {
       id,
       teamName,
-      sport,
+      sportId, // Use sportId here instead of sport
       studentIds: selectedStudents,
     };
 
@@ -199,6 +255,40 @@ function CreateTeam(props: Props) {
       </div>
       <div>
         <label htmlFor="sport">Sport:</label>
+        <Select
+          id="sport"
+          name="sport"
+          value={
+            sportsOptions.find((option) => option.value === sportId) || null
+          }
+          onChange={(option) => {
+            if (!option) {
+              setSportId(null);
+            } else if (option.value === "add_new") {
+              addNewSport();
+            } else if (option.value === "remove_sport") {
+              removeSport();
+            } else {
+              // Ensuring value is handled as a number for regular sport options
+              const newSportId = parseInt(option.value, 10);
+              if (!isNaN(newSportId)) {
+                setSportId(newSportId);
+              }
+            }
+          }}
+          options={[
+            ...sportsOptions,
+            { value: "add_new", label: "+ Add New Sport" },
+            { value: "remove_sport", label: "- Remove Sport" },
+          ]}
+          required
+          className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          classNamePrefix="my-custom-select"
+        />
+      </div>
+
+      {/* <div>
+        <label htmlFor="sport">Sport:</label>
         <select
           id="sport"
           name="sport"
@@ -239,7 +329,7 @@ function CreateTeam(props: Props) {
           </option>
           <option value="special projects">Special Projects Mixed</option>
         </select>
-      </div>
+      </div> */}
       <div>
         <label>Students:</label>
         {submitState === "edit" && (

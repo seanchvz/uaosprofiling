@@ -8,17 +8,16 @@ import { auth } from "@clerk/nextjs";
  *
  * @param req - The request object.
  * @returns A JSON response containing the created team or an error message.
- */
-export async function POST(req: Request) {
+ */export async function POST(req: Request) {
     try {
         const { userId } = auth();
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { sport, teamName, studentIds, eventIds } = await req.json();
+        const { sportId, teamName, studentIds, eventIds } = await req.json();
 
-        if (!teamName) {
+        if (!teamName || sportId === undefined) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
@@ -34,18 +33,20 @@ export async function POST(req: Request) {
 
         const team = await prisma.team.create({
             data: {
-                sport,
+                sportId,  // Linking the team to a sport by sportId
                 teamName,
                 students: {
                     connect: studentIds.map(id => ({ id }))
                 },
-                events: {
-                    connect: eventIds.map((id: string) => ({ id }))
-                }
+                // Assuming eventIds is also an array of integers
+                // events: {
+                //     connect: eventIds.map(id => ({ id }))
+                // }
             },
             include: {
+                sport: true,  // Including sport details in the response
                 students: true,
-                events: true
+                // events: true
             }
         });
 
@@ -53,32 +54,6 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error("Error Creating Team: ", error);
         return NextResponse.json({ error: "Error creating team", status: 500 });
-    }
-}
-
-/**
- * Handles the HTTP GET request to fetch all teams.
- *
- * @returns A JSON response containing all teams or an error message.
- */
-export async function GET() {
-    try {
-        const { userId } = auth();
-        if (!userId) {
-            return NextResponse.json({ error: "Unauthorized", status: 401 });
-        }
-
-        const teams = await prisma.team.findMany({
-            include: {
-                students: true,
-                events: true
-            }
-        });
-
-        return NextResponse.json(teams);
-    } catch (error) {
-        console.error("ERROR GETTING TEAMS: ", error);
-        return NextResponse.json({ error: "Error retrieving teams", status: 500 });
     }
 }
 
