@@ -8,6 +8,7 @@ interface Props {
   teamName: string;
   sport: string;
   id: string;
+  year: Date | string | number; // Allow multiple types if necessary
   handleEdit: () => void;
 }
 
@@ -41,13 +42,27 @@ function TeamContent({
   teamName,
   sport,
   id,
+  year,
   handleEdit,
 }: Props): React.JSX.Element {
   const { theme, deleteTeam } = useGlobalState();
 
+  // console.log("Received year in TeamContent:", year); // Log the received year
+  const formatYear = (year: Date | string | number) => {
+    if (year instanceof Date) {
+      return year.getFullYear(); // For Date objects
+    } else if (typeof year === "number" || typeof year === "string") {
+      return new Date(year).getFullYear(); // For year numbers or string representations
+    }
+    return "N/A"; // Fallback if year is undefined or not in expected format
+  };
+
   return (
     <TeamContentStyled theme={theme}>
-      <h1 style={{ marginBottom: "5px" }}>{teamName}</h1>
+      <h1 style={{ marginBottom: "5px" }}>
+        {teamName}{" "}
+        <span style={{ color: "lightblue" }}>({formatYear(year)})</span>
+      </h1>
       <div className="tags" style={{ marginTop: "5px" }}></div>
       <div className="team-footer">
         {/* Buttons for editing and deleting */}

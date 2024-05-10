@@ -357,7 +357,7 @@ function CreateTeam(props: Props) {
         </select>
       </div> */}
       <div>
-        <label>Students:</label>
+        <label>Student-athlete members:</label>
         {submitState === "edit" && (
           <>
             <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}></h2>
@@ -383,7 +383,10 @@ function CreateTeam(props: Props) {
           classNamePrefix="my-custom-select"
         />
       </div>
-      <button type="submit">
+      <button
+        type="submit"
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
+      >
         {submitState === "edit" ? "Update Team" : "Create Team"}
       </button>
     </CreateTeamStyled>

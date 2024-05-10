@@ -159,6 +159,7 @@ function Page({ name, teams }: Props) {
               }}
               sport={team.sportId}
               id={team.id}
+              year={team.year}
             />
           ))
         ) : (
