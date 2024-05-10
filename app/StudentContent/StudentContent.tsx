@@ -11,7 +11,7 @@ interface Props {
   lastName: string;
   contactNumber: string;
   birthDate: string;
-  sport: string | null;
+  sport: string;
   nationality: string;
   weight: string | null;
   height: string | null;
@@ -59,10 +59,10 @@ const roleColors = {
   academicYear: "#fda600",
 };
 
-const getSportColor = (sport) => {
-  const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
-  return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
-};
+// const getSportColor = (sport) => {
+//   const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
+//   return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
+// };
 
 function StudentProfileContent({
   handleEdit,
@@ -71,7 +71,7 @@ function StudentProfileContent({
   middleName,
   lastName,
   contactNumber,
-  sport,
+  // sport,
   birthDate,
   nationality,
   weight,
@@ -116,9 +116,9 @@ function StudentProfileContent({
         >
           {statusIsActive ? "Active" : "Inactive"}
         </Tag>
-        <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
+        {/* <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
           {sport || "No Sport"}
-        </Tag>
+        </Tag> */}
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
       </div>
       <p className="date">

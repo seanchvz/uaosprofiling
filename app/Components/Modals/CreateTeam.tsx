@@ -153,7 +153,7 @@ function CreateTeam(props: Props) {
           const response = await axios.get("/api/teams?teamId=123"); // Fetch more detailed data if necessary
           console.log("Fetched team data:", response.data);
           if (response.data) {
-            console.log("Fetched tean data:", response.data);
+            console.log("Fetched team data:", response.data);
             // Set state with fetched data
           }
         } catch (error) {

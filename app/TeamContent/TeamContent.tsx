@@ -48,12 +48,7 @@ function TeamContent({
   return (
     <TeamContentStyled theme={theme}>
       <h1 style={{ marginBottom: "5px" }}>{teamName}</h1>
-      <div className="tags" style={{ marginTop: "5px" }}>
-        {/* Tag for the sport */}
-        {/* <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
-          {sport || "No Sport"}
-        </Tag> */}
-      </div>
+      <div className="tags" style={{ marginTop: "5px" }}></div>
       <div className="team-footer">
         {/* Buttons for editing and deleting */}
         <button className="edit" onClick={handleEdit}>

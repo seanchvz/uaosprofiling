@@ -157,7 +157,7 @@ function Page({ name, teams }: Props) {
                 setSelectedTeam(team);
                 openModal();
               }}
-              sport={team.sport}
+              sport={team.sportId}
               id={team.id}
             />
           ))

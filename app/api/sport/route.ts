@@ -35,7 +35,8 @@ export async function GET() {
     try {
         const sports = await prisma.sport.findMany({
             include: {
-                teams: true // If you want to include related teams
+                teams: true,
+                // students:true //error on scalars
             }
         });
 

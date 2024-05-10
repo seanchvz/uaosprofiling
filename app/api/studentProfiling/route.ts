@@ -12,7 +12,6 @@ export async function POST(req: Request) {
         }
 
         const {
-            id,
             firstName,
             middleName,
             lastName,
@@ -22,7 +21,7 @@ export async function POST(req: Request) {
             nationality,
             weight,
             height,
-            sport,
+            sportId,
             bloodType,
             academicYear,
             isMale,
@@ -84,12 +83,11 @@ export async function POST(req: Request) {
                 middleName: middleName,
                 lastName: lastName,
                 contactNumber: contactNumber,
-                landLineNumber:   landLineNumber,
+                landLineNumber: landLineNumber,
                 birthDate: formattedBirthDate,
                 nationality: nationality,
                 weight: weight,
                 height: height,
-                sport: sport,
                 bloodType: bloodType,
                 academicYear: academicYear,
                 isMale: isMale,
@@ -108,12 +106,15 @@ export async function POST(req: Request) {
                 statusIsInactive: statusIsInactive,
                 remarks: remarks,
                 userId: userId,
+                sportId,
                 events: {
                     connect: eventIds.map((id: string) => ({ id }))
                 }
             },
             include: {
-                events: true // Include connected events in the response
+                sport: true,
+                events: true,
+                // Include connected events in the response
             }
         });
 
@@ -128,7 +129,6 @@ export async function POST(req: Request) {
 }
 
 
-//get rfunction
 export async function GET(req: Request) {
     try {
         const { userId } = auth();
@@ -136,17 +136,15 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const student = await prisma.studentprofile.findMany({
-            // where: {
-            //     userId,
-            // },
+        const students = await prisma.studentprofile.findMany({
             include: {
-                events: true // Include the students in the response for verification
+                events: true,  // Include connected events if necessary
+                sport: true   // Include sport details if relevant to the profile
             }
         });
 
-        console.log("STUDENT: ", student);
-        return NextResponse.json(student);
+        console.log("STUDENT: ", students);
+        return NextResponse.json(students);
 
     } catch (error) {
         console.log("ERROR GETTING STUDENTS: ", error);

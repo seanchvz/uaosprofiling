@@ -12,7 +12,7 @@ interface Props {
   contactNumber: string;
   landLineNumber: string;
   birthDate: string;
-  sport: string;
+  // sport: string;
   nationality: string;
   weight: string | null;
   height: string | null;
@@ -69,7 +69,7 @@ function StudentProfileContent({
   middleName,
   lastName,
   contactNumber,
-  sport,
+  // sport,
   birthDate,
   nationality,
   weight,
@@ -121,12 +121,12 @@ function StudentProfileContent({
         >
           {statusIsActive ? "Full Time" : "Part Time"}
         </Tag>
-        <Tag
+        {/* <Tag
           style={{ marginRight: "10px" }}
           color={roleColors[sport.replace(/\s+/g, "").toLowerCase()]}
         >
           {sport}
-        </Tag>
+        </Tag> */}
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
         <Tag color={roleColors.qpi}>{QPI}</Tag>
       </div>

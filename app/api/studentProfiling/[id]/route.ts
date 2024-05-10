@@ -55,7 +55,7 @@ export async function PATCH(
 
         const body = await req.json();
 
-        
+
         const {
             firstName,
             middleName,
@@ -66,7 +66,7 @@ export async function PATCH(
             nationality,
             weight,
             height,
-            sport,
+            sportId,
             bloodType,
             academicYear,
             isMale,
@@ -106,7 +106,7 @@ export async function PATCH(
                 nationality,
                 weight,
                 height,
-                sport,
+                sportId,
                 bloodType,
                 academicYear,
                 isMale,
@@ -132,7 +132,8 @@ export async function PATCH(
             },
             // Include related 'events' in the response for verification of successful update
             include: {
-                events: true // Include connected events in the response for verification
+                events: true,
+                sport: true // Include connected events in the response for verification
             }
         });
 

@@ -43,9 +43,14 @@ function CreateProfile(props: Props) {
   const [height, setHeight] = useState(
     studentProfile ? studentProfile.Height : ""
   );
-  const [sport, setSport] = useState(
-    studentProfile ? studentProfile.sport : ""
+
+  const [sportId, setSportId] = useState<number | null>(
+    studentProfile ? studentProfile.sportId : null
   );
+  const [sportsOptions, setSportsOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
+
   const [bloodType, setbloodType] = useState(
     studentProfile ? studentProfile.bloodType : ""
   );
@@ -102,12 +107,20 @@ function CreateProfile(props: Props) {
   >([]);
 
   const [students, setStudents] = useState([]);
+
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const { data } = await axios.get("/api/studentProfiling");
-        setStudents(data); // Assuming the API returns an array of student profiles
+        if (Array.isArray(data)) {
+          setStudents(data); // Set only if it's an array
+        } else {
+          console.error("Data fetched is not an array:", data);
+          setStudents([]); // Set as empty array if data is not correct
+        }
       } catch (error) {
+        console.error("Failed to load student profiles:", error);
+        setStudents([]); // Ensure it's still an array even on error
         toast.error("Failed to load student profiles.");
       }
     };
@@ -146,6 +159,67 @@ function CreateProfile(props: Props) {
 
     fetchEvents();
   }, [studentProfile, submitState]);
+
+  useEffect(() => {
+    fetchSports();
+  }, []);
+
+  // Function to fetch sports
+  const fetchSports = async () => {
+    try {
+      const response = await axios.get("/api/sport");
+      const sportsData = response.data.map((sport) => ({
+        value: sport.id,
+        label: sport.name,
+      }));
+      console.error("Failed to fetch sports:", sportsData);
+      setSportsOptions(sportsData);
+    } catch (error) {
+      console.error("Failed to fetch sports:", error);
+      toast.error("Failed to load sports data.");
+    }
+  };
+
+  // Function to add a new sport
+  const addNewSport = async () => {
+    const sportName = prompt("Enter the name of the new sport:");
+    if (!sportName) return;
+    try {
+      const response = await axios.post("/api/sport", { name: sportName });
+      if (response.data) {
+        const newSport = {
+          value: response.data.id, // Store as number directly
+          label: response.data.name,
+        };
+        setSportsOptions((prev) => [...prev, newSport]);
+        setSportId(response.data.id); // As a number
+        toast.success("Sport added successfully!");
+      }
+    } catch (error) {
+      console.error("Failed to add sport:", error);
+      toast.error("Failed to add sport.");
+    }
+  };
+
+  const removeSport = async () => {
+    const sportToRemove = sportId;
+    if (!sportToRemove) {
+      toast.error("No sport selected to remove.");
+      return;
+    }
+    try {
+      await axios.delete(`/api/sport/${sportToRemove}`);
+      setSportsOptions(
+        (prev) => prev.filter((option) => option.value !== sportToRemove) // Ensure numeric comparison
+      );
+      setSportId(null);
+      toast.success("Sport removed successfully!");
+    } catch (error) {
+      console.error("Failed to remove sport:", error);
+      toast.error("Failed to remove sport.");
+    }
+  };
+
   // Handle change function for form fields
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -181,9 +255,6 @@ function CreateProfile(props: Props) {
         break;
       case "landLineNumber":
         setLandLineNumber(value);
-        break;
-      case "sport":
-        setSport(value);
         break;
       case "birthDate":
         setBirthdate(value);
@@ -258,7 +329,7 @@ function CreateProfile(props: Props) {
       setNationality(studentProfile.nationality);
       setWeight(studentProfile.weight);
       setHeight(studentProfile.height);
-      setSport(studentProfile.sport);
+      // setSport(studentProfile.sport);
       setbloodType(studentProfile.bloodType);
       setAcademicYear(studentProfile.academicYear);
       setIsMale(studentProfile.isMale);
@@ -294,7 +365,7 @@ function CreateProfile(props: Props) {
         setNationality(studentProfile.nationality);
         setWeight(studentProfile.weight);
         setHeight(studentProfile.height);
-        setSport(studentProfile.sport);
+        // setSport(studentProfile.sport);
         setbloodType(studentProfile.bloodType);
         setAcademicYear(studentProfile.academicYear);
         setIsMale(studentProfile.isMale);
@@ -362,13 +433,13 @@ function CreateProfile(props: Props) {
     const fullName = `${firstName} ${middleName} ${lastName}`.toLowerCase();
 
     // Check for duplicates: Ensure no other student has the same full name unless it's the same student being edited
-    const isDuplicate = students.some((studentProfile) => {
-      const existingFullName =
-        `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
-
-      // Check if there is another student with the same full name and a different ID
-      return fullName === existingFullName && studentProfile.id !== id;
-    });
+    const isDuplicate =
+      Array.isArray(students) &&
+      students.some((studentProfile) => {
+        const existingFullName =
+          `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
+        return existingFullName === fullName && studentProfile.id !== id;
+      });
 
     if (isDuplicate) {
       toast.error("A student with the same full name already exists.");
@@ -396,10 +467,11 @@ function CreateProfile(props: Props) {
       return;
     }
 
-    if (!sport) {
-      toast.error("Please specify a sport.");
-      return;
-    }
+    // if (!sport) {
+    //   toast.error("Please specify a sport.");
+    //   return;
+    // }
+
     if (!contactNumber) {
       toast.error("Please enter a contact number.");
       return;
@@ -504,7 +576,7 @@ function CreateProfile(props: Props) {
       nationality,
       weight,
       height,
-      sport,
+      sportId,
       bloodType,
       academicYear,
       isMale,
@@ -598,7 +670,7 @@ function CreateProfile(props: Props) {
     nationality: string;
     weight?: number;
     height?: number;
-    sport?: string;
+    // sport?: string;
     bloodType?: string;
     academicYear: string;
     isMale: boolean;
@@ -618,6 +690,7 @@ function CreateProfile(props: Props) {
     QPI: string;
     userId: string;
     id: string;
+    // sportId:
   }
 
   const handleEdit = async (studentProfile: studentData) => {
@@ -741,49 +814,36 @@ function CreateProfile(props: Props) {
           <label htmlFor="sport" className="block">
             Sport
           </label>
-          <select
+          <Select
             id="sport"
             name="sport"
-            value={sport}
-            onChange={handleChange}
+            value={
+              sportsOptions.find((option) => option.value === sportId) || null
+            }
+            onChange={(option) => {
+              if (!option) {
+                setSportId(null);
+              } else if (option.value === "add_new") {
+                addNewSport();
+              } else if (option.value === "remove_sport") {
+                removeSport();
+              } else {
+                // Ensuring value is handled as a number for regular sport options
+                const newSportId = parseInt(option.value, 10);
+                if (!isNaN(newSportId)) {
+                  setSportId(newSportId);
+                }
+              }
+            }}
+            options={[
+              ...sportsOptions,
+              { value: "add_new", label: "+ Add New Sport" },
+              { value: "remove_sport", label: "- Remove Sport" },
+            ]}
+            required
             className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
-          >
-            <option value="">Select Sport</option>
-            <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women 3x3">
-                Basketball Women (3X3)
-              </option>
-              <option value="basketball women 5x5">
-                Basketball Women (5X5)
-              </option>
-            </optgroup>
-            <optgroup label="Football">
-              <option value="football men">Football Men</option>
-              <option value="football women">Football Women</option>
-            </optgroup>
-            <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
-            </optgroup>
-            <optgroup label="Badminton">
-              <option value="badminton women">Badminton Women</option>
-              <option value="badminton men">Badminton Men</option>
-            </optgroup>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
-            <option value="table tennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming Mixed</option>
-            <option value="strength and conditioning">
-              Strength and Conditioning
-            </option>
-            <option value="special projects">Special Projects Mixed</option>
-          </select>
+            classNamePrefix="my-custom-select"
+          />
         </div>
 
         <div className="input-control">

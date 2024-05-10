@@ -8,11 +8,11 @@ datasource db {
 }
 
 model sport {
-  id    Int    @id @default(autoincrement())
-  name  String
-  // events   events[]
-  teams team[]
-  // students studentprofile[]
+  id       Int              @id @default(autoincrement())
+  name     String
+  // events events[]
+  teams    team[]
+  students studentprofile[]
   // coaches  coachprofile[]
 }
 
@@ -57,9 +57,9 @@ model studentprofile {
   lastName               String
   contactNumber          String
   landLineNumber         String
-  sport                  String
-  // sportId                Int?
-  // sport                  sport?         @relation(fields: [sportId], references: [id])
+  // sport                  String
+  sport                  sport?         @relation(fields: [sportId], references: [id])
+  sportId                Int?
   birthDate              String
   nationality            String
   weight                 String?
