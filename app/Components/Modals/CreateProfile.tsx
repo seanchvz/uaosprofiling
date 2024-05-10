@@ -812,7 +812,7 @@ function CreateProfile(props: Props) {
 
         <div className="input-control">
           <label htmlFor="sport" className="block">
-            Sport
+            Second Sport (Optional)
           </label>
           <Select
             id="sport"

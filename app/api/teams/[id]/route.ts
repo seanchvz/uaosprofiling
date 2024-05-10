@@ -59,17 +59,25 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const body = await req.json();
-        const { sportId, teamName, studentIds } = body;
+        const { sportId, teamName, studentIds, year } = body;
 
         if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
             return new NextResponse("Invalid student IDs", { status: 400 });
         }
+
+        // Format the year similarly to the first code snippet
+        const formattedYear = new Date(year);
+        if (isNaN(formattedYear.getTime())) {
+            return new NextResponse("Invalid year format", { status: 400 });
+        }
+
 
         const updatedTeam = await prisma.team.update({
             where: { id: +teamId },
             data: {
                 sportId,
                 teamName,
+                year: formattedYear,
                 students: {
                     set: studentIds.map(id => ({ id })) // Use 'set' to replace existing relationships
                 }

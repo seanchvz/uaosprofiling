@@ -4,6 +4,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useGlobalState } from "@/app/context/globalProvider";
 import Select from "react-select";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 // Props definition
 interface Props {
@@ -24,6 +28,9 @@ function CreateTeam(props: Props) {
   const [studentOptions, setStudentOptions] = useState<
     { value: number; label: string }[]
   >([]);
+  const [year, setYear] = useState<number | null>(
+    team ? new Date(team.year).getFullYear() : new Date().getFullYear()
+  );
 
   const [teamsList, setTeamsList] = useState([]);
   const [id, setId] = useState(team ? team.id : "");
@@ -186,14 +193,23 @@ function CreateTeam(props: Props) {
     console.log("Current selectedStudents:", selectedStudents);
   }, [selectedStudents]);
 
+  const handleYearChange = (date: Date | [Date, Date] | null) => {
+    if (date instanceof Date) {
+      setYear(date.getFullYear()); // Correctly storing the year as an integer
+    }
+  };
+  // Formatting the year as ISO string
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formattedYear = year ? `${year}-01-01T00:00:00.000Z` : null;
 
     // Ensure that we are using sportId which should be a number or null
     const formattedTeam = {
       id,
       teamName,
-      sportId, // Use sportId here instead of sport
+      sportId,
+      year: formattedYear,
       studentIds: selectedStudents,
     };
 
@@ -251,6 +267,16 @@ function CreateTeam(props: Props) {
           value={teamName}
           onChange={handleChange}
           required
+        />
+      </div>
+      <div>
+        <label htmlFor="year">Year:</label>
+        <DatePicker
+          selected={year ? new Date(`${year}-01-01`) : new Date()}
+          onChange={handleYearChange}
+          showYearPicker
+          dateFormat="yyyy"
+          className="date-picker"
         />
       </div>
       <div>

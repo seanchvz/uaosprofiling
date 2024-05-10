@@ -11,55 +11,60 @@ import { auth } from "@clerk/nextjs";
  */
 
 
-
 export async function POST(req: Request) {
+    const { userId } = auth();
+    if (!userId) {
+        return NextResponse.json({ error: "Unauthorized", status: 401 });
+    }
+
+    const { sportId, teamName, studentIds, year } = await req.json();
+
+    if (!teamName || sportId === undefined || !year) {
+        return NextResponse.json({
+            error: "Missing required fields (teamName, sportId, or year)",
+            status: 400
+        });
+    }
+
+    if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
+        return NextResponse.json({
+            error: "Invalid student IDs",
+            status: 400
+        });
+    }
+
     try {
-        const { userId } = auth();
-        if (!userId) {
-            return NextResponse.json({ error: "Unauthorized", status: 401 });
-        }
-
-        const { sportId, teamName, studentIds, eventIds } = await req.json();
-
-        if (!teamName || sportId === undefined) {
+        const formattedYear = new Date(year);
+        if (isNaN(formattedYear.getTime())) {
             return NextResponse.json({
-                error: "Missing required fields",
-                status: 400,
-            });
-        }
-
-        if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
-            return NextResponse.json({
-                error: "Invalid student IDs",
-                status: 400,
+                error: "Invalid year format",
+                status: 400
             });
         }
 
         const team = await prisma.team.create({
             data: {
-                sportId,  // Linking the team to a sport by sportId
+                sportId,
                 teamName,
+                year: formattedYear,
                 students: {
                     connect: studentIds.map(id => ({ id }))
-                },
-                // Assuming eventIds is also an array of integers
-                // events: {
-                //     connect: eventIds.map(id => ({ id }))
-                // }
+                }
             },
             include: {
-                sport: true,  // Including sport details in the response
-                students: true,
-                // events: true
+                sport: true,
+                students: true
             }
         });
 
         return NextResponse.json(team);
     } catch (error) {
-        console.error("Error Creating Team: ", error);
+        console.error("Error Creating Team:", error);
         return NextResponse.json({ error: "Error creating team", status: 500 });
     }
 }
+
+
 
 
 export async function GET() {

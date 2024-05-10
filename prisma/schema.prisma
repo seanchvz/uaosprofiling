@@ -48,6 +48,7 @@ model team {
   // sport     String
   sport     sport?           @relation(fields: [sportId], references: [id])
   sportId   Int?
+  year      DateTime
 }
 
 model studentprofile {
