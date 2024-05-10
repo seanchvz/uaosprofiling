@@ -8,7 +8,11 @@ import { auth } from "@clerk/nextjs";
  *
  * @param req - The request object.
  * @returns A JSON response containing the created team or an error message.
- */export async function POST(req: Request) {
+ */
+
+
+
+export async function POST(req: Request) {
     try {
         const { userId } = auth();
         if (!userId) {
@@ -56,6 +60,29 @@ import { auth } from "@clerk/nextjs";
         return NextResponse.json({ error: "Error creating team", status: 500 });
     }
 }
+
+
+export async function GET() {
+    try {
+        const { userId } = auth();
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized", status: 401 });
+        }
+
+        const teams = await prisma.team.findMany({
+            include: {
+                students: true,
+                sport: true
+            }
+        });
+
+        return NextResponse.json(teams);
+    } catch (error) {
+        console.error("ERROR GETTING TEAMS: ", error);
+        return NextResponse.json({ error: "Error retrieving teams", status: 500 });
+    }
+}
+
 
 export async function PUT(req: Request) {
     const { userId } = auth();

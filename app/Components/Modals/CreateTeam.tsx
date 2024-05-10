@@ -69,7 +69,7 @@ function CreateTeam(props: Props) {
   // Function to fetch sports
   const fetchSports = async () => {
     try {
-      const response = await axios.get("/api/sports");
+      const response = await axios.get("/api/sport");
       const sportsData = response.data.map((sport) => ({
         value: sport.id,
         label: sport.name,
@@ -87,7 +87,7 @@ function CreateTeam(props: Props) {
     const sportName = prompt("Enter the name of the new sport:");
     if (!sportName) return;
     try {
-      const response = await axios.post("/api/sports", { name: sportName });
+      const response = await axios.post("/api/sport", { name: sportName });
       if (response.data) {
         const newSport = {
           value: response.data.id, // Store as number directly
@@ -110,7 +110,7 @@ function CreateTeam(props: Props) {
       return;
     }
     try {
-      await axios.delete(`/api/sports/${sportToRemove}`);
+      await axios.delete(`/api/sport/${sportToRemove}`);
       setSportsOptions(
         (prev) => prev.filter((option) => option.value !== sportToRemove) // Ensure numeric comparison
       );

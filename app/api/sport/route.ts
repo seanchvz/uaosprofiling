@@ -48,50 +48,31 @@ export async function GET() {
 }
 
 
-export async function DELETE(req: Request) {
-    const { sportId } = await req.json(); // Assuming you send sportId in JSON body
 
-    // Parse sportId to ensure it is a number
-    const parsedSportId = parseInt(sportId, 10);
-    if (isNaN(parsedSportId)) {
-        return NextResponse.json({ error: "Invalid sport ID", status: 400 });
-    }
+// export async function PATCH(req: Request) {
+//     const { sportId, name } = await req.json(); // Assuming these are the fields you want to update
 
-    try {
-        await prisma.sport.delete({
-            where: { id: parsedSportId }
-        });
-        return NextResponse.json({ message: "Sport deleted successfully" });
-    } catch (error) {
-        console.error("Error deleting sport: ", error);
-        return NextResponse.json({ error: "Error deleting sport", status: 500 });
-    }
-}
+//     if (!sportId || !name) {
+//         return NextResponse.json({
+//             error: "Missing required fields",
+//             status: 400
+//         });
+//     }
 
-export async function PATCH(req: Request) {
-    const { sportId, name } = await req.json(); // Assuming these are the fields you want to update
+//     // Parse sportId to ensure it is a number
+//     const parsedSportId = parseInt(sportId, 10);
+//     if (isNaN(parsedSportId)) {
+//         return NextResponse.json({ error: "Invalid sport ID", status: 400 });
+//     }
 
-    if (!sportId || !name) {
-        return NextResponse.json({
-            error: "Missing required fields",
-            status: 400
-        });
-    }
-
-    // Parse sportId to ensure it is a number
-    const parsedSportId = parseInt(sportId, 10);
-    if (isNaN(parsedSportId)) {
-        return NextResponse.json({ error: "Invalid sport ID", status: 400 });
-    }
-
-    try {
-        const sport = await prisma.sport.update({
-            where: { id: parsedSportId },
-            data: { name }
-        });
-        return NextResponse.json(sport);
-    } catch (error) {
-        console.error("Error updating sport: ", error);
-        return NextResponse.json({ error: "Error updating sport", status: 500 });
-    }
-}
+//     try {
+//         const sport = await prisma.sport.update({
+//             where: { id: parsedSportId },
+//             data: { name }
+//         });
+//         return NextResponse.json(sport);
+//     } catch (error) {
+//         console.error("Error updating sport: ", error);
+//         return NextResponse.json({ error: "Error updating sport", status: 500 });
+//     }
+// }

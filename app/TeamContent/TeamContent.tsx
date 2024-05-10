@@ -32,10 +32,10 @@ const roleColors = {
   mobilelegends: "#0038ff",
 };
 
-const getSportColor = (sport) => {
-  const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
-  return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
-};
+// const getSportColor = (sport) => {
+//   const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
+//   return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
+// };
 
 function TeamContent({
   teamName,
@@ -50,9 +50,9 @@ function TeamContent({
       <h1 style={{ marginBottom: "5px" }}>{teamName}</h1>
       <div className="tags" style={{ marginTop: "5px" }}>
         {/* Tag for the sport */}
-        <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
+        {/* <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
           {sport || "No Sport"}
-        </Tag>
+        </Tag> */}
       </div>
       <div className="team-footer">
         {/* Buttons for editing and deleting */}

@@ -7,14 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model sport {
-//   id    Int    @id @default(autoincrement())
-//   name  String
-//   // events   events[]
-//   teams team[]
-//   // students studentprofile[]
-//   // coaches  coachprofile[]
-// }
+model sport {
+  id    Int    @id @default(autoincrement())
+  name  String
+  // events   events[]
+  teams team[]
+  // students studentprofile[]
+  // coaches  coachprofile[]
+}
 
 model events {
   id           Int              @id @default(autoincrement())
@@ -31,7 +31,7 @@ model events {
   coaches      coachprofile[]
   StudentEvent StudentEvent[]
   teams        team[]           @relation("TeamEvents")
-  Sport        String
+  // Sport        String
   // sportId      Int?
   // sport        sport?           @relation(fields: [sportId], references: [id])
 }
@@ -45,7 +45,9 @@ model team {
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
   events    events[]         @relation("TeamEvents")
-  sport     String
+  // sport     String
+  sport     sport?           @relation(fields: [sportId], references: [id])
+  sportId   Int?
 }
 
 model studentprofile {

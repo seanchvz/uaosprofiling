@@ -59,7 +59,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const body = await req.json();
-        const { sport, teamName, studentIds } = body;
+        const { sportId, teamName, studentIds } = body;
 
         if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
             return new NextResponse("Invalid student IDs", { status: 400 });
@@ -68,14 +68,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         const updatedTeam = await prisma.team.update({
             where: { id: +teamId },
             data: {
-                sport,
+                sportId,
                 teamName,
                 students: {
                     set: studentIds.map(id => ({ id })) // Use 'set' to replace existing relationships
                 }
             },
             include: {
-                students: true // Include the students in the response for verification
+                students: true,
+                sport: true // Include the students in the response for verification
             }
         });
 
