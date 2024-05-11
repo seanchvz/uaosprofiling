@@ -6,6 +6,9 @@ import EventItem from "../EventItem/EventItem";
 import { plus } from "@/app/utils/Icons";
 import CreateContent from "../Modals/CreateContent";
 import EventModal from "../Modals/EventModal";
+import { Table } from "react-bootstrap";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface Props {
   name: string;
@@ -18,6 +21,27 @@ function Dashboard({ name, events }: Props) {
   const [selectedEvent, setSelectedEvent] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+
+  const [teams, setTeams] = useState([]);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("/api/teams");
+        setTeams(response.data); // assuming the API returns an array of teams
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+        toast.error("Failed to load teams");
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  const enhancedEvents = events.map((event) => {
+    const team = teams.find((t) => t.id === event.teamId); // Assuming each event has a teamId
+    return { ...event, teamName: team ? team.name : "No team assigned" };
+  });
 
   useEffect(() => {
     allEvents();
@@ -47,6 +71,20 @@ function Dashboard({ name, events }: Props) {
     return matchesName && matchesSport;
   });
 
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch("/api/teams"); // Adjust the API endpoint as necessary
+        const data = await response.json();
+        setTeams(data);
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
   return (
     <DashboardStyled theme={theme}>
       {modal && (
@@ -54,6 +92,7 @@ function Dashboard({ name, events }: Props) {
           <CreateContent submitState={modalState} event={selectedEvent} />
         </EventModal>
       )}
+
       <div
         style={{
           display: "flex",
@@ -145,27 +184,85 @@ function Dashboard({ name, events }: Props) {
         </div>
       </div>
 
-      <div className="inventoryitem grid mt-5">
-        {filteredEvents.length > 0 ? ( // For Filtered Events
-          filteredEvents.map((event) => (
-            <EventItem
-              key={event.id}
-              name={event.name}
-              handleEdit={() => {
-                setModalState("edit");
-                setSelectedEvent(event);
-                openModal();
-              }}
-              startDate={event.startDate}
-              endDate={event.endDate}
-              Sport={event.Sport}
-              isExternal={event.isExternal}
-              id={event.id}
-            />
-          ))
-        ) : (
-          <p>No events found.</p>
-        )}
+      <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
+        <table
+          className="min-w-full leading-normal"
+          style={{ backgroundColor: "#363636" }}
+        >
+          <thead>
+            <tr>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                #
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Start Date
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                End Date
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Team
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {enhancedEvents.length > 0 ? (
+              enhancedEvents.map((event, index) => (
+                <tr key={event.id}>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {index + 1}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {event.name}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {new Date(event.startDate).toLocaleDateString("en-US")}
+                  </td>
+
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {new Date(event.endDate).toLocaleDateString("en-US")}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {event.teamName}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {event.isExternal ? "External" : "Internal"}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm">
+                    <button
+                      className="text-blue-400 hover:text-blue-300 underline"
+                      onClick={() => {
+                        setModalState("edit");
+                        setSelectedEvent(event);
+                        openModal();
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="7"
+                  className="px-5 py-5 border-b border-gray-700 text-sm text-gray-300"
+                >
+                  No events found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </DashboardStyled>
   );

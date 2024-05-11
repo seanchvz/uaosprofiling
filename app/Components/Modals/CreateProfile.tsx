@@ -939,12 +939,12 @@ function CreateProfile(props: Props) {
         </div>
         {submitState === "edit" && (
           <>
-            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>Teams</h2>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.2em" }}>Teams</h2>
           </>
         )}
         {submitState === "create" && (
           <>
-            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.2em" }}>
               Tag a Team to Event
             </h2>
           </>
@@ -957,16 +957,17 @@ function CreateProfile(props: Props) {
             selectedTeams.includes(option.value)
           )}
           onChange={handleTeamChange}
-          className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          className="border border-black rounded-md p-1 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
           classNamePrefix="my-custom-select"
         />
         {/* Displaying the selected teams with their details */}
-        {displayTeamDetails()}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
           <div className="input-control my-custom-input-control bg-dark-500"></div>
-        </div>
+        </div> */}
 
         <div className="input-control">
+          {displayTeamDetails()}
           <label htmlFor="sport" className="block">
             Second Sport (Optional)
           </label>
@@ -997,7 +998,7 @@ function CreateProfile(props: Props) {
               { value: "remove_sport", label: "- Remove Sport" },
             ]}
             required
-            className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+            className="border border-black rounded-md p-1 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
             classNamePrefix="my-custom-select"
           />
         </div>

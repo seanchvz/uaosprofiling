@@ -146,25 +146,73 @@ function Page({ name, teams }: Props) {
         </div>
       </div>
 
-      <div className="inventoryitem grid mt-5">
-        {filteredTeams.length > 0 ? (
-          filteredTeams.map((team) => (
-            <TeamContent
-              key={team.id}
-              teamName={team.teamName}
-              handleEdit={() => {
-                setModalState("edit");
-                setSelectedTeam(team);
-                openModal();
-              }}
-              sport={team.sportId}
-              id={team.id}
-              year={team.year}
-            />
-          ))
-        ) : (
-          <p>No teams found.</p>
-        )}
+      <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
+        <table
+          className="min-w-full leading-normal"
+          style={{ backgroundColor: "#363636" }}
+        >
+          <thead>
+            <tr>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                #
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Year
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Sport
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredTeams.length > 0 ? (
+              filteredTeams.map((team, index) => (
+                <tr key={team.id}>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {index + 1}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {team.teamName}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {new Date(team.year).getFullYear()}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                    {team.sportId}
+                  </td>
+
+                  <td className="px-5 py-5 border-b border-gray-500 text-sm">
+                    <button
+                      className="text-blue-400 hover:text-blue-300 underline"
+                      onClick={() => {
+                        setModalState("edit");
+                        setSelectedTeam(team);
+                        openModal();
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300"
+                >
+                  No teams found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </TeamStyled>
   );
