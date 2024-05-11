@@ -308,7 +308,7 @@ function CreateTeam(props: Props) {
         {submitState === "edit" && (
           <>
             <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-              Tagged Events
+              Events Joined
             </h2>
           </>
         )}

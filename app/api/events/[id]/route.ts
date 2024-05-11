@@ -55,6 +55,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
             return new NextResponse("Invalid student IDs", { status: 400 });
         }
 
+        if (!Array.isArray(teamIds) || teamIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid team IDs",
+                status: 400,
+            });
+        }
+
         // Perform the update operation
         const updatedEvent = await prisma.events.update({
             where: { id: +eventId },
@@ -65,9 +72,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 eventDetails,
                 isExternal,
                 isInternal,
+                teams: {
+                    set: teamIds.map(id => ({ id })) // Use 'set' to replace existing relationships
+                },
+
                 students: {
                     set: studentIds.map(id => ({ id })) // Use 'set' to replace existing relationships
                 }
+
             },
             include: {
                 students: true,

@@ -67,15 +67,18 @@ function CreateContent(props: Props) {
         const response = await axios.get("/api/teams");
         const formattedTeams = response.data.map((team) => ({
           value: team.id,
-          label: team.teamName,
+          label: `${team.teamName} - ${
+            team.sport ? team.sport.name : "No Sport"
+          }`,
           sport: team.sport ? team.sport.name : "No Sport",
+          year: team.year || "Unknown Year", // Directly using the year if it's just a number
           students: team.students.map((s) => ({
             id: s.id,
             name: `${s.firstName} ${s.lastName}`,
           })),
         }));
         setTeamOptions(formattedTeams);
-        setTeamDetails(formattedTeams); // Store detailed information
+        setTeamDetails(formattedTeams);
         if (submitState === "edit" && event && event.teams) {
           setSelectedTeams(event.teams.map((t) => t.id));
         }
@@ -85,7 +88,7 @@ function CreateContent(props: Props) {
     };
 
     fetchTeams();
-  }, [submitState, event]);
+  }, [submitState, event]); // Ensure dependencies are correct for your use casensure dependencies are correct for your use case
 
   useEffect(() => {
     // Fetching student options for the select dropdown
@@ -172,11 +175,19 @@ function CreateContent(props: Props) {
         if (teamOptions.length === 0) {
           const response = await axios.get("/api/teams");
           const teamsData = response.data.map(
-            (team: { id: any; teamName: any; sport: { name: any } }) => ({
+            (team: {
+              year: any;
+              id: any;
+              teamName: any;
+              sport: { name: any };
+            }) => ({
               value: team.id,
               label: `${team.teamName} - ${
                 team.sport ? team.sport.name : "No Sport"
               }`,
+              year: team.year
+                ? new Date(team.year).getFullYear()
+                : "Unknown Year", // Formatting the year
             })
           );
           setTeamOptions(teamsData);
@@ -377,56 +388,36 @@ function CreateContent(props: Props) {
       if (!team) return null;
 
       return (
-        <div
-          key={teamId}
-          style={{
-            marginBottom: "20px",
-            border: "1px solid #000",
-            padding: "10px",
-          }}
-        >
-          <div
-            style={{
-              marginBottom: "10px",
-              border: "1px solid #000",
-              padding: "10px",
-            }}
-          >
-            <h3>
-              Team Name:{" "}
-              <span style={{ fontWeight: "normal" }}>{team.label}</span>
-            </h3>
-          </div>
-          <div
-            style={{
-              marginBottom: "10px",
-              border: "1px solid #000",
-              padding: "10px",
-            }}
-          >
-            <h3>
-              Team Sport:{" "}
-              <span style={{ fontWeight: "normal" }}>{team.sport}</span>
-            </h3>
-          </div>
-
-          <div
-            style={{
-              marginBottom: "10px",
-              border: "1px solid #000",
-              padding: "10px",
-            }}
-          >
-            <h3>Team Members:</h3>
-            <ul style={{ paddingLeft: "20px" }}>
-              {team.students.map((student) => (
-                <li key={student.id} style={{ marginBottom: "5px" }}>
-                  {student.name}
-                </li>
+        <TeamCard key={teamId}>
+          <Section>
+            <Heading>
+              Team Name: <Label>{team.label}</Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>
+              Team Sport: <Label>{team.sport}</Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>
+              Team Year:{" "}
+              <Label>
+                {team.year ? new Date(team.year).getFullYear() : "N/A"}
+              </Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>Team Members:</Heading>
+            <ul>
+              {team.students.map((student, index) => (
+                <ListItem key={student.id}>
+                  {index + 1}. {student.name}
+                </ListItem>
               ))}
             </ul>
-          </div>
-        </div>
+          </Section>
+        </TeamCard>
       );
     });
   };
@@ -440,9 +431,7 @@ function CreateContent(props: Props) {
       </div>
       {submitState === "edit" && (
         <>
-          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-            Tagged Teams
-          </h2>
+          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>Teams</h2>
         </>
       )}
       {submitState === "create" && (
@@ -455,13 +444,13 @@ function CreateContent(props: Props) {
       <Select
         options={teamDetails}
         isMulti
-        getOptionLabel={(option) => `${option.label} - ${option.sport}`}
+        getOptionLabel={(option) => `${option.label} `}
         value={teamDetails.filter((option) =>
           selectedTeams.includes(option.value)
         )}
         onChange={handleTeamChange}
-        className="my-custom-select"
-        classNamePrefix="select"
+        className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+        classNamePrefix="my-custom-select"
       />
       {/* Displaying the selected teams with their details */}
       {displayTeamDetails()}
@@ -658,6 +647,43 @@ className="my-custom-select text-black bg-dark-700"
     </CreateContentStyled>
   );
 }
+
+const TeamCard = styled.div`
+  margin-bottom: 20px;
+  border: 1px solid #444;
+  background-color: #222;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+  color: #ddd;
+`;
+
+const Section = styled.div`
+  margin-bottom: 20px;
+  border: 1px solid #444;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 5px;
+  color: #ddd;
+`;
+
+const Heading = styled.h3`
+  color: #ddd;
+  font-size: 1rem;
+  margin-bottom: 10px;
+`;
+
+const ListItem = styled.li`
+  margin-bottom: 5px;
+  list-style-type: none;
+  padding-left: 20px;
+  color: #ddd;
+`;
+
+const Label = styled.span`
+  font-weight: normal;
+  color: #bbb;
+`;
 
 const CreateContentStyled = styled.form`
   > h1 {
