@@ -120,9 +120,9 @@ function CreateProfile(props: Props) {
           }`,
           sport: team.sport ? team.sport.name : "No Sport",
           year: team.year || "Unknown Year", // Directly using the year if it's just a number
-          students: team.students.map((s) => ({
-            id: s.id,
-            name: `${s.firstName} ${s.lastName}`,
+          events: team.events.map((e) => ({
+            id: e.id,
+            name: e.name,
           })),
         }));
         setTeamOptions(formattedTeams);
@@ -874,11 +874,11 @@ function CreateProfile(props: Props) {
             </Heading>
           </Section>
           <Section>
-            <Heading>Team Members:</Heading>
+            <Heading>Events Joined with team:</Heading>
             <ul>
-              {team.students.map((student, index) => (
-                <ListItem key={student.id}>
-                  {index + 1}. {student.name}
+              {team.events.map((event, index) => (
+                <ListItem key={event.id}>
+                  {index + 1}. {event.name}
                 </ListItem>
               ))}
             </ul>
