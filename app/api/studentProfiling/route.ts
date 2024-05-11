@@ -40,18 +40,9 @@ export async function POST(req: Request) {
             statusIsActive,
             statusIsInactive,
             eventIds,
-            teamId,
+            teamIds,
         } = await req.json();
 
-        // Ensure teamId is correctly parsed as an array of integers
-        const teamIds = Array.isArray(teamId) ? teamId.map(id => parseInt(id)).filter(id => !isNaN(id)) : [];
-
-        if (teamIds.length === 0) {
-            return NextResponse.json({
-                error: "Invalid Team IDs",
-                status: 400
-            });
-        }
 
         // Validate required fields
         if (!firstName || !lastName || !email) {
@@ -81,6 +72,14 @@ export async function POST(req: Request) {
                 status: 400,
             });
         }
+
+        if (!Array.isArray(teamIds) || teamIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid team IDs",
+                status: 400,
+            });
+        }
+
 
         // if (!Array.isArray(teamId) || teamId.some(id => typeof id !== 'number')) {
         //     return NextResponse.json({
@@ -128,11 +127,14 @@ export async function POST(req: Request) {
                 events: {
                     connect: eventIds.map(id => ({ id })),
                 },
+                teams: {
+                    connect: teamIds.map(id => ({ id })),
+                },
             },
             include: {
                 sport: true,
                 events: true,
-                // teams: true,
+                teams: true,
             }
         });
 

@@ -86,7 +86,7 @@ export async function PATCH(
             remarks,
             id,
             eventIds,
-            teamId,
+            teamIds,
         } = body;
 
         // Perform the update operation
@@ -94,8 +94,11 @@ export async function PATCH(
         if (!Array.isArray(eventIds)) {
             return new NextResponse("Invalid event IDs", { status: 400 });
         }
-        if (!Array.isArray(teamId)) {
-            return new NextResponse("Invalid Team IDs", { status: 400 });
+        if (!Array.isArray(teamIds) || teamIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid team IDs",
+                status: 400,
+            });
         }
 
         const updatedStudentProfile = await prisma.studentprofile.update({
@@ -130,7 +133,7 @@ export async function PATCH(
                 remarks,
                 id,
                 teams: {
-                    set: teamId.map(id => ({ id }))// Replace existing connections with new ones
+                    set: teamIds.map(id => ({ id })) // Use 'set' to replace existing relationships
                 },
 
                 // Creating new Array of objects with id property

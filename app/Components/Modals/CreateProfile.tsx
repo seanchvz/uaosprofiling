@@ -105,43 +105,38 @@ function CreateProfile(props: Props) {
   const [eventOptions, setEventOptions] = useState<
     { value: number; label: string }[]
   >([]);
-
   const [teamOptions, setTeamOptions] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [teamDetails, setTeamDetails] = useState([]);
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        console.log("Fetching teams...");
         const response = await axios.get("/api/teams");
-        console.log("Response data:", response.data); // Check the actual structure of response data
-
-        const teamData = response.data.map((team) => ({
+        const formattedTeams = response.data.map((team) => ({
           value: team.id,
           label: `${team.teamName} - ${
             team.sport ? team.sport.name : "No Sport"
           }`,
+          sport: team.sport ? team.sport.name : "No Sport",
+          year: team.year || "Unknown Year", // Directly using the year if it's just a number
+          students: team.students.map((s) => ({
+            id: s.id,
+            name: `${s.firstName} ${s.lastName}`,
+          })),
         }));
-
-        console.log("Formatted team data:", teamData); // Check the mapped data
-
-        setTeamOptions(teamData);
-
-        if (submitState === "edit" && studentProfile && studentProfile.teamId) {
-          const selected = teamData.find(
-            (t: { value: any }) => t.value === studentProfile.teamId
-          );
-          console.log("Selected team:", selected); // Verify the selected team based on condition
-          setSelectedTeam(selected);
+        setTeamOptions(formattedTeams);
+        setTeamDetails(formattedTeams);
+        if (submitState === "edit" && studentProfile && studentProfile.teams) {
+          setSelectedTeams(studentProfile.teams.map((t) => t.id));
         }
       } catch (error) {
-        console.error("Failed to fetch teams:", error);
-        toast.error("Failed to load team data.");
+        toast.error("Failed to load teams");
       }
     };
 
     fetchTeams();
-  }, [submitState, studentProfile]); // Confirm dependencies are correct
+  }, [submitState, studentProfile]); // Ensure dependencies are correct for your use casensure dependencies are correct for your use case
 
   const [students, setStudents] = useState([]);
 
@@ -171,25 +166,22 @@ function CreateProfile(props: Props) {
         if (teamOptions.length === 0) {
           const response = await axios.get("/api/teams");
           const teamsData = response.data.map(
-            (team: { id: any; teamName: any; sport: { name: any } }) => ({
+            (team: {
+              year: any;
+              id: any;
+              teamName: any;
+              sport: { name: any };
+            }) => ({
               value: team.id,
               label: `${team.teamName} - ${
                 team.sport ? team.sport.name : "No Sport"
               }`,
+              year: team.year
+                ? new Date(team.year).getFullYear()
+                : "Unknown Year", // Formatting the year
             })
           );
           setTeamOptions(teamsData);
-          setSelectedTeam(
-            teamsData.find(
-              (team: { value: any }) => team.value === studentProfile.teamId
-            )
-          );
-        } else {
-          // If already loaded, just set the selected team
-          setSelectedTeam(
-            teamOptions.find((team) => team.value === studentProfile.teamId) ||
-              null
-          );
         }
       }
     };
@@ -439,11 +431,34 @@ function CreateProfile(props: Props) {
       setStatusIsActive(studentProfile.statusIsActive);
       setStatusIsInactive(studentProfile.statusIsInactive);
       setUserId(studentProfile.userId);
+      if (studentProfile.teams && studentProfile.teams.length > 0) {
+        setSelectedTeams(studentProfile.teams.map((team: any) => team.id));
+      }
     }
   }, [submitState, studentProfile]);
   useEffect(() => {
     const fetchStudentDetails = async () => {
       if (submitState === "edit" && studentProfile) {
+        if (teamOptions.length === 0) {
+          const response = await axios.get("/api/teams");
+          const teamsData = response.data.map(
+            (team: {
+              year: any;
+              id: any;
+              teamName: any;
+              sport: { name: any };
+            }) => ({
+              value: team.id,
+              label: `${team.teamName} - ${
+                team.sport ? team.sport.name : "No Sport"
+              }`,
+              year: team.year
+                ? new Date(team.year).getFullYear()
+                : "Unknown Year", // Formatting the year
+            })
+          );
+          setTeamOptions(teamsData);
+        }
         setfirstName(studentProfile.firstName);
         setmiddleName(studentProfile.middleName);
         setlastName(studentProfile.lastName);
@@ -475,12 +490,8 @@ function CreateProfile(props: Props) {
         setStatusIsActive(studentProfile.statusIsActive);
         setStatusIsInactive(studentProfile.statusIsInactive);
         setUserId(studentProfile.userId);
-
-        if (studentProfile.events && studentProfile.events.length > 0) {
-          setSelectedEventIds(
-            studentProfile.events.map((s: { id: number }) => s.id)
-          );
-        }
+        // setSelectedStudents(studentProfile.students.map((s: { id: number }) => s.id));
+        setSelectedTeams(studentProfile.teams.map((t: { id: number }) => t.id));
       } else if (submitState === "create") {
         try {
           // Assume you need to fetch a default event or some data when creating a new event
@@ -688,9 +699,16 @@ function CreateProfile(props: Props) {
       hasDeficiency,
       userId,
       id,
-      teamId: selectedTeam,
+      teamIds: selectedTeams,
       eventIds: selectedEventIds,
     };
+
+    console.log("Selected Events on submit:", selectedTeams);
+    if (selectedTeams.some((teamIds) => typeof teamIds !== "number")) {
+      console.error("Invalid event entries detected:", selectedTeams);
+      toast.error("Invalid event data detected.");
+      return; // Stop execution to avoid further errors
+    }
 
     console.log("Selected Events on submit:", selectedEventIds);
     if (selectedEventIds.some((eventId) => typeof eventId !== "number")) {
@@ -824,39 +842,57 @@ function CreateProfile(props: Props) {
     });
   };
 
+  const handleTeamChange = (selectedOptions) => {
+    setSelectedTeams(
+      selectedOptions ? selectedOptions.map((option) => option.value) : []
+    );
+  };
+
+  const displayTeamDetails = () => {
+    return selectedTeams.map((teamId) => {
+      const team = teamDetails.find((t) => t.value === teamId);
+      if (!team) return null;
+
+      return (
+        <TeamCard key={teamId}>
+          <Section>
+            <Heading>
+              Team Name: <Label>{team.label}</Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>
+              Team Sport: <Label>{team.sport}</Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>
+              Team Year:{" "}
+              <Label>
+                {team.year ? new Date(team.year).getFullYear() : "N/A"}
+              </Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>Team Members:</Heading>
+            <ul>
+              {team.students.map((student, index) => (
+                <ListItem key={student.id}>
+                  {index + 1}. {student.name}
+                </ListItem>
+              ))}
+            </ul>
+          </Section>
+        </TeamCard>
+      );
+    });
+  };
+
   return (
     <CreatestudentStyled onSubmit={handleSubmit}>
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">Student Details</h1>
       </div>
-      {submitState === "edit" && (
-        <>
-          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-            Tagged Events
-          </h2>
-        </>
-      )}
-      {submitState === "create" && (
-        <>
-          <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-            Tag an Event to Student
-          </h2>
-        </>
-      )}
-      <Select
-        options={eventOptions}
-        isMulti
-        value={eventOptions.filter((option) =>
-          selectedEventIds.includes(option.value)
-        )}
-        onChange={(options) =>
-          setSelectedEventIds(
-            options ? options.map((option) => option.value) : []
-          )
-        }
-        className="my-custom-select text-black bg-dark-700"
-        classNamePrefix="my-custom-select"
-      />
 
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
@@ -901,36 +937,33 @@ function CreateProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
-
-        <div className="input-control">
-          <label htmlFor="team">Team:</label>
-          <Select
-            id="team"
-            name="team"
-            options={teamOptions}
-            value={selectedTeam}
-            onChange={(option) => setSelectedTeam(option)}
-            className="custom-select"
-            classNamePrefix="select"
-          />
-        </div>
-
-        <div className="input-control">
-          <label>Team Name:</label>
-          <input
-            type="text"
-            value={selectedTeam ? selectedTeam.label.split(" - ")[0] : ""}
-            readOnly
-          />
-        </div>
-
-        <div className="input-control">
-          <label>Sport:</label>
-          <input
-            type="text"
-            value={selectedTeam ? selectedTeam.label.split(" - ")[1] : ""}
-            readOnly
-          />
+        {submitState === "edit" && (
+          <>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>Teams</h2>
+          </>
+        )}
+        {submitState === "create" && (
+          <>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+              Tag a Team to Event
+            </h2>
+          </>
+        )}
+        <Select
+          options={teamDetails}
+          isMulti
+          getOptionLabel={(option) => `${option.label} `}
+          value={teamDetails.filter((option) =>
+            selectedTeams.includes(option.value)
+          )}
+          onChange={handleTeamChange}
+          className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          classNamePrefix="my-custom-select"
+        />
+        {/* Displaying the selected teams with their details */}
+        {displayTeamDetails()}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="input-control my-custom-input-control bg-dark-500"></div>
         </div>
 
         <div className="input-control">
@@ -1421,6 +1454,44 @@ function CreateProfile(props: Props) {
     </CreatestudentStyled>
   );
 }
+
+const TeamCard = styled.div`
+  margin-bottom: 20px;
+  border: 1px solid #444;
+  background-color: #222;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+  color: #ddd;
+`;
+
+const Section = styled.div`
+  margin-bottom: 20px;
+  border: 1px solid #444;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 5px;
+  color: #ddd;
+`;
+
+const Heading = styled.h3`
+  color: #ddd;
+  font-size: 1rem;
+  margin-bottom: 10px;
+`;
+
+const ListItem = styled.li`
+  margin-bottom: 5px;
+  list-style-type: none;
+  padding-left: 20px;
+  color: #ddd;
+`;
+
+const Label = styled.span`
+  font-weight: normal;
+  color: #bbb;
+`;
+
 const CreatestudentStyled = styled.form`
 display: flex;
 flex-direction: column;
