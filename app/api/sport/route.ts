@@ -36,7 +36,7 @@ export async function GET() {
         const sports = await prisma.sport.findMany({
             include: {
                 teams: true,
-                // students:true //error on scalars
+                students: true //error on scalars
             }
         });
 

@@ -86,12 +86,16 @@ export async function PATCH(
             remarks,
             id,
             eventIds,
+            teamId,
         } = body;
 
         // Perform the update operation
         //If events is the event is not an array, if statement is executed
         if (!Array.isArray(eventIds)) {
             return new NextResponse("Invalid event IDs", { status: 400 });
+        }
+        if (!Array.isArray(teamId)) {
+            return new NextResponse("Invalid Team IDs", { status: 400 });
         }
 
         const updatedStudentProfile = await prisma.studentprofile.update({
@@ -125,6 +129,10 @@ export async function PATCH(
                 statusIsInactive,
                 remarks,
                 id,
+                teams: {
+                    set: teamId.map(id => ({ id }))// Replace existing connections with new ones
+                },
+
                 // Creating new Array of objects with id property
                 events: {
                     set: eventIds.map(id => ({ id })) // Replace existing connections with new ones
@@ -133,7 +141,8 @@ export async function PATCH(
             // Include related 'events' in the response for verification of successful update
             include: {
                 events: true,
-                sport: true // Include connected events in the response for verification
+                sport: true,
+                teams: true // Include connected events in the response for verification
             }
         });
 

@@ -49,7 +49,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const body = await req.json();
-        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal, studentIds } = body;
+        const { name, startDate, endDate, teamIds, Sport, eventDetails, isExternal, isInternal, studentIds } = body;
 
         if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
             return new NextResponse("Invalid student IDs", { status: 400 });
@@ -62,7 +62,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 name,
                 startDate,
                 endDate,
-                Sport,
                 eventDetails,
                 isExternal,
                 isInternal,
@@ -71,7 +70,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 }
             },
             include: {
-                students: true // Include the students in the response for verification
+                students: true,
+                teams: true // Include the students in the response for verification
             }
         });
 

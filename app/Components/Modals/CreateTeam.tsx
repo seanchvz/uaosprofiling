@@ -32,9 +32,36 @@ function CreateTeam(props: Props) {
     team ? new Date(team.year).getFullYear() : new Date().getFullYear()
   );
 
+  const [events, setEvents] = useState<{ value: number; label: string }[]>([]);
+  const [selectedEventIds, setSelectedEventIds] = useState<number[]>([]);
+  const [eventOptions, setEventOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
+
   const [teamsList, setTeamsList] = useState([]);
   const [id, setId] = useState(team ? team.id : "");
   const { fetchTeams, closeModal } = useGlobalState(); // Assume similar functions exist in your global context
+
+  // Assuming you fetch events somewhere in your component or get them passed down as props:
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get("/api/events");
+        const options = response.data.map((event: { id: any; name: any }) => ({
+          value: event.id,
+          label: event.name,
+        }));
+        setEventOptions(options);
+        if (submitState === "edit" && team && team.events) {
+          setSelectedEventIds(team.events.map((e: any) => e.id));
+        }
+      } catch (error) {
+        toast.error("Failed to load events");
+      }
+    };
+
+    fetchEvents();
+  }, [team, submitState]);
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -211,7 +238,15 @@ function CreateTeam(props: Props) {
       sportId,
       year: formattedYear,
       studentIds: selectedStudents,
+      eventIds: selectedEventIds,
     };
+
+    console.log("Selected Events on submit:", selectedEventIds);
+    if (selectedEventIds.some((eventId) => typeof eventId !== "number")) {
+      console.error("Invalid event entries detected:", selectedEventIds);
+      toast.error("Invalid event data detected.");
+      return; // Stop execution to avoid further errors
+    }
 
     console.log("Selected Students on submit:", selectedStudents);
     if (selectedStudents.some((studentId) => typeof studentId !== "number")) {
@@ -255,10 +290,49 @@ function CreateTeam(props: Props) {
     });
   };
 
+  const displayEvents = () => {
+    return selectedEventIds.map((eventId, index) => {
+      const event = eventOptions.find((e) => e.value === eventId);
+      return event ? (
+        <li key={index}>
+          {event.label} (ID: {event.value})
+        </li>
+      ) : null; // Handle the case where an event might not be found
+    });
+  };
+
   return (
     <CreateTeamStyled onSubmit={handleSubmit}>
       <h1>{submitState === "edit" ? "Edit Team" : "Create Team"}</h1>
       <div>
+        {submitState === "edit" && (
+          <>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+              Tagged Events
+            </h2>
+          </>
+        )}
+        {submitState === "create" && (
+          <>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
+              Tag an Event to Student
+            </h2>
+          </>
+        )}
+        <Select
+          options={eventOptions}
+          isMulti
+          value={eventOptions.filter((option) =>
+            selectedEventIds.includes(option.value)
+          )}
+          onChange={(options) =>
+            setSelectedEventIds(
+              options ? options.map((option) => option.value) : []
+            )
+          }
+          className="my-custom-select text-black bg-dark-700"
+          classNamePrefix="my-custom-select"
+        />
         <label htmlFor="teamName">Team Name:</label>
         <input
           type="text"

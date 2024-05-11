@@ -106,6 +106,43 @@ function CreateProfile(props: Props) {
     { value: number; label: string }[]
   >([]);
 
+  const [teamOptions, setTeamOptions] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        console.log("Fetching teams...");
+        const response = await axios.get("/api/teams");
+        console.log("Response data:", response.data); // Check the actual structure of response data
+
+        const teamData = response.data.map((team) => ({
+          value: team.id,
+          label: `${team.teamName} - ${
+            team.sport ? team.sport.name : "No Sport"
+          }`,
+        }));
+
+        console.log("Formatted team data:", teamData); // Check the mapped data
+
+        setTeamOptions(teamData);
+
+        if (submitState === "edit" && studentProfile && studentProfile.teamId) {
+          const selected = teamData.find(
+            (t: { value: any }) => t.value === studentProfile.teamId
+          );
+          console.log("Selected team:", selected); // Verify the selected team based on condition
+          setSelectedTeam(selected);
+        }
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+        toast.error("Failed to load team data.");
+      }
+    };
+
+    fetchTeams();
+  }, [submitState, studentProfile]); // Confirm dependencies are correct
+
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
@@ -127,9 +164,41 @@ function CreateProfile(props: Props) {
 
     fetchStudents();
   }, []);
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      if (submitState === "edit" && studentProfile) {
+        // Fetch teams if not already loaded
+        if (teamOptions.length === 0) {
+          const response = await axios.get("/api/teams");
+          const teamsData = response.data.map(
+            (team: { id: any; teamName: any; sport: { name: any } }) => ({
+              value: team.id,
+              label: `${team.teamName} - ${
+                team.sport ? team.sport.name : "No Sport"
+              }`,
+            })
+          );
+          setTeamOptions(teamsData);
+          setSelectedTeam(
+            teamsData.find(
+              (team: { value: any }) => team.value === studentProfile.teamId
+            )
+          );
+        } else {
+          // If already loaded, just set the selected team
+          setSelectedTeam(
+            teamOptions.find((team) => team.value === studentProfile.teamId) ||
+              null
+          );
+        }
+      }
+    };
+
+    fetchStudentDetails();
+  }, [studentProfile, submitState, teamOptions]);
 
   //qpi checker
-  const handleGradeChange = (e) => {
+  const handleGradeChange = (e: { target: { value: any } }) => {
     const QPI = e.target.value;
     setQPI(QPI); // Update the QPI state
     if (parseFloat(QPI) < 2) {
@@ -144,7 +213,7 @@ function CreateProfile(props: Props) {
     const fetchEvents = async () => {
       try {
         const response = await axios.get("/api/events");
-        const options = response.data.map((event) => ({
+        const options = response.data.map((event: { id: any; name: any }) => ({
           value: event.id,
           label: event.name,
         }));
@@ -161,6 +230,26 @@ function CreateProfile(props: Props) {
   }, [studentProfile, submitState]);
 
   useEffect(() => {
+    const fetchSportsData = async () => {
+      try {
+        const response = await axios.get("/api/sport"); // Replace with your actual endpoint
+        const sportsData = response.data.map(
+          (sport: { id: any; name: any }) => ({
+            value: sport.id,
+            label: sport.name,
+          })
+        );
+        setSportsOptions(sportsData);
+      } catch (error) {
+        console.error("Failed to fetch sports data:", error);
+        toast.error("Failed to load sports options");
+      }
+    };
+
+    fetchSportsData();
+  }, []); // Dependency array is empty to only run once on component mount
+
+  useEffect(() => {
     fetchSports();
   }, []);
 
@@ -168,7 +257,7 @@ function CreateProfile(props: Props) {
   const fetchSports = async () => {
     try {
       const response = await axios.get("/api/sport");
-      const sportsData = response.data.map((sport) => ({
+      const sportsData = response.data.map((sport: { id: any; name: any }) => ({
         value: sport.id,
         label: sport.name,
       }));
@@ -221,7 +310,9 @@ function CreateProfile(props: Props) {
   };
 
   // Handle change function for form fields
-  const handleChange = (e) => {
+  const handleChange = (e: {
+    target: { name: any; value: any; type: any; checked: any };
+  }) => {
     const { name, value, type, checked } = e.target;
 
     switch (name) {
@@ -597,6 +688,7 @@ function CreateProfile(props: Props) {
       hasDeficiency,
       userId,
       id,
+      teamId: selectedTeam,
       eventIds: selectedEventIds,
     };
 
@@ -611,7 +703,7 @@ function CreateProfile(props: Props) {
     if (submitState === "edit") {
       // API call to update the event
       try {
-        console.log("Sending PATCH request for coach ID:", studentProfile.id);
+        console.log("Sending PATCH request for student ID:", studentProfile.id);
         console.log("Data being sent:", studentProfile);
         const response = await axios.patch(
           `/api/studentProfiling/${studentProfile.id}/`,
@@ -807,6 +899,37 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+          />
+        </div>
+
+        <div className="input-control">
+          <label htmlFor="team">Team:</label>
+          <Select
+            id="team"
+            name="team"
+            options={teamOptions}
+            value={selectedTeam}
+            onChange={(option) => setSelectedTeam(option)}
+            className="custom-select"
+            classNamePrefix="select"
+          />
+        </div>
+
+        <div className="input-control">
+          <label>Team Name:</label>
+          <input
+            type="text"
+            value={selectedTeam ? selectedTeam.label.split(" - ")[0] : ""}
+            readOnly
+          />
+        </div>
+
+        <div className="input-control">
+          <label>Sport:</label>
+          <input
+            type="text"
+            value={selectedTeam ? selectedTeam.label.split(" - ")[1] : ""}
+            readOnly
           />
         </div>
 

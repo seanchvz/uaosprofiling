@@ -40,9 +40,20 @@ export async function POST(req: Request) {
             statusIsActive,
             statusIsInactive,
             eventIds,
+            teamId,
         } = await req.json();
 
-        // Check if firstName, lastName, and email are provided
+        // Ensure teamId is correctly parsed as an array of integers
+        const teamIds = Array.isArray(teamId) ? teamId.map(id => parseInt(id)).filter(id => !isNaN(id)) : [];
+
+        if (teamIds.length === 0) {
+            return NextResponse.json({
+                error: "Invalid Team IDs",
+                status: 400
+            });
+        }
+
+        // Validate required fields
         if (!firstName || !lastName || !email) {
             return NextResponse.json({
                 error: "Missing required fields",
@@ -50,16 +61,6 @@ export async function POST(req: Request) {
             });
         }
 
-        // Check if email is valid
-        const emailRegex = /\S+@\S+\.\S+/;
-        if (!emailRegex.test(email)) {
-            return NextResponse.json({
-                error: "Invalid email format",
-                status: 400,
-            });
-        }
-
-        // Check if contactNumber is provided and is a valid number
         if (!contactNumber || isNaN(contactNumber)) {
             return NextResponse.json({
                 error: "Invalid contact number",
@@ -67,7 +68,6 @@ export async function POST(req: Request) {
             });
         }
 
-        // Check if birthDate is provided and is a valid date
         if (!birthDate || isNaN(Date.parse(birthDate))) {
             return NextResponse.json({
                 error: "Invalid birth date",
@@ -75,61 +75,77 @@ export async function POST(req: Request) {
             });
         }
 
+        if (!Array.isArray(eventIds) || eventIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid student IDs",
+                status: 400,
+            });
+        }
+
+        // if (!Array.isArray(teamId) || teamId.some(id => typeof id !== 'number')) {
+        //     return NextResponse.json({
+        //         error: "Invalid student IDs",
+        //         status: 400,
+        //     });
+        // }
+
         const formattedBirthDate = new Date(birthDate).toISOString();
 
+        // Create student profile
         const student = await prisma.studentprofile.create({
             data: {
-                firstName: firstName,
-                middleName: middleName,
-                lastName: lastName,
-                contactNumber: contactNumber,
-                landLineNumber: landLineNumber,
+                firstName,
+                middleName,
+                lastName,
+                contactNumber,
+                landLineNumber,
                 birthDate: formattedBirthDate,
-                nationality: nationality,
-                weight: weight,
-                height: height,
-                bloodType: bloodType,
-                academicYear: academicYear,
-                isMale: isMale,
-                isFemale: isFemale,
-                yrStartedPlaying: yrStartedPlaying,
-                mothersName: mothersName,
-                fathersName: fathersName,
-                guardiansName: guardiansName,
-                courseAndYear: courseAndYear,
-                emergencyContactPerson: emergencyContactPerson,
-                emergencyContactNumber: emergencyContactNumber,
-                email: email,
-                QPI: QPI,
-                homeAddress: homeAddress,
-                statusIsActive: statusIsActive,
-                statusIsInactive: statusIsInactive,
-                remarks: remarks,
-                userId: userId,
+                nationality,
+                weight,
+                height,
+                bloodType,
+                academicYear,
+                isMale,
+                isFemale,
+                yrStartedPlaying,
+                mothersName,
+                fathersName,
+                guardiansName,
+                courseAndYear,
+                emergencyContactPerson,
+                emergencyContactNumber,
+                email,
+                QPI,
+                homeAddress,
+                statusIsActive,
+                statusIsInactive,
+                remarks,
+                userId,
                 sportId,
+                // teams: {
+                //     connect: teamId.map(id => ({ id }))
+                // },
                 events: {
-                    connect: eventIds.map((id: string) => ({ id }))
-                }
+                    connect: eventIds.map(id => ({ id })),
+                },
             },
             include: {
                 sport: true,
                 events: true,
-                // Include connected events in the response
+                // teams: true,
             }
         });
 
-
         console.log("STUDENT CREATED ", student);
-
         return NextResponse.json(student);
     } catch (error) {
-        console.log("Error creating Student Profile: ", error);
-        return NextResponse.json({ error: "Error Creating Student Profile:", status: 500 });
+        console.error("Error creating Student Profile: ", error);
+        return NextResponse.json({ error: "Error Creating Student Profile", status: 500 });
     }
 }
 
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const { userId } = auth();
         if (!userId) {
@@ -139,7 +155,8 @@ export async function GET(req: Request) {
         const students = await prisma.studentprofile.findMany({
             include: {
                 events: true,  // Include connected events if necessary
-                sport: true   // Include sport details if relevant to the profile
+                sport: true,
+                teams: true,   // Include sport details if relevant to the profile
             }
         });
 

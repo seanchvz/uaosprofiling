@@ -39,6 +39,9 @@ function CreateContent(props: Props) {
 
   // Specify the type for useState to be an array of numbers
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+  const [teamOptions, setTeamOptions] = useState([]);
+  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [teamDetails, setTeamDetails] = useState([]);
   const [studentOptions, setStudentOptions] = useState<
     { value: number; label: string }[]
   >([]);
@@ -58,6 +61,31 @@ function CreateContent(props: Props) {
 
     fetchEvents();
   }, []);
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("/api/teams");
+        const formattedTeams = response.data.map((team) => ({
+          value: team.id,
+          label: team.teamName,
+          sport: team.sport ? team.sport.name : "No Sport",
+          students: team.students.map((s) => ({
+            id: s.id,
+            name: `${s.firstName} ${s.lastName}`,
+          })),
+        }));
+        setTeamOptions(formattedTeams);
+        setTeamDetails(formattedTeams); // Store detailed information
+        if (submitState === "edit" && event && event.teams) {
+          setSelectedTeams(event.teams.map((t) => t.id));
+        }
+      } catch (error) {
+        toast.error("Failed to load teams");
+      }
+    };
+
+    fetchTeams();
+  }, [submitState, event]);
 
   useEffect(() => {
     // Fetching student options for the select dropdown
@@ -109,9 +137,7 @@ function CreateContent(props: Props) {
       case "endDate":
         setEndDate(value);
         break;
-      case "Sport":
-        setSport(value);
-        break;
+
       case "eventDetails":
         setEventDetails(value);
         break;
@@ -132,7 +158,7 @@ function CreateContent(props: Props) {
 
       setStartDate(formattedStartDate);
       setEndDate(formattedEndDate);
-      setSport(event.Sport);
+      // setSport(event.Sport);
       setEventDetails(event.eventDetails);
       setIsExternal(event.isExternal);
       setIsInternal(event.isInternal);
@@ -143,6 +169,18 @@ function CreateContent(props: Props) {
   useEffect(() => {
     const fetchEventDetails = async () => {
       if (submitState === "edit" && event) {
+        if (teamOptions.length === 0) {
+          const response = await axios.get("/api/teams");
+          const teamsData = response.data.map(
+            (team: { id: any; teamName: any; sport: { name: any } }) => ({
+              value: team.id,
+              label: `${team.teamName} - ${
+                team.sport ? team.sport.name : "No Sport"
+              }`,
+            })
+          );
+          setTeamOptions(teamsData);
+        }
         // Use existing event details if in 'edit' mode
         setName(event.name);
         setStartDate(new Date(event.startDate).toISOString().split("T")[0]);
@@ -152,6 +190,7 @@ function CreateContent(props: Props) {
         setIsExternal(event.isExternal);
         setIsInternal(event.isInternal);
         setSelectedStudents(event.students.map((s: { id: number }) => s.id));
+        setSelectedTeams(event.teams.map((t: { id: number }) => t.id));
       } else if (submitState === "create") {
         try {
           // Assume you need to fetch a default event or some data when creating a new event
@@ -169,7 +208,6 @@ function CreateContent(props: Props) {
 
     fetchEventDetails();
   }, [event, submitState]);
-
   //
   useEffect(() => {
     console.log("Updated studentOptions state:", studentOptions);
@@ -191,8 +229,11 @@ function CreateContent(props: Props) {
       if (event.students && event.students.length > 0) {
         setSelectedStudents(event.students.map((student: any) => student.id));
       }
+      if (event.teams && event.teams.length > 0) {
+        setSelectedTeams(event.teams.map((team: any) => team.id));
+      }
     }
-  }, [submitState, event]); // Ensure this hook is sensitive to changes in 'submitState' and 'event'
+  }, [submitState, event, teamOptions]); // Ensure this hook is sensitive to changes in 'submitState' and 'event'
 
   useEffect(() => {
     // to see if they are selected
@@ -239,10 +280,10 @@ function CreateContent(props: Props) {
       toast.error("Please enter an end date.");
       return;
     }
-    if (!Sport) {
-      toast.error("Please specify a sport.");
-      return;
-    }
+    // if (!Sport) {
+    //   toast.error("Please specify a sport.");
+    //   return;
+    // }
     if (!eventDetails) {
       toast.error("Please enter event details.");
       return;
@@ -265,13 +306,20 @@ function CreateContent(props: Props) {
       name,
       startDate: new Date(startDate).toISOString(), // Ensure date is in ISO format
       endDate: new Date(endDate).toISOString(),
-      Sport,
       eventDetails,
       isExternal,
       isInternal,
       userId, // Assuming this is the ID of the user creating or editing the event
       studentIds: selectedStudents, // Include selected student IDs
+      teamIds: selectedTeams, // Include selected team IDs
     };
+
+    console.log("Selected Events on submit:", selectedTeams);
+    if (selectedTeams.some((teamIds) => typeof teamIds !== "number")) {
+      console.error("Invalid event entries detected:", selectedTeams);
+      toast.error("Invalid event data detected.");
+      return; // Stop execution to avoid further errors
+    }
 
     console.log("Selected Students on submit:", selectedStudents);
     if (selectedStudents.some((studentId) => typeof studentId !== "number")) {
@@ -317,6 +365,72 @@ function CreateContent(props: Props) {
     });
   };
 
+  const handleTeamChange = (selectedOptions) => {
+    setSelectedTeams(
+      selectedOptions ? selectedOptions.map((option) => option.value) : []
+    );
+  };
+
+  const displayTeamDetails = () => {
+    return selectedTeams.map((teamId) => {
+      const team = teamDetails.find((t) => t.value === teamId);
+      if (!team) return null;
+
+      return (
+        <div
+          key={teamId}
+          style={{
+            marginBottom: "20px",
+            border: "1px solid #000",
+            padding: "10px",
+          }}
+        >
+          <div
+            style={{
+              marginBottom: "10px",
+              border: "1px solid #000",
+              padding: "10px",
+            }}
+          >
+            <h3>
+              Team Name:{" "}
+              <span style={{ fontWeight: "normal" }}>{team.label}</span>
+            </h3>
+          </div>
+          <div
+            style={{
+              marginBottom: "10px",
+              border: "1px solid #000",
+              padding: "10px",
+            }}
+          >
+            <h3>
+              Team Sport:{" "}
+              <span style={{ fontWeight: "normal" }}>{team.sport}</span>
+            </h3>
+          </div>
+
+          <div
+            style={{
+              marginBottom: "10px",
+              border: "1px solid #000",
+              padding: "10px",
+            }}
+          >
+            <h3>Team Members:</h3>
+            <ul style={{ paddingLeft: "20px" }}>
+              {team.students.map((student) => (
+                <li key={student.id} style={{ marginBottom: "5px" }}>
+                  {student.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    });
+  };
+
   return (
     <CreateContentStyled onSubmit={handleSubmit} className="mx-auto max-w-lg">
       {" "}
@@ -327,31 +441,30 @@ function CreateContent(props: Props) {
       {submitState === "edit" && (
         <>
           <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-            Tagged Student-Athletes
+            Tagged Teams
           </h2>
         </>
       )}
       {submitState === "create" && (
         <>
           <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-            Tag a Student-Athlete to an Event
+            Tag a Team to Event
           </h2>
         </>
       )}
       <Select
-        options={studentOptions}
+        options={teamDetails}
         isMulti
-        value={studentOptions.filter((option) =>
-          selectedStudents.includes(option.value)
+        getOptionLabel={(option) => `${option.label} - ${option.sport}`}
+        value={teamDetails.filter((option) =>
+          selectedTeams.includes(option.value)
         )}
-        onChange={(options) =>
-          setSelectedStudents(
-            options ? options.map((option) => option.value) : []
-          )
-        }
-        className="my-custom-select text-black bg-dark-700"
-        classNamePrefix="my-custom-select"
+        onChange={handleTeamChange}
+        className="my-custom-select"
+        classNamePrefix="select"
       />
+      {/* Displaying the selected teams with their details */}
+      {displayTeamDetails()}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="input-control my-custom-input-control bg-dark-500">
           {/* 
@@ -403,7 +516,7 @@ className="my-custom-select text-black bg-dark-700"
             />
           </div>
         </div>
-        <div className="input-control">
+        {/* <div className="input-control">
           <label htmlFor="Sport" className="block">
             Sport
           </label>
@@ -450,7 +563,7 @@ className="my-custom-select text-black bg-dark-700"
             </option>
             <option value="special projects">Special Projects Mixed</option>
           </select>
-        </div>
+        </div> */}
         <div className="input-control">
           <label htmlFor="eventDetails">
             Event Details{" "}

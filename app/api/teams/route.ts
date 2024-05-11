@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
 
-    const { sportId, teamName, studentIds, year } = await req.json();
+    const { sportId, teamName, studentIds, year, eventIds } = await req.json();
 
     if (!teamName || sportId === undefined || !year) {
         return NextResponse.json({
@@ -33,6 +33,13 @@ export async function POST(req: Request) {
         });
     }
 
+    if (!Array.isArray(eventIds) || eventIds.some(id => typeof id !== 'number')) {
+        return NextResponse.json({
+            error: "Invalid student IDs",
+            status: 400,
+        });
+    }
+
     try {
         const formattedYear = new Date(year);
         if (isNaN(formattedYear.getTime())) {
@@ -42,22 +49,26 @@ export async function POST(req: Request) {
             });
         }
 
-        const team = await prisma.team.create({
+        const teams = await prisma.team.create({
             data: {
                 sportId,
                 teamName,
                 year: formattedYear,
                 students: {
                     connect: studentIds.map(id => ({ id }))
-                }
+                },
+                events: {
+                    connect: eventIds.map(id => ({ id })),
+                },
             },
             include: {
                 sport: true,
-                students: true
+                students: true,
+                events: true
             }
         });
 
-        return NextResponse.json(team);
+        return NextResponse.json(teams);
     } catch (error) {
         console.error("Error Creating Team:", error);
         return NextResponse.json({ error: "Error creating team", status: 500 });
@@ -77,7 +88,8 @@ export async function GET() {
         const teams = await prisma.team.findMany({
             include: {
                 students: true,
-                sport: true
+                sport: true,
+                events: true
             }
         });
 

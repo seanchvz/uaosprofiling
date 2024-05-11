@@ -59,10 +59,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const body = await req.json();
-        const { sportId, teamName, studentIds, year } = body;
+        const { sportId, eventIds, teamName, studentIds, year } = body;
 
         if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
             return new NextResponse("Invalid student IDs", { status: 400 });
+        }
+
+        if (!Array.isArray(eventIds)) {
+            return new NextResponse("Invalid event IDs", { status: 400 });
         }
 
         // Format the year similarly to the first code snippet
@@ -80,11 +84,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 year: formattedYear,
                 students: {
                     set: studentIds.map(id => ({ id })) // Use 'set' to replace existing relationships
+                },
+                events: {
+                    set: eventIds.map(id => ({ id })) // Replace existing connections with new ones
                 }
             },
             include: {
                 students: true,
-                sport: true // Include the students in the response for verification
+                sport: true,
+                events: true // Include the students in the response for verification
             }
         });
 

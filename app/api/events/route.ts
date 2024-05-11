@@ -17,7 +17,7 @@ import { auth } from "@clerk/nextjs";
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { name, startDate, endDate, Sport, eventDetails, isExternal, isInternal, studentIds } = await req.json();
+        const { name, startDate, teamIds, endDate, Sport, eventDetails, isExternal, isInternal, studentIds } = await req.json();
 
         if (!name || !startDate || !endDate || !studentIds) {
             return NextResponse.json({
@@ -40,6 +40,13 @@ import { auth } from "@clerk/nextjs";
             });
         }
 
+        if (!Array.isArray(teamIds) || teamIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid team IDs",
+                status: 400,
+            });
+        }
+
 
         const formattedStartDate = new Date(startDate).toISOString();
         const formattedEndDate = new Date(endDate).toISOString();
@@ -49,17 +56,20 @@ import { auth } from "@clerk/nextjs";
                 name: name,
                 startDate: formattedStartDate,
                 endDate: formattedEndDate,
-                Sport: Sport,
                 eventDetails: eventDetails,
                 isExternal: isExternal,
                 isInternal: isInternal,
                 userId: userId,
                 students: {
                     connect: studentIds.map(id => ({ id }))
-                }
+                },
+                teams: {
+                    connect: teamIds.map(id => ({ id })),
+                },
             },
             include: {
-                students: true // Include the students in the response for verification
+                students: true,
+                teams: true // Include the students in the response for verification
             }
         });
 
@@ -87,7 +97,8 @@ export async function GET(req: Request) {
             //     userId,
             // },
             include: {
-                students: true // Include the students in the response for verification
+                students: true,
+                teams: true // Include the students in the response for verification
             }
         });
         //   console.log("EVENTS: ", events);
