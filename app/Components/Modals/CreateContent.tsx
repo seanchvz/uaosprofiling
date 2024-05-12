@@ -61,6 +61,7 @@ function CreateContent(props: Props) {
 
     fetchEvents();
   }, []);
+
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -76,7 +77,13 @@ function CreateContent(props: Props) {
             id: s.id,
             name: `${s.firstName} ${s.lastName}`,
           })),
+          coaches: team.coaches.map((c) => ({
+            // Assuming 'coaches' is a similar array to 'students'
+            id: c.id,
+            name: `${c.firstName} ${c.lastName}`,
+          })),
         }));
+
         setTeamOptions(formattedTeams);
         setTeamDetails(formattedTeams);
         if (submitState === "edit" && event && event.teams) {
@@ -413,6 +420,16 @@ function CreateContent(props: Props) {
               {team.students.map((student, index) => (
                 <ListItem key={student.id}>
                   {index + 1}. {student.name}
+                </ListItem>
+              ))}
+            </ul>
+          </Section>
+          <Section>
+            <Heading>Team Coaches:</Heading>
+            <ul>
+              {team.coaches.map((coach, index) => (
+                <ListItem key={coach.id}>
+                  {index + 1}. {coach.name}
                 </ListItem>
               ))}
             </ul>
