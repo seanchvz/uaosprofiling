@@ -59,7 +59,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const body = await req.json();
-        const { sportId, eventIds, teamName, studentIds, year } = body;
+        const { sportId, eventIds, teamName, studentIds, year, coachIds } = body;
 
         if (!Array.isArray(studentIds) || studentIds.some(id => typeof id !== 'number')) {
             return new NextResponse("Invalid student IDs", { status: 400 });
@@ -67,6 +67,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
         if (!Array.isArray(eventIds)) {
             return new NextResponse("Invalid event IDs", { status: 400 });
+        }
+
+        if (!Array.isArray(coachIds)) {
+            return new NextResponse("Invalid coach IDs", { status: 400 });
         }
 
         // Format the year similarly to the first code snippet
@@ -87,12 +91,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 },
                 events: {
                     set: eventIds.map(id => ({ id })) // Replace existing connections with new ones
+                },
+                coaches: {
+                    set: coachIds.map(id => ({ id })) // Replace existing connections with new ones
                 }
             },
             include: {
                 students: true,
                 sport: true,
-                events: true // Include the students in the response for verification
+                events: true,
+                coaches: true
             }
         });
 

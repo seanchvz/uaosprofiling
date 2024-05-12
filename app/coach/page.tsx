@@ -28,8 +28,6 @@ function Page({ name, coachprofile }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
 
-
-
   // Open modal specifically for creating a new event
   const handleOpenCreateModal = () => {
     setModalState("create");
@@ -59,7 +57,6 @@ function Page({ name, coachprofile }: Props) {
     fetchAllCoachProfile();
   }, []);
   return (
-    
     <CoachStyled theme={theme}>
       {modal && (
         <CoachModal>
@@ -161,12 +158,12 @@ function Page({ name, coachprofile }: Props) {
             <CoachContent
               key={coachProfile.id}
               firstName={coachProfile.firstName}
-              middleName={coachProfile.middleNamename}
-              lastName={coachProfile.lastNamename}
+              middleName={coachProfile.middleName}
+              lastName={coachProfile.lastName}
               landLineNumber={coachProfile.landLineNumber}
               contactNumber={coachProfile.contactNumber}
-              sport={coachProfile.sport}
-              permanentTeam={coachProfile.permanentTeam}
+              // sport={coachProfile.sport}
+              // permanentTeam={coachProfile.permanentTeam}
               isMale={coachProfile.isMale}
               isFemale={coachProfile.isFemale}
               emergencyContact={coachProfile.emergencyContact}

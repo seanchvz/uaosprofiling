@@ -48,6 +48,7 @@ model team {
   // sport     String
   sport     sport?           @relation(fields: [sportId], references: [id])
   sportId   Int?
+  coaches   coachprofile[]   @relation("TeamCoaches")
   year      DateTime
 }
 
@@ -98,7 +99,6 @@ model coachprofile {
   lastName               String
   contactNumber          String
   landLineNumber         String
-  permanentTeam          String
   isMale                 Boolean  @default(false)
   isFemale               Boolean  @default(false)
   emergencyContact       String
@@ -118,7 +118,8 @@ model coachprofile {
   UpdatedAt              DateTime @updatedAt
   userId                 String
   events                 events[]
-  sport                  String
+  // sport                  String
+  teams                  team[]   @relation("TeamCoaches")
   // sportId                Int?
   // sport                  sport?   @relation(fields: [sportId], references: [id])
 }

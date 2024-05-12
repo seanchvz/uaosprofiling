@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
 
-    const { sportId, teamName, studentIds, year, eventIds } = await req.json();
+    const { sportId, teamName, studentIds, year, eventIds, coachIds } = await req.json();
 
     if (!teamName || sportId === undefined || !year) {
         return NextResponse.json({
@@ -35,7 +35,14 @@ export async function POST(req: Request) {
 
     if (!Array.isArray(eventIds) || eventIds.some(id => typeof id !== 'number')) {
         return NextResponse.json({
-            error: "Invalid student IDs",
+            error: "Invalid events IDs",
+            status: 400,
+        });
+    }
+
+    if (!Array.isArray(coachIds) || coachIds.some(id => typeof id !== 'number')) {
+        return NextResponse.json({
+            error: "Invalid coach IDs",
             status: 400,
         });
     }
@@ -60,11 +67,15 @@ export async function POST(req: Request) {
                 events: {
                     connect: eventIds.map(id => ({ id })),
                 },
+                coaches: {
+                    connect: coachIds.map(id => ({ id }))
+                },
             },
             include: {
                 sport: true,
                 students: true,
-                events: true
+                events: true,
+                coaches: true,
             }
         });
 
@@ -89,7 +100,8 @@ export async function GET() {
             include: {
                 students: true,
                 sport: true,
-                events: true
+                events: true,
+                coaches: true,
             }
         });
 

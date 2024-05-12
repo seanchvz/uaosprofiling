@@ -939,14 +939,12 @@ function CreateProfile(props: Props) {
         </div>
         {submitState === "edit" && (
           <>
-            <h2 style={{ fontSize: "1.2em", marginBottom: "0.2em" }}>Teams</h2>
+            <h2 style={{ fontSize: "1.2em" }}>Teams</h2>
           </>
         )}
         {submitState === "create" && (
           <>
-            <h2 style={{ fontSize: "1.2em", marginBottom: "0.2em" }}>
-              Tag a Team to Event
-            </h2>
+            <h2 style={{ fontSize: "1.2em" }}>Add a Team to Student</h2>
           </>
         )}
         <Select
@@ -957,7 +955,7 @@ function CreateProfile(props: Props) {
             selectedTeams.includes(option.value)
           )}
           onChange={handleTeamChange}
-          className="border border-black rounded-md p-1 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          className="border border-black rounded-md focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
           classNamePrefix="my-custom-select"
         />
         {/* Displaying the selected teams with their details */}

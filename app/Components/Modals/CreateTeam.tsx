@@ -28,6 +28,12 @@ function CreateTeam(props: Props) {
   const [studentOptions, setStudentOptions] = useState<
     { value: number; label: string }[]
   >([]);
+
+  const [selectedCoaches, setSelectedCoaches] = useState<number[]>([]);
+  const [selectedCoachIds, setSelectedCoachIds] = useState<number[]>([]);
+  const [coachOptions, setCoachOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
   const [year, setYear] = useState<number | null>(
     team ? new Date(team.year).getFullYear() : new Date().getFullYear()
   );
@@ -93,6 +99,24 @@ function CreateTeam(props: Props) {
     };
 
     fetchStudents();
+  }, []);
+
+  useEffect(() => {
+    const fetchCoaches = async () => {
+      try {
+        const response = await axios.get("/api/coachProfiling");
+        const options = response.data.map((coach: any) => ({
+          value: coach.id,
+          label: `${coach.firstName} ${coach.lastName}`,
+        }));
+        setCoachOptions(options);
+      } catch (error) {
+        console.error("Failed to fetch coaches:", error);
+        toast.error("Failed to load coach data.");
+      }
+    };
+
+    fetchCoaches();
   }, []);
 
   // Fetch sports from API
@@ -173,6 +197,7 @@ function CreateTeam(props: Props) {
       setSelectedStudents(
         team.students.map((student: { id: number }) => student.id)
       );
+      setSelectedCoaches(team.coaches.map((coach: { id: number }) => coach.id));
     }
   }, [submitState, team]);
 
@@ -182,6 +207,7 @@ function CreateTeam(props: Props) {
         setTeamName(team.teamName);
         // setSport(team.sport);
         setSelectedStudents(team.students.map((s: { id: number }) => s.id));
+        setSelectedCoaches(team.coaches.map((s: { id: number }) => s.id));
       } else if (submitState === "create") {
         try {
           const response = await axios.get("/api/teams?teamId=123"); // Fetch more detailed data if necessary
@@ -212,6 +238,9 @@ function CreateTeam(props: Props) {
       if (team.students && team.students.length > 0) {
         setSelectedStudents(team.students.map((student: any) => student.id));
       }
+      if (team.coaches && team.coaches.length > 0) {
+        setSelectedCoaches(team.coaches.map((coach: any) => coach.id));
+      }
     }
   }, [submitState, team]); // React to changes in 'submitState' and 'team'
 
@@ -239,6 +268,7 @@ function CreateTeam(props: Props) {
       year: formattedYear,
       studentIds: selectedStudents,
       eventIds: selectedEventIds,
+      coachIds: selectedCoachIds,
     };
 
     console.log("Selected Events on submit:", selectedEventIds);
@@ -251,6 +281,13 @@ function CreateTeam(props: Props) {
     console.log("Selected Students on submit:", selectedStudents);
     if (selectedStudents.some((studentId) => typeof studentId !== "number")) {
       console.error("Invalid student entries detected:", selectedStudents);
+      toast.error("Invalid student data detected.");
+      return; // Stop execution to avoid further errors
+    }
+
+    console.log("Selected Students on submit:", selectedCoaches);
+    if (selectedCoaches.some((coachId) => typeof coachId !== "number")) {
+      console.error("Invalid student entries detected:", selectedCoaches);
       toast.error("Invalid student data detected.");
       return; // Stop execution to avoid further errors
     }
@@ -285,6 +322,17 @@ function CreateTeam(props: Props) {
       return student ? (
         <li key={index}>
           {student.label} (ID: {student.value})
+        </li>
+      ) : null; // Handle the case where student might not be found
+    });
+  };
+
+  const displayCoaches = () => {
+    return selectedCoaches.map((coachId, index) => {
+      const coach = coachOptions.find((option) => option.value === coachId);
+      return coach ? (
+        <li key={index}>
+          {coach.label} (ID: {coach.value})
         </li>
       ) : null; // Handle the case where student might not be found
     });
@@ -450,6 +498,33 @@ function CreateTeam(props: Props) {
           )}
           onChange={(options) =>
             setSelectedStudents(
+              options ? options.map((option) => option.value) : []
+            )
+          }
+          className="my-custom-select text-black bg-dark-700"
+          classNamePrefix="my-custom-select"
+        />
+      </div>
+      <div>
+        <label>Coach members:</label>
+        {submitState === "edit" && (
+          <>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}></h2>
+          </>
+        )}
+        {submitState === "create" && (
+          <>
+            <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}></h2>
+          </>
+        )}
+        <Select
+          options={coachOptions}
+          isMulti
+          value={coachOptions.filter((option) =>
+            selectedCoaches.includes(option.value)
+          )}
+          onChange={(options) =>
+            setSelectedCoaches(
               options ? options.map((option) => option.value) : []
             )
           }

@@ -62,8 +62,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
             lastName,
             contactNumber,
             landLineNumber,
-            sport,
-            permanentTeam,
             isMale,
             isFemale,
             emergencyContact,
@@ -79,9 +77,17 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
             resumeUrl,
             email,
             remarks,
+            teamIds,
         } = body;
 
         // Perform the update operation
+
+        if (!Array.isArray(teamIds) || teamIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid team IDs",
+                status: 400,
+            });
+        }
 
         const updatedCoachProfile = await prisma.coachprofile.update({
             where: { id: +coachprofileId },
@@ -91,8 +97,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 lastName,
                 contactNumber,
                 landLineNumber,
-                sport,
-                permanentTeam,
                 isMale,
                 isFemale,
                 emergencyContact,
@@ -108,7 +112,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                 resumeUrl,
                 email,
                 remarks,
+                teams: {
+                    set: teamIds.map(id => ({ id })) // Use 'set' to replace existing relationships
+                },
             },
+            include: {
+                teams: true
+            }
         });
 
         console.log("Profile Updated: ", updatedCoachProfile);

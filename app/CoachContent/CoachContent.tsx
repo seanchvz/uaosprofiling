@@ -13,8 +13,8 @@ interface Props {
   lastName: string;
   contactNumber: string;
   landLineNumber: string;
-  sport: string;
-  permanentTeam: string;
+  // sport: string;
+  // permanentTeam: string;
   isMale: boolean;
   isFemale: boolean;
   emergencyContact: string;
@@ -60,11 +60,10 @@ const roleColors = {
   academicYear: "#fda600",
 };
 
-
-const getSportColor = (sport) => {
-  const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
-  return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
-};
+// const getSportColor = (sport) => {
+//   const key = sport ? sport.replace(/\s+/g, "").toLowerCase() : "";
+//   return roleColors[key] || roleColors.defaultColor; // Ensure there's a defaultColor defined
+// };
 
 function CoachContent({
   firstName,
@@ -72,8 +71,8 @@ function CoachContent({
   lastName,
   contactNumber,
   landLineNumber,
-  sport,
-  permanentTeam,
+  // sport,
+  // permanentTeam,
   remarks,
   isMale,
   isFemale,
@@ -102,8 +101,7 @@ function CoachContent({
   // Card Contents
   return (
     <CoachContentStyled theme={theme}>
-      <h1 style={{ marginBottom: "5px" }}>{firstName}</h1>
-     
+      <h1>{`${lastName}, ${firstName} ${middleName}`}</h1>
       <div className="tags">
         <Tag
           style={{ marginBottom: "10px" }}
@@ -111,12 +109,11 @@ function CoachContent({
         >
           {statusIsFulltime ? "Full Time" : "Part Time"}
         </Tag>
-        <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
+        {/* <Tag style={{ marginRight: "10px" }} color={getSportColor(sport)}>
           {sport || "No Sport"}
-        </Tag>
+        </Tag> */}
         <Tag color={roleColors.academicYear}>{academicYear}</Tag>
       </div>
-
       {/* <p className="sport">Permanent Team: {permanentTeam}</p> */}
       <p className="date" style={{ marginBottom: "5px" }}>
         Birth Date: {new Date(birthDate).toLocaleDateString(undefined, options)}
@@ -127,7 +124,6 @@ function CoachContent({
       <p className="remarks" style={{ marginBottom: "5px" }}>
         Remarks: {remarks}
       </p>
-
       <div className="event-footer" style={{ marginTop: "5px" }}>
         <button className="edit" onClick={handleEdit}>
           {edit}

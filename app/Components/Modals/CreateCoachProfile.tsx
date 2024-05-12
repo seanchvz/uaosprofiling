@@ -30,10 +30,10 @@ function CreateCoachProfile(props: Props) {
   const [landLineNumber, setLandLineNumber] = useState(
     coachProfile ? coachProfile.landLineNumber : ""
   );
-  const [sport, setSport] = useState(coachProfile ? coachProfile.sport : "");
-  const [permanentTeam, setPermanentTeam] = useState(
-    coachProfile ? coachProfile.permanentTeam : ""
-  );
+
+  // const [permanentTeam, setPermanentTeam] = useState(
+  //   coachProfile ? coachProfile.permanentTeam : ""
+  // );
   const [isMale, setIsMale] = useState(
     coachProfile ? coachProfile.isMale : false
   );
@@ -79,6 +79,43 @@ function CreateCoachProfile(props: Props) {
   const { fetchAllCoachProfile, closeModal } = useGlobalState();
   const [resumeUrl, setResumeUrl] = useState("");
 
+  const [sportsOptions, setSportsOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
+
+  const [teamOptions, setTeamOptions] = useState([]);
+  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [teamDetails, setTeamDetails] = useState([]);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("/api/teams");
+        const formattedTeams = response.data.map((team) => ({
+          value: team.id,
+          label: `${team.teamName} - ${
+            team.sport ? team.sport.name : "No Sport"
+          }`,
+          sport: team.sport ? team.sport.name : "No Sport",
+          year: team.year || "Unknown Year", // Directly using the year if it's just a number
+          events: team.events.map((e) => ({
+            id: e.id,
+            name: e.name,
+          })),
+        }));
+        setTeamOptions(formattedTeams);
+        setTeamDetails(formattedTeams);
+        if (submitState === "edit" && coachProfile && coachProfile.teams) {
+          setSelectedTeams(coachProfile.teams.map((t) => t.id));
+        }
+      } catch (error) {
+        toast.error("Failed to load teams");
+      }
+    };
+
+    fetchTeams();
+  }, [submitState, coachProfile]);
+
   const [coachProfiles, setCoachProfiles] = useState([]);
   // Fetch all coach profiles
   useEffect(() => {
@@ -93,6 +130,36 @@ function CreateCoachProfile(props: Props) {
 
     fetchProfiles();
   }, []);
+
+  useEffect(() => {
+    const fetchCoachDetails = async () => {
+      if (submitState === "edit" && coachProfile) {
+        // Fetch teams if not already loaded
+        if (teamOptions.length === 0) {
+          const response = await axios.get("/api/teams");
+          const teamsData = response.data.map(
+            (team: {
+              year: any;
+              id: any;
+              teamName: any;
+              sport: { name: any };
+            }) => ({
+              value: team.id,
+              label: `${team.teamName} - ${
+                team.sport ? team.sport.name : "No Sport"
+              }`,
+              year: team.year
+                ? new Date(team.year).getFullYear()
+                : "Unknown Year", // Formatting the year
+            })
+          );
+          setTeamOptions(teamsData);
+        }
+      }
+    };
+
+    fetchCoachDetails();
+  }, [coachProfile, submitState, teamOptions]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -142,12 +209,9 @@ function CreateCoachProfile(props: Props) {
         case "landLineNumber":
           setLandLineNumber(value);
           break;
-        case "sport":
-          setSport(value);
-          break;
-        case "permanentTeam":
-          setPermanentTeam(value);
-          break;
+        // case "permanentTeam":
+        //   setPermanentTeam(value);
+        //   break;
         case "emergencyContact":
           setEmergencyContact(value);
           break;
@@ -191,8 +255,8 @@ function CreateCoachProfile(props: Props) {
         .split("T")[0];
       setContactNumber(coachProfile.contactNumber);
       setLandLineNumber(coachProfile.landLineNumber);
-      setSport(coachProfile.sport);
-      setPermanentTeam(coachProfile.permanentTeam);
+
+      // setPermanentTeam(coachProfile.permanentTeam);
       setIsMale(coachProfile.isMale);
       setIsFemale(coachProfile.isFemale);
       setEmergencyContact(coachProfile.emergencyContact);
@@ -209,18 +273,91 @@ function CreateCoachProfile(props: Props) {
       setEmail(coachProfile.email);
       setRemarks(coachProfile.remarks);
       setUserId(coachProfile.userId);
+      if (coachProfile.teams && coachProfile.teams.length > 0) {
+        setSelectedTeams(coachProfile.teams.map((team: any) => team.id));
+      }
     }
   }, [submitState, coachProfile]);
+
+  useEffect(() => {
+    const fetchCoachDetails = async () => {
+      if (submitState === "edit" && coachProfile) {
+        if (teamOptions.length === 0) {
+          const response = await axios.get("/api/teams");
+          const teamsData = response.data.map(
+            (team: {
+              year: any;
+              id: any;
+              teamName: any;
+              sport: { name: any };
+            }) => ({
+              value: team.id,
+              label: `${team.teamName} - ${
+                team.sport ? team.sport.name : "No Sport"
+              }`,
+              year: team.year
+                ? new Date(team.year).getFullYear()
+                : "Unknown Year", // Formatting the year
+            })
+          );
+          setTeamOptions(teamsData);
+        }
+        setfirstName(coachProfile.firstName);
+        setMiddleName(coachProfile.middleName);
+        setLastName(coachProfile.lastName);
+        setContactNumber(coachProfile.contactNumber);
+        setLandLineNumber(coachProfile.landLineNumber);
+        setIsMale(coachProfile.isMale);
+        setIsFemale(coachProfile.isFemale);
+        setEmergencyContact(coachProfile.emergencyContact);
+        setEmergencyContactPerson(coachProfile.emergencyContactPerson);
+        const formattedBirthDate = new Date(coachProfile.birthDate)
+          .toISOString()
+          .split("T")[0];
+        setBirthDate(formattedBirthDate);
+        setNationality(coachProfile.nationality);
+        setWeight(coachProfile.weight);
+        setHeight(coachProfile.height);
+        // setSport(coachProfile.sport);
+        setBloodType(coachProfile.bloodType);
+        setAcademicYear(coachProfile.academicYear);
+        setStatusIsFulltime(coachProfile.statusIsFulltime);
+        setStatusIsParttime(coachProfile.statusIsParttime);
+        setResumeUrl(coachProfile.resumeUrl);
+        setEmail(coachProfile.email);
+        setRemarks(coachProfile.remarks);
+        setUserId(coachProfile.userId);
+        setSelectedTeams(coachProfile.teams.map((t: { id: number }) => t.id));
+      } else if (submitState === "create") {
+        try {
+          // Assume you need to fetch a default event or some data when creating a new event
+          const response = await axios.get("/api/coachProfiling?coachId=123"); // Example API call
+          if (response.data) {
+            console.log("Fetched student data:", response.data);
+            // Set state with fetched data
+          }
+        } catch (error) {
+          console.error("Error fetching student details:", error);
+          toast.error("Failed to fetch student details");
+        }
+      }
+    };
+
+    fetchCoachDetails();
+  }, [coachProfile, submitState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const fullName = `${firstName} ${middleName} ${lastName}`.toLowerCase();
     // Check for duplicate name, excluding the current coach profile if editing
-    const isDuplicate = Array.isArray(coachProfiles) && coachProfiles.some((coachProfile) => {
-      const existingFullName = `${coachProfile.firstName} ${coachProfile.middleName} ${coachProfile.lastName}`.toLowerCase();
-      return fullName === existingFullName && coachProfile.id !== id;
-  });
+    const isDuplicate =
+      Array.isArray(coachProfiles) &&
+      coachProfiles.some((coachProfile) => {
+        const existingFullName =
+          `${coachProfile.firstName} ${coachProfile.middleName} ${coachProfile.lastName}`.toLowerCase();
+        return fullName === existingFullName && coachProfile.id !== id;
+      });
 
     if (isDuplicate) {
       toast.error("A coach with the same name already exists!");
@@ -259,14 +396,7 @@ function CreateCoachProfile(props: Props) {
       toast.error("The contact number must be exactly 11 digits.");
       return;
     }
-    if (!sport) {
-      toast.error("Please specify a sport.");
-      return;
-    }
-    if (!permanentTeam) {
-      toast.error("Please enter a permanent team.");
-      return;
-    }
+
     if (isMale === undefined && isFemale === undefined) {
       toast.error("Please select a gender.");
       return;
@@ -326,8 +456,6 @@ function CreateCoachProfile(props: Props) {
       lastName,
       contactNumber,
       landLineNumber,
-      sport,
-      permanentTeam,
       isMale,
       isFemale,
       emergencyContact,
@@ -344,7 +472,15 @@ function CreateCoachProfile(props: Props) {
       email,
       remarks,
       userId,
+      teamIds: selectedTeams,
     };
+
+    console.log("Selected teams on submit:", selectedTeams);
+    if (selectedTeams.some((teamIds) => typeof teamIds !== "number")) {
+      console.error("Invalid team entries detected:", selectedTeams);
+      toast.error("Invalid team data detected.");
+      return; // Stop execution to avoid further errors
+    }
 
     if (submitState === "edit") {
       // handleEdit(event);
@@ -397,8 +533,6 @@ function CreateCoachProfile(props: Props) {
     lastName: string;
     contactNumber: string;
     landLineNumber: string;
-    sport: string;
-    permanentTeam: string;
     isMale: boolean;
     isFemale: boolean;
     emergencyContact: string;
@@ -445,6 +579,52 @@ function CreateCoachProfile(props: Props) {
     }
   };
 
+  const handleTeamChange = (selectedOptions) => {
+    setSelectedTeams(
+      selectedOptions ? selectedOptions.map((option) => option.value) : []
+    );
+  };
+
+  const displayTeamDetails = () => {
+    return selectedTeams.map((teamId) => {
+      const team = teamDetails.find((t) => t.value === teamId);
+      if (!team) return null;
+
+      return (
+        <TeamCard key={teamId}>
+          <Section>
+            <Heading>
+              Team Name: <Label>{team.label}</Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>
+              Team Sport: <Label>{team.sport}</Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>
+              Team Year:{" "}
+              <Label>
+                {team.year ? new Date(team.year).getFullYear() : "N/A"}
+              </Label>
+            </Heading>
+          </Section>
+          <Section>
+            <Heading>Events Joined with team:</Heading>
+            <ul>
+              {team.events.map((event, index) => (
+                <ListItem key={event.id}>
+                  {index + 1}. {event.name}
+                </ListItem>
+              ))}
+            </ul>
+          </Section>
+        </TeamCard>
+      );
+    });
+  };
+
   return (
     <CreateCoachProfileStyled
       onSubmit={handleSubmit}
@@ -458,7 +638,8 @@ function CreateCoachProfile(props: Props) {
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
           <label htmlFor="name">
-           First Name {!firstName && <span className="required-asterisk">*</span>}
+            First Name{" "}
+            {!firstName && <span className="required-asterisk">*</span>}
           </label>
           <input
             type="text"
@@ -471,9 +652,7 @@ function CreateCoachProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="name">
-            Middle Name
-          </label>
+          <label htmlFor="name">Middle Name</label>
           <input
             type="text"
             id="middleName"
@@ -486,7 +665,8 @@ function CreateCoachProfile(props: Props) {
         </div>
         <div className="input-control">
           <label htmlFor="name">
-            Last Name {!lastName && <span className="required-asterisk">*</span>}
+            Last Name{" "}
+            {!lastName && <span className="required-asterisk">*</span>}
           </label>
           <input
             type="text"
@@ -498,6 +678,31 @@ function CreateCoachProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
+
+        {submitState === "edit" && (
+          <>
+            <h2 style={{ fontSize: "1.2em" }}>Teams</h2>
+          </>
+        )}
+        {submitState === "create" && (
+          <>
+            <h2 style={{ fontSize: "1.2em" }}>Add a Team to Coach</h2>
+          </>
+        )}
+        <Select
+          options={teamDetails}
+          isMulti
+          getOptionLabel={(option) => `${option.label} `}
+          value={teamDetails.filter((option) =>
+            selectedTeams.includes(option.value)
+          )}
+          onChange={handleTeamChange}
+          className="border border-black rounded-md focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          classNamePrefix="my-custom-select"
+        />
+
+        {displayTeamDetails()}
+
         <div className="input-control">
           <label htmlFor="email">
             Email {!email && <span className="required-asterisk">*</span>}
@@ -536,70 +741,6 @@ function CreateCoachProfile(props: Props) {
             name="landLineNumber"
             onChange={handleChange}
             placeholder="e.g. 00-123-1234"
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
-          />
-        </div>
-        <div className="input-control">
-          <label htmlFor="Sport" className="block">
-            Sport
-          </label>
-          <select
-            id="sport"
-            name="sport"
-            value={sport}
-            onChange={handleChange}
-            className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
-          >
-            <option value="">Select Sport</option>
-            <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women 3x3">
-                Basketball Women (3X3)
-              </option>
-              <option value="basketball women 5x5">
-                Basketball Women (5X5)
-              </option>
-            </optgroup>
-            <optgroup label="Football">
-              <option value="football men">Football Men</option>
-              <option value="football women">Football Women</option>
-            </optgroup>
-            <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
-            </optgroup>
-            <optgroup label="Badminton">
-              <option value="badminton women">Badminton Women</option>
-              <option value="badminton men">Badminton Men</option>
-            </optgroup>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
-            <option value="table tennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming Mixed</option>
-            <option value="strength and conditioning">
-              Strength and Conditioning
-            </option>
-            <option value="special projects">Special Projects Mixed</option>
-          </select>
-        </div>
-
-        <div className="input-control">
-          <label htmlFor="permanentTeam">
-            Permanent Team{" "}
-            {!permanentTeam && <span className="required-asterisk">*</span>}
-          </label>
-          <input
-            type="text"
-            id="permanentTeam"
-            value={permanentTeam}
-            name="permanentTeam"
-            onChange={handleChange}
-            placeholder="e.g. DACS"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -926,6 +1067,43 @@ function CreateCoachProfile(props: Props) {
     </CreateCoachProfileStyled>
   );
 }
+
+const TeamCard = styled.div`
+  margin-bottom: 20px;
+  border: 1px solid #444;
+  background-color: #222;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+  color: #ddd;
+`;
+
+const Section = styled.div`
+  margin-bottom: 20px;
+  border: 1px solid #444;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 5px;
+  color: #ddd;
+`;
+
+const Heading = styled.h3`
+  color: #ddd;
+  font-size: 1rem;
+  margin-bottom: 10px;
+`;
+
+const ListItem = styled.li`
+  margin-bottom: 5px;
+  list-style-type: none;
+  padding-left: 20px;
+  color: #ddd;
+`;
+
+const Label = styled.span`
+  font-weight: normal;
+  color: #bbb;
+`;
 
 const CreateCoachProfileStyled = styled.form`
   display: flex;

@@ -15,9 +15,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const { firstName, middleName, lastName, remarks, contactNumber, landLineNumber, sport, permanentTeam, isMale, isFemale, emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email } = await req.json();
+        const { firstName, middleName, lastName, remarks, teamIds, contactNumber, landLineNumber, isMale, isFemale, emergencyContact, emergencyContactPerson, birthDate, nationality, weight, height, bloodType, academicYear, statusIsFulltime, statusIsParttime, resumeUrl, email } = await req.json();
 
-        if (!firstName || !lastName || !contactNumber || !sport || !permanentTeam || !nationality || !academicYear || !emergencyContact || !emergencyContactPerson) {
+        if (!firstName || !lastName || !contactNumber || !nationality || !academicYear || !emergencyContact || !emergencyContactPerson) {
             return NextResponse.json({
                 error: "Missing required fields",
                 status: 400,
@@ -29,6 +29,14 @@ export async function POST(req: Request) {
                 status: 400,
             });
         }
+
+        if (!Array.isArray(teamIds) || teamIds.some(id => typeof id !== 'number')) {
+            return NextResponse.json({
+                error: "Invalid team IDs",
+                status: 400,
+            });
+        }
+
         const formattedBirthDate = new Date(birthDate).toISOString(); // Parse the stockinDate value if necessary
 
         const coachProfile = await prisma.coachprofile.create({
@@ -38,8 +46,6 @@ export async function POST(req: Request) {
                 lastName: lastName,
                 contactNumber: contactNumber,
                 landLineNumber: landLineNumber,
-                sport: sport,
-                permanentTeam: permanentTeam,
                 isMale: isMale,
                 isFemale: isFemale,
                 emergencyContact: emergencyContact,
@@ -56,7 +62,13 @@ export async function POST(req: Request) {
                 email: email,
                 remarks: remarks,
                 userId: userId,
+                teams: {
+                    connect: teamIds.map(id => ({ id })),
+                },
             },
+            include: {
+                teams: true,
+            }
         });
         console.log(coachProfile);
         return NextResponse.json(coachProfile);
@@ -82,13 +94,13 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Unauthorized", status: 401 });
         }
 
-        const coachProfile = await prisma.coachprofile.findMany({
-            // where: {
-            //     userId,
-            // },
+        const coaches = await prisma.coachprofile.findMany({
+            include: {
+                teams: true,
+            }
         });
-        console.log("Coach Profiles: ", coachProfile);
-        return NextResponse.json(coachProfile);
+        console.log("Coach Profiles: ", coaches);
+        return NextResponse.json(coaches);
     } catch (error) {
         console.error("ERROR GETTING COACH PROFILES: ", error);
         return NextResponse.json({ error: "Error getting coach profiles", status: 500 });
