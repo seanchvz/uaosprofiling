@@ -891,7 +891,11 @@ function CreateProfile(props: Props) {
   return (
     <CreatestudentStyled onSubmit={handleSubmit}>
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Student Details</h1>
+        <h1>
+          {submitState === "edit"
+            ? "View Student Profile"
+            : "Create Student Profile"}
+        </h1>
       </div>
 
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
@@ -1499,6 +1503,12 @@ justify-content: space-around; // Change from 'space-between' to 'space-around' 
 width: 100%; 
 height: 100%;
 padding: 20px; 
+
+h1 {
+  font-size: clamp(1.2rem, 5vw, 1.6rem);
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
 
 > * {
   width: 100%; 

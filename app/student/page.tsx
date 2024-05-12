@@ -152,12 +152,12 @@ function Page({ name, studentprofile }: Props) {
           />
           <input
             type="text"
-            placeholder="Search by Year Started Playing..."
+            placeholder="Year"
             value={searchYear}
             onChange={handleSearchInput}
             style={{
               height: "3rem",
-              width: "20rem",
+              width: "5rem",
               marginRight: "1rem",
               border: "1px solid #555",
               borderRadius: "10px",

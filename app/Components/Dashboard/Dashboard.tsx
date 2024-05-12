@@ -186,30 +186,30 @@ function Dashboard({ name, events }: Props) {
 
       <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
         <table
-          className="min-w-full leading-normal"
+          className="min-w-full leading-normal border-2 border-gray-500" // added border-2 for border weight
           style={{ backgroundColor: "#363636" }}
         >
           <thead>
             <tr>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 #
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Start Date
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 End Date
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Event Details
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -218,35 +218,44 @@ function Dashboard({ name, events }: Props) {
             {enhancedEvents.length > 0 ? (
               enhancedEvents.map((event, index) => (
                 <tr key={event.id}>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {index + 1}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {event.name}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {new Date(event.startDate).toLocaleDateString("en-US")}
                   </td>
 
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {new Date(event.endDate).toLocaleDateString("en-US")}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {event.eventDetails}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
-                    {event.isExternal ? "External" : "Internal"}
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    <span
+                      className={`inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 ${
+                        event.isExternal
+                          ? "bg-red-500 text-white"
+                          : "bg-green-500 text-white"
+                      }`}
+                    >
+                      {event.isExternal ? "External" : "Internal"}
+                    </span>
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm">
+
+                  <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="text-blue-400 hover:text-blue-300 underline"
+                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedEvent(event);
                         openModal();
                       }}
                     >
-                      Edit
+                      View
                     </button>
                   </td>
                 </tr>
@@ -255,7 +264,7 @@ function Dashboard({ name, events }: Props) {
               <tr>
                 <td
                   colSpan="7"
-                  className="px-5 py-5 border-b border-gray-700 text-sm text-gray-300"
+                  className="px-5 py-5 border-b border-gray-700 text-base text-gray-300"
                 >
                   No events found.
                 </td>

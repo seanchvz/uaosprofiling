@@ -444,7 +444,7 @@ function CreateContent(props: Props) {
       {" "}
       <div className="mb-8">
         {" "}
-        <h1 className="text-4xl font-bold mb-4">Event Details</h1>{" "}
+        <h1>{submitState === "edit" ? "View Event" : "Create Event"}</h1>
       </div>
       {submitState === "edit" && (
         <>
@@ -703,6 +703,12 @@ const Label = styled.span`
 `;
 
 const CreateContentStyled = styled.form`
+  h1 {
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
   > h1 {
     font-size: clamp(1.2rem, 5vw, 1.6rem);
     font-weight: 600;

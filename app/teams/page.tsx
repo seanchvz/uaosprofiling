@@ -1,7 +1,7 @@
 import { useGlobalState } from "@/app/context/globalProvider";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { plus } from "@/app/utils/Icons";
+import { plus, trash } from "@/app/utils/Icons";
 import TeamModal from "../Components/Modals/TeamModal";
 import CreateTeam from "../Components/Modals/CreateTeam";
 import TeamContent from "../TeamContent/TeamContent";
@@ -12,7 +12,8 @@ interface Props {
 }
 
 function Page({ name, teams }: Props) {
-  const { theme, isLoading, openModal, modal, fetchTeams } = useGlobalState();
+  const { theme, isLoading, openModal, modal, fetchTeams, deleteTeam } =
+    useGlobalState();
   const [modalState, setModalState] = useState("create");
   const [selectedTeam, setSelectedTeam] = useState();
   const [searchTerm, setSearchTerm] = useState("");
@@ -148,24 +149,24 @@ function Page({ name, teams }: Props) {
 
       <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
         <table
-          className="min-w-full leading-normal"
+          className="min-w-full leading-normal border-2 border-gray-500" // added border-2 for border weight
           style={{ backgroundColor: "#363636" }}
         >
           <thead>
             <tr>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 #
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
-                Year
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Year Active
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Sport
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -174,30 +175,53 @@ function Page({ name, teams }: Props) {
             {filteredTeams.length > 0 ? (
               filteredTeams.map((team, index) => (
                 <tr key={team.id}>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {index + 1}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {team.teamName}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {new Date(team.year).getFullYear()}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {team.sportId}
                   </td>
 
-                  <td className="px-5 py-5 border-b border-gray-500 text-sm">
+                  <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="text-blue-400 hover:text-blue-300 underline"
+                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedTeam(team);
                         openModal();
                       }}
                     >
-                      Edit
+                      View
                     </button>
+                    {/* <button
+                      className="text-blue-400 hover:text-blue-300 underline mr-4"
+                      onClick={() => {
+                        setModalState("view"); // Set state to "view" for non-editable mode
+                        setSelectedTeam(team); // Select the team to display
+                        openModal(); // Open the modal with the CreateTeam component
+                      }}
+                    >
+                      View
+                    </button> */}
+                    {/* <button
+                      className="text-blue-400 hover:text-blue-300 underline mr-4"
+                      onClick={() => {
+                        const isConfirmed = window.confirm(
+                          "Are you sure you want to delete this team?"
+                        );
+                        if (isConfirmed) {
+                          deleteTeam(team.id);
+                        }
+                      }}
+                    >
+                      Delete
+                    </button> */}
                   </td>
                 </tr>
               ))
@@ -205,7 +229,7 @@ function Page({ name, teams }: Props) {
               <tr>
                 <td
                   colSpan="5"
-                  className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300"
+                  className="px-5 py-5 border-b border-gray-500 text-base text-gray-300"
                 >
                   No teams found.
                 </td>
