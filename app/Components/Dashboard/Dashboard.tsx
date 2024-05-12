@@ -204,7 +204,7 @@ function Dashboard({ name, events }: Props) {
                 End Date
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
-                Team
+                Event Details
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                 Status
@@ -232,7 +232,7 @@ function Dashboard({ name, events }: Props) {
                     {new Date(event.endDate).toLocaleDateString("en-US")}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
-                    {event.teamName}
+                    {event.eventDetails}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-sm text-gray-300">
                     {event.isExternal ? "External" : "Internal"}
