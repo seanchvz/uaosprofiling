@@ -178,50 +178,114 @@ function Page({ name, studentprofile }: Props) {
         </div>
       </div>
 
-      <div className="inventoryitem grid mt-5">
-        {filteredStudentProfile.length && filteredStudentYear.length > 0 ? (
-          filteredStudentProfile.map &&
-          filteredStudentYear.map((studentProfile) => (
-            <StudentProfileContent
-              handleEdit={() => {
-                setModalState("edit");
-                openModal();
-                setSelectedStudent(studentProfile);
-              }}
-              key={studentProfile.id}
-              firstName={studentProfile.firstName}
-              middleName={studentProfile.middleName}
-              lastName={studentProfile.lastName}
-              contactNumber={studentProfile.contactNumber}
-              birthDate={studentProfile.birthDate}
-              nationality={studentProfile.nationality}
-              weight={studentProfile.weight}
-              height={studentProfile.height}
-              sport={studentProfile.sport}
-              bloodType={studentProfile.bloodType}
-              academicYear={studentProfile.academicYear}
-              isMale={studentProfile.isMale}
-              isFemale={studentProfile.isFemale}
-              yrStartedPlaying={studentProfile.yrStartedPlaying}
-              mothersName={studentProfile.mothersName}
-              fathersName={studentProfile.fathersName}
-              guardiansName={studentProfile.guardiansName}
-              courseAndYear={studentProfile.courseAndYear}
-              emergencyContactPerson={studentProfile.emergencyContactPerson}
-              emergencyContactNumber={studentProfile.emergencyContactNumber}
-              email={studentProfile.email}
-              homeAddress={studentProfile.homeAddress}
-              statusIsActive={studentProfile.statusIsActive}
-              statusIsInactive={studentProfile.statusIsInactive}
-              userId={studentProfile.userId}
-              remarks={studentProfile.remarks}
-              QPI={studentProfile.QPI}
-              id={studentProfile.id}
-            />
-          ))
-        ) : (
-          <p>No student profiles available.</p>
-        )}
+      <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
+        <table
+          className="min-w-full leading-normal border-2 border-gray-500"
+          style={{ backgroundColor: "#363636" }}
+        >
+          <thead>
+            <tr>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                #
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Contact Number
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Email Address
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Year Started Playing
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Second Sport
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                QPI
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredStudentProfile.length > 0 ? (
+              filteredStudentProfile.map((studentProfile, index) => (
+                <tr key={studentProfile.id}>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {index + 1}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {`${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {studentProfile.contactNumber}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {studentProfile.email}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {studentProfile.yrStartedPlaying}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {studentProfile.sport.name || studentProfile.sport}{" "}
+                    {/* Adjusted to handle object */}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    <span
+                      className={`inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 ${
+                        studentProfile.QPI < 2
+                          ? "border-red-500 text-white"
+                          : "border-green-500 text-white"
+                      } border-2`}
+                    >
+                      {studentProfile.QPI}
+                    </span>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    <span
+                      className={`inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 ${
+                        studentProfile.statusIsActive
+                          ? "border-green-500 text-white"
+                          : "border-red-500 text-white"
+                      } border-2`}
+                    >
+                      {studentProfile.statusIsInactive ? "Inactive" : "Active"}
+                    </span>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base">
+                    <button
+                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                      onClick={() => {
+                        setModalState("edit");
+                        setSelectedStudent(studentProfile);
+                        openModal();
+                      }}
+                    >
+                      View
+                    </button>
+                    {/* Other buttons */}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="px-5 py-5 border-b border-gray-500 text-base text-gray-300"
+                >
+                  No student profiles found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </StudentStyled>
     // </div>

@@ -1,5 +1,6 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
+import TeamContent from "@/app/TeamContent/TeamContent";
 import { edit, trash } from "@/app/utils/Icons";
 import React from "react";
 import styled from "styled-components";
@@ -100,6 +101,7 @@ function StudentProfileContent({
     month: "long",
     day: "numeric",
   };
+
   const qpiNumber = parseFloat(QPI);
 
   return (

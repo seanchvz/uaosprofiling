@@ -918,6 +918,14 @@ function CreateProfile(props: Props) {
     });
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // ...
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <CreatestudentStyled onSubmit={handleSubmit}>
       <div className="mb-8">
@@ -1063,14 +1071,14 @@ function CreateProfile(props: Props) {
           />
         </div>
         <div className="input-control">
-          <label htmlFor="contactNumber">Land Line Number </label>
+          <label htmlFor="contactNumber">Landline Number </label>
           <input
             type="text"
             id="  landLineNumber"
             value={landLineNumber}
             name="landLineNumber"
             onChange={handleChange}
-            placeholder="e.g. 00-000-0000"
+            placeholder="e.g. 2561563"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
