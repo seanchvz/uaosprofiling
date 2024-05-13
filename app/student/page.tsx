@@ -7,6 +7,8 @@ import StudentProfileContent from "../StudentContent/StudentContent";
 import CreateProfile from "../Components/Modals/CreateProfile";
 import StudentModal from "../Components/Modals/StudentModal";
 import ViewStudentModal from "../Components/Modals/ViewStudentProfile";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface Props {
   name: string;
@@ -21,6 +23,15 @@ function Page({ name, studentprofile }: Props) {
   const [searchYear, setSearchYear] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
   const [viewModalOpen, setViewModalOpen] = useState(false);
+
+  const [teamNameFilter, setTeamNameFilter] = useState("");
+  const [teamYearFilter, setTeamYearFilter] = useState("");
+  const [studentProfiles, setStudentProfiles] = useState([]);
+
+  const [teamOptions, setTeamOptions] = useState([]);
+  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [teamDetails, setTeamDetails] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
 
   const handleOpenCreateModal = () => {
     setModalState("create");
@@ -44,17 +55,72 @@ function Page({ name, studentprofile }: Props) {
     setSearchTerm(studentProfile.target.value);
   };
 
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("/api/teams");
+        const formattedTeams = response.data.map((team) => ({
+          value: team.id,
+          label: `${team.teamName} - ${new Date(team.year).getFullYear()} - ${
+            team.sport ? team.sport.name : "No Sport"
+          }`,
+          sport: team.sport ? team.sport.name : "No Sport",
+          year: team.year
+            ? new Date(team.year).getFullYear().toString()
+            : "Unknown Year",
+          events: team.events.map((e) => ({
+            id: e.id,
+            name: e.name,
+          })),
+        }));
+        setTeamOptions(formattedTeams);
+        setTeamDetails(formattedTeams);
+      } catch (error) {
+        console.error("Failed to load teams:", error);
+        toast.error("Failed to load teams");
+      }
+    };
+
+    fetchTeams();
+  }, []); // Removing dependencies to ensure this runs only once when the component mounts
+
+  // const filteredStudentProfile = studentprofile.filter((studentProfile) => {
+  //   const existingFullName =
+  //     `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
+  //   const matchesName = existingFullName.includes(searchTerm.toLowerCase());
+  //   const matchesSport =
+  //     selectedSport === "all" ||
+  //     studentProfile.sport.toLowerCase() === selectedSport.toLowerCase();
+  //   console.log(
+  //     `Event: ${studentProfile.sport}, Sport: ${studentProfile.sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
+  //   ); // Debugging line
+  //   return matchesName && matchesSport;
+  // });
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("/api/studentProfiling"); // Adjust API endpoint as needed
+      console.log("Sample student profile data:", response.data[0]); // Log the first profile
+      setStudentProfiles(response.data); // Set state with fetched data
+    }
+
+    fetchData();
+  }, []);
   const filteredStudentProfile = studentprofile.filter((studentProfile) => {
+    console.log("Checking student profile:", studentProfile);
+
     const existingFullName =
       `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
     const matchesName = existingFullName.includes(searchTerm.toLowerCase());
     const matchesSport =
       selectedSport === "all" ||
       studentProfile.sport.toLowerCase() === selectedSport.toLowerCase();
-    console.log(
-      `Event: ${studentProfile.sport}, Sport: ${studentProfile.sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
-    ); // Debugging line
-    return matchesName && matchesSport;
+    const matchesTeam =
+      selectedTeam === null ||
+      (studentProfile.teams &&
+        studentProfile.teams.some((team) => team.id === selectedTeam));
+
+    return matchesName && matchesSport && matchesTeam;
   });
 
   useEffect(() => {
@@ -77,58 +143,6 @@ function Page({ name, studentprofile }: Props) {
           {name}
         </h1>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <select
-            value={selectedSport}
-            onChange={(e) => setSelectedSport(e.target.value)}
-            style={{
-              height: "3rem",
-              marginRight: "1rem",
-              borderRadius: "10px",
-              padding: "0.5rem 1rem",
-              color: "#eee",
-              backgroundColor: "#323232",
-              border: "1px solid #555",
-              outline: "none",
-            }}
-          >
-            <option value="all">All Sports</option>
-            <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women 3x3">
-                Basketball Women (3X3)
-              </option>
-              <option value="basketball women 5x5">
-                Basketball Women (5X5)
-              </option>
-            </optgroup>
-            <optgroup label="Football">
-              <option value="football men">Football Men</option>
-              <option value="football women">Football Women</option>
-            </optgroup>
-            <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
-            </optgroup>
-            <optgroup label="Badminton">
-              <option value="badminton women">Badminton Women</option>
-              <option value="badminton men">Badminton Men</option>
-            </optgroup>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
-            <option value="table tennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming Mixed</option>
-            <option value="strength and conditioning">
-              Strength and Conditioning
-            </option>
-            <option value="special projects">Special Projects Mixed</option>
-
-            {/* Add more sports as needed */}
-          </select>
           <input
             type="text"
             placeholder="Search Profiles..."
@@ -150,27 +164,31 @@ function Page({ name, studentprofile }: Props) {
               textAlign: "left", // align text to the left
             }}
           />
-          <input
-            type="text"
-            placeholder="Year"
-            value={searchYear}
-            onChange={handleSearchInput}
+          <select
+            value={selectedTeam || ""}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSelectedTeam(value === "" ? null : Number(value));
+            }}
             style={{
               height: "3rem",
-              width: "5rem",
               marginRight: "1rem",
-              border: "1px solid #555",
               borderRadius: "10px",
               padding: "0.5rem 1rem",
               color: "#eee",
               backgroundColor: "#323232",
-              fontSize: "1rem",
-              fontFamily: "Arial, sans-serif",
+              border: "1px solid #555",
               outline: "none",
-              boxShadow: "none", // remove shadow
-              textAlign: "left", // align text to the left
             }}
-          />
+          >
+            <option value="">Select a Team</option>
+            {teamDetails.map((team) => (
+              <option key={team.value} value={team.value}>
+                {team.label}
+              </option>
+            ))}
+          </select>
+
           <button className="create-item" onClick={handleOpenCreateModal}>
             {plus}
             Add New Student

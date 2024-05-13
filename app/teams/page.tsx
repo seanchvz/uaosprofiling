@@ -209,7 +209,7 @@ function Page({ name, teams }: Props) {
                     >
                       View
                     </button> */}
-                    {/* <button
+                    <button
                       className="text-blue-400 hover:text-blue-300 underline mr-4"
                       onClick={() => {
                         const isConfirmed = window.confirm(
@@ -221,7 +221,7 @@ function Page({ name, teams }: Props) {
                       }}
                     >
                       Delete
-                    </button> */}
+                    </button>
                   </td>
                 </tr>
               ))
