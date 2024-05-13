@@ -7,6 +7,8 @@ import CreateCoachProfile from "../Components/Modals/CreateCoachProfile";
 import CoachModal from "../Components/Modals/CoachModal";
 import CoachContent from "../CoachContent/CoachContent";
 import ViewCoachModal from "../Components/Modals/ViewCoachModal";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface Props {
   name: string;
@@ -21,12 +23,25 @@ interface Props {
  * @returns {JSX.Element} The rendered page component.
  */
 function Page({ name, coachprofile }: Props) {
-  const { theme, isLoading, fetchAllCoachProfile, openModal, modal } =
-    useGlobalState();
+  const {
+    theme,
+    isLoading,
+    fetchAllCoachProfile,
+    openModal,
+    modal,
+    deleteCoachProfile,
+  } = useGlobalState();
   const [modalState, setModalState] = useState("create");
   const [selectedCoachProfile, setSelectedCoachProfile] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+
+  const [coachProfiles, setCoachProfiles] = useState([]);
+
+  const [teamOptions, setTeamOptions] = useState([]);
+  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [teamDetails, setTeamDetails] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
 
   // Open modal specifically for creating a new event
   const handleOpenCreateModal = () => {
@@ -39,6 +54,45 @@ function Page({ name, coachprofile }: Props) {
     setSearchTerm(coachProfile.target.value);
   };
 
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("/api/teams");
+        const formattedTeams = response.data.map((team) => ({
+          value: team.id,
+          label: `${team.teamName} - ${new Date(team.year).getFullYear()} - ${
+            team.sport ? team.sport.name : "No Sport"
+          }`,
+          sport: team.sport ? team.sport.name : "No Sport",
+          year: team.year
+            ? new Date(team.year).getFullYear().toString()
+            : "Unknown Year",
+          events: team.events.map((e) => ({
+            id: e.id,
+            name: e.name,
+          })),
+        }));
+        setTeamOptions(formattedTeams);
+        setTeamDetails(formattedTeams);
+      } catch (error) {
+        console.error("Failed to load teams:", error);
+        toast.error("Failed to load teams");
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("/api/coachProfiling"); // Adjust API endpoint as needed
+      console.log("Sample coach profile data:", response.data[0]); // Log the first profile
+      setCoachProfiles(response.data); // Set state with fetched data
+    }
+
+    fetchData();
+  }, []);
+
   const filteredCoachProfile = coachprofile.filter((coachProfile) => {
     const existingFullName =
       `${coachProfile.firstName} ${coachProfile.middleName} ${coachProfile.lastName}`.toLowerCase();
@@ -49,7 +103,12 @@ function Page({ name, coachprofile }: Props) {
     console.log(
       `Event: ${coachProfile.sport}, Sport: ${coachProfile.sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
     ); // Debugging line
-    return matchesName && matchesSport;
+    const matchesTeam =
+      selectedTeam === null ||
+      (coachProfile.teams &&
+        coachProfile.teams.some((team) => team.id === selectedTeam));
+
+    return matchesName && matchesSport && matchesTeam;
   });
 
   useEffect(() => {
@@ -72,58 +131,6 @@ function Page({ name, coachprofile }: Props) {
           {name}
         </h1>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <select
-            value={selectedSport}
-            onChange={(e) => setSelectedSport(e.target.value)}
-            style={{
-              height: "3rem",
-              marginRight: "1rem",
-              borderRadius: "10px",
-              padding: "0.5rem 1rem",
-              color: "#eee",
-              backgroundColor: "#323232",
-              border: "1px solid #555",
-              outline: "none",
-            }}
-          >
-            <option value="all">All Sports</option>
-            <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women 3x3">
-                Basketball Women (3X3)
-              </option>
-              <option value="basketball women 5x5">
-                Basketball Women (5X5)
-              </option>
-            </optgroup>
-            <optgroup label="Football">
-              <option value="football men">Football Men</option>
-              <option value="football women">Football Women</option>
-            </optgroup>
-            <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
-            </optgroup>
-            <optgroup label="Badminton">
-              <option value="badminton women">Badminton Women</option>
-              <option value="badminton men">Badminton Men</option>
-            </optgroup>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
-            <option value="table tennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming Mixed</option>
-            <option value="strength and conditioning">
-              Strength and Conditioning
-            </option>
-            <option value="special projects">Special Projects Mixed</option>
-
-            {/* Add more sports as needed */}
-          </select>
           <input
             type="text"
             placeholder="Search Profiles..."
@@ -146,50 +153,144 @@ function Page({ name, coachprofile }: Props) {
             }}
           />
 
+          <select
+            value={selectedTeam || ""}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSelectedTeam(value === "" ? null : Number(value));
+            }}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="">Select a Team</option>
+            {teamDetails.map((team) => (
+              <option key={team.value} value={team.value}>
+                {team.label}
+              </option>
+            ))}
+          </select>
+
           <button className="create-item" onClick={handleOpenCreateModal}>
             {plus}
             Add New Coach
           </button>
         </div>
       </div>
-      <div className="inventoryitem grid mt-5">
-        {filteredCoachProfile.length > 0 ? ( // For Filtered Events
-          filteredCoachProfile.map((coachProfile) => (
-            <CoachContent
-              key={coachProfile.id}
-              firstName={coachProfile.firstName}
-              middleName={coachProfile.middleName}
-              lastName={coachProfile.lastName}
-              landLineNumber={coachProfile.landLineNumber}
-              contactNumber={coachProfile.contactNumber}
-              // sport={coachProfile.sport}
-              // permanentTeam={coachProfile.permanentTeam}
-              isMale={coachProfile.isMale}
-              isFemale={coachProfile.isFemale}
-              emergencyContact={coachProfile.emergencyContact}
-              emergencyContactPerson={coachProfile.emergencyContactPerson}
-              birthDate={coachProfile.birthDate}
-              nationality={coachProfile.nationality}
-              weight={coachProfile.weight}
-              height={coachProfile.height}
-              bloodType={coachProfile.bloodType}
-              academicYear={coachProfile.academicYear}
-              statusIsFulltime={coachProfile.statusIsFulltime}
-              statusIsParttime={coachProfile.statusIsParttime}
-              resumeUrl={coachProfile.resumeUrl}
-              email={coachProfile.email}
-              id={coachProfile.id}
-              remarks={coachProfile.remarks}
-              handleEdit={() => {
-                setModalState("edit");
-                setSelectedCoachProfile(coachProfile); // Pass the selected coach to be edited
-                openModal();
-              }}
-            />
-          ))
-        ) : (
-          <p>No coach profiles found.</p>
-        )}
+      <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
+        <table
+          className="min-w-full leading-normal border-2 border-gray-500"
+          style={{ backgroundColor: "#363636" }}
+        >
+          <thead>
+            <tr>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                #
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Contact Number
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Email Address
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Academic Year
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Remarks
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Role
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredCoachProfile.length > 0 ? (
+              filteredCoachProfile.map((coachProfile, index) => (
+                <tr key={coachProfile.id}>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {index + 1}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">{`${coachProfile.firstName} ${coachProfile.middleName} ${coachProfile.lastName}`}</td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {coachProfile.contactNumber}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {coachProfile.email}
+                  </td>
+
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {coachProfile.academicYear}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {coachProfile.remarks}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    <span
+                      className={`inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 ${
+                        coachProfile.statusIsFulltime
+                          ? "border-green-500 text-white"
+                          : "border-yellow-500 text-white"
+                      } border-2`}
+                    >
+                      {coachProfile.statusIsParttime
+                        ? "Part Time"
+                        : "Full Time"}
+                    </span>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base">
+                    <button
+                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                      onClick={() => {
+                        setModalState("edit");
+                        setSelectedCoachProfile(coachProfile);
+                        openModal();
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this coach profile?"
+                          )
+                        ) {
+                          deleteCoachProfile(coachProfile.id);
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="px-5 py-5 border-b border-gray-500 text-base text-gray-300"
+                >
+                  No coach profiles found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </CoachStyled>
     // </div>

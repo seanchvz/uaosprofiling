@@ -84,19 +84,6 @@ function Page({ name, studentprofile }: Props) {
     fetchTeams();
   }, []); // Removing dependencies to ensure this runs only once when the component mounts
 
-  // const filteredStudentProfile = studentprofile.filter((studentProfile) => {
-  //   const existingFullName =
-  //     `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
-  //   const matchesName = existingFullName.includes(searchTerm.toLowerCase());
-  //   const matchesSport =
-  //     selectedSport === "all" ||
-  //     studentProfile.sport.toLowerCase() === selectedSport.toLowerCase();
-  //   console.log(
-  //     `Event: ${studentProfile.sport}, Sport: ${studentProfile.sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
-  //   ); // Debugging line
-  //   return matchesName && matchesSport;
-  // });
-
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get("/api/studentProfiling"); // Adjust API endpoint as needed
