@@ -238,9 +238,9 @@ function Dashboard({ name, events }: Props) {
                     <span
                       className={`inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 ${
                         event.isExternal
-                          ? "bg-red-500 text-white"
-                          : "bg-green-500 text-white"
-                      }`}
+                          ? "border-red-500 text-white"
+                          : "border-green-500 text-white"
+                      } border-2`}
                     >
                       {event.isExternal ? "External" : "Internal"}
                     </span>

@@ -93,7 +93,7 @@ function CreateCoachProfile(props: Props) {
         const response = await axios.get("/api/teams");
         const formattedTeams = response.data.map((team) => ({
           value: team.id,
-          label: `${team.teamName} - ${
+          label: `${team.teamName} - ${new Date(team.year).getFullYear()} - ${
             team.sport ? team.sport.name : "No Sport"
           }`,
           sport: team.sport ? team.sport.name : "No Sport",
@@ -1117,7 +1117,7 @@ const CreateCoachProfileStyled = styled.form`
         width: 100%; 
         height: 100%;
         padding: 20px; 
-        
+
         h1 {
           font-size: clamp(1.2rem, 5vw, 1.6rem);
           font-weight: bold;

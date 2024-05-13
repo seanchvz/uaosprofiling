@@ -68,7 +68,7 @@ function CreateContent(props: Props) {
         const response = await axios.get("/api/teams");
         const formattedTeams = response.data.map((team) => ({
           value: team.id,
-          label: `${team.teamName} - ${
+          label: `${team.teamName} - ${new Date(team.year).getFullYear()} - ${
             team.sport ? team.sport.name : "No Sport"
           }`,
           sport: team.sport ? team.sport.name : "No Sport",

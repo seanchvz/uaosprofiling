@@ -115,7 +115,7 @@ function CreateProfile(props: Props) {
         const response = await axios.get("/api/teams");
         const formattedTeams = response.data.map((team) => ({
           value: team.id,
-          label: `${team.teamName} - ${
+          label: `${team.teamName} - ${new Date(team.year).getFullYear()} - ${
             team.sport ? team.sport.name : "No Sport"
           }`,
           sport: team.sport ? team.sport.name : "No Sport",
@@ -298,6 +298,36 @@ function CreateProfile(props: Props) {
     } catch (error) {
       console.error("Failed to remove sport:", error);
       toast.error("Failed to remove sport.");
+    }
+  };
+
+  const updateSportName = async () => {
+    const sportToUpdate = sportId;
+    if (!sportToUpdate) {
+      toast.error("No sport selected to update.");
+      return;
+    }
+    const newName = prompt(
+      `Enter the new name for the sport:`,
+      sportsOptions.find((option) => option.value === sportToUpdate)?.label
+    );
+    if (!newName) return; // User cancelled or didn't input a name
+
+    try {
+      await axios.patch(`/api/sport/${sportToUpdate}`, { name: newName });
+      // Update the local state to reflect the change
+      setSportsOptions((prev) =>
+        prev.map((option) => {
+          if (option.value === sportToUpdate) {
+            return { ...option, label: newName };
+          }
+          return option;
+        })
+      );
+      toast.success("Sport name updated successfully!");
+    } catch (error) {
+      console.error("Failed to update sport:", error);
+      toast.error("Failed to update sport name.");
     }
   };
 
@@ -971,7 +1001,7 @@ function CreateProfile(props: Props) {
         <div className="input-control">
           {displayTeamDetails()}
           <label htmlFor="sport" className="block">
-            Second Sport (Optional)
+            Second Sport (Select "No Sport" if not applicable)
           </label>
           <Select
             id="sport"
@@ -986,8 +1016,9 @@ function CreateProfile(props: Props) {
                 addNewSport();
               } else if (option.value === "remove_sport") {
                 removeSport();
+              } else if (option.value === "update_sport") {
+                updateSportName();
               } else {
-                // Ensuring value is handled as a number for regular sport options
                 const newSportId = parseInt(option.value, 10);
                 if (!isNaN(newSportId)) {
                   setSportId(newSportId);
@@ -995,13 +1026,24 @@ function CreateProfile(props: Props) {
               }
             }}
             options={[
-              ...sportsOptions,
               { value: "add_new", label: "+ Add New Sport" },
-              { value: "remove_sport", label: "- Remove Sport" },
+              { value: "remove_sport", label: "- Remove Selected Sport" },
+              { value: "update_sport", label: "* Update Selected Sport" },
+              ...sportsOptions.sort((a, b) => a.label.localeCompare(b.label)),
             ]}
             required
-            className="border border-black rounded-md p-1 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+            className="border-2 border-blue-500 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-blue-300 w-full text-gray-900 shadow-lg"
             classNamePrefix="my-custom-select"
+            styles={{
+              option: (provided, state) => ({
+                ...provided,
+                color: state.isSelected ? "white" : "black",
+                backgroundColor: state.isSelected ? "blue" : "white",
+                "&:hover": {
+                  backgroundColor: "lightgray",
+                },
+              }),
+            }}
           />
         </div>
 

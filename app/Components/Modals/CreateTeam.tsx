@@ -180,6 +180,36 @@ function CreateTeam(props: Props) {
     }
   };
 
+  const updateSportName = async () => {
+    const sportToUpdate = sportId;
+    if (!sportToUpdate) {
+      toast.error("No sport selected to update.");
+      return;
+    }
+    const newName = prompt(
+      `Enter the new name for the sport:`,
+      sportsOptions.find((option) => option.value === sportToUpdate)?.label
+    );
+    if (!newName) return; // User cancelled or didn't input a name
+
+    try {
+      await axios.patch(`/api/sport/${sportToUpdate}`, { name: newName });
+      // Update the local state to reflect the change
+      setSportsOptions((prev) =>
+        prev.map((option) => {
+          if (option.value === sportToUpdate) {
+            return { ...option, label: newName };
+          }
+          return option;
+        })
+      );
+      toast.success("Sport name updated successfully!");
+    } catch (error) {
+      console.error("Failed to update sport:", error);
+      toast.error("Failed to update sport name.");
+    }
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -416,8 +446,9 @@ function CreateTeam(props: Props) {
               addNewSport();
             } else if (option.value === "remove_sport") {
               removeSport();
+            } else if (option.value === "update_sport") {
+              updateSportName();
             } else {
-              // Ensuring value is handled as a number for regular sport options
               const newSportId = parseInt(option.value, 10);
               if (!isNaN(newSportId)) {
                 setSportId(newSportId);
@@ -425,13 +456,24 @@ function CreateTeam(props: Props) {
             }
           }}
           options={[
-            ...sportsOptions,
             { value: "add_new", label: "+ Add New Sport" },
-            { value: "remove_sport", label: "- Remove Sport" },
+            { value: "remove_sport", label: "- Remove Selected Sport" },
+            { value: "update_sport", label: "* Update Selected Sport" },
+            ...sportsOptions.sort((a, b) => a.label.localeCompare(b.label)),
           ]}
           required
-          className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+          className="border-2 border-blue-500 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-blue-300 w-full text-gray-900 shadow-lg"
           classNamePrefix="my-custom-select"
+          styles={{
+            option: (provided, state) => ({
+              ...provided,
+              color: state.isSelected ? "white" : "black",
+              backgroundColor: state.isSelected ? "blue" : "white",
+              "&:hover": {
+                backgroundColor: "lightgray",
+              },
+            }),
+          }}
         />
       </div>
 
