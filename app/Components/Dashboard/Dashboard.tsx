@@ -21,6 +21,11 @@ function Dashboard({ name, events }: Props) {
   const [selectedEvent, setSelectedEvent] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+  const [Events, setEvents] = useState([]);
+  const [teamOptions, setTeamOptions] = useState([]);
+  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [teamDetails, setTeamDetails] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
 
   const [teams, setTeams] = useState([]);
 
@@ -28,9 +33,24 @@ function Dashboard({ name, events }: Props) {
     const fetchTeams = async () => {
       try {
         const response = await axios.get("/api/teams");
-        setTeams(response.data); // assuming the API returns an array of teams
+        const formattedTeams = response.data.map((team) => ({
+          value: team.id,
+          label: `${team.teamName} - ${new Date(team.year).getFullYear()} - ${
+            team.sport ? team.sport.name : "No Sport"
+          }`,
+          sport: team.sport ? team.sport.name : "No Sport",
+          year: team.year
+            ? new Date(team.year).getFullYear().toString()
+            : "Unknown Year",
+          events: team.events.map((e) => ({
+            id: e.id,
+            name: e.name,
+          })),
+        }));
+        setTeamOptions(formattedTeams);
+        setTeamDetails(formattedTeams);
       } catch (error) {
-        console.error("Failed to fetch teams:", error);
+        console.error("Failed to load teams:", error);
         toast.error("Failed to load teams");
       }
     };
@@ -58,32 +78,43 @@ function Dashboard({ name, events }: Props) {
     setSearchTerm(event.target.value);
   };
 
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("/api/events"); // Adjust API endpoint as needed
+      console.log("Sample student profile data:", response.data[0]); // Log the first profile
+      setEvents(response.data); // Set state with fetched data
+    }
+
+    fetchData();
+  }, []);
+
   const filteredEvents = events.filter((event) => {
+    // Convert event name to lowercase and check if it includes the search term
     const matchesName = event.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
+
+    // Check if the selected sport matches the event's sport
+    // Ensure event.sport exists and is a string before calling toLowerCase to prevent errors
     const matchesSport =
       selectedSport === "all" ||
-      event.Sport.toLowerCase() === selectedSport.toLowerCase();
+      (event.sport &&
+        event.sport.toLowerCase() === selectedSport.toLowerCase());
+
+    // Check if the selected team is associated with the event
+    // Assuming event.teamIds is an array of integers representing team IDs
+    const matchesTeam =
+      selectedTeam === null ||
+      (event.teams && event.teams.some((team) => team.id === selectedTeam));
+
+    // Log detailed debugging information to understand the filter process better
     console.log(
-      `Event: ${event.name}, Sport: ${event.Sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
+      `Event: ${event.name}, Sport: ${event.sport}, Team IDs: ${event.teamIds}, matchesName: ${matchesName}, matchesSport: ${matchesSport}, matchesTeam: ${matchesTeam}`
     ); // Debugging line
-    return matchesName && matchesSport;
+
+    // Return true if name, sport, and team conditions match
+    return matchesName && matchesSport && matchesTeam;
   });
-
-  useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await fetch("/api/teams"); // Adjust the API endpoint as necessary
-        const data = await response.json();
-        setTeams(data);
-      } catch (error) {
-        console.error("Failed to fetch teams:", error);
-      }
-    };
-
-    fetchTeams();
-  }, []);
 
   return (
     <DashboardStyled theme={theme}>
@@ -104,58 +135,6 @@ function Dashboard({ name, events }: Props) {
           {name}
         </h1>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <select
-            value={selectedSport}
-            onChange={(e) => setSelectedSport(e.target.value)}
-            style={{
-              height: "3rem",
-              marginRight: "1rem",
-              borderRadius: "10px",
-              padding: "0.5rem 1rem",
-              color: "#eee",
-              backgroundColor: "#323232",
-              border: "1px solid #555",
-              outline: "none",
-            }}
-          >
-            <option value="all">All Sports</option>
-            <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women 3x3">
-                Basketball Women (3X3)
-              </option>
-              <option value="basketball women 5x5">
-                Basketball Women (5X5)
-              </option>
-            </optgroup>
-            <optgroup label="Football">
-              <option value="football men">Football Men</option>
-              <option value="football women">Football Women</option>
-            </optgroup>
-            <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
-            </optgroup>
-            <optgroup label="Badminton">
-              <option value="badminton women">Badminton Women</option>
-              <option value="badminton men">Badminton Men</option>
-            </optgroup>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
-            <option value="table tennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming Mixed</option>
-            <option value="strength and conditioning">
-              Strength and Conditioning
-            </option>
-            <option value="special projects">Special Projects Mixed</option>
-
-            {/* Add more sports as needed */}
-          </select>
           <input
             type="text"
             placeholder="Search Events..."
@@ -177,6 +156,32 @@ function Dashboard({ name, events }: Props) {
               textAlign: "left", // align text to the left
             }}
           />
+
+          <select
+            value={selectedTeam || ""}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSelectedTeam(value === "" ? null : Number(value));
+            }}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="">Select a Team</option>
+            {teamDetails.map((team) => (
+              <option key={team.value} value={team.value}>
+                {team.label}
+              </option>
+            ))}
+          </select>
+
           <button className="create-item" onClick={handleOpenCreateModal}>
             {plus}
             Add New Event
@@ -215,8 +220,8 @@ function Dashboard({ name, events }: Props) {
             </tr>
           </thead>
           <tbody>
-            {enhancedEvents.length > 0 ? (
-              enhancedEvents.map((event, index) => (
+            {filteredEvents.length > 0 ? (
+              filteredEvents.map((event, index) => (
                 <tr key={event.id}>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {index + 1}
