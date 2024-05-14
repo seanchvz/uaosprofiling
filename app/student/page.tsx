@@ -9,6 +9,7 @@ import StudentModal from "../Components/Modals/StudentModal";
 import ViewStudentModal from "../Components/Modals/ViewStudentProfile";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { FaEye, FaTrash } from "react-icons/fa";
 
 interface Props {
   name: string;
@@ -28,6 +29,7 @@ function Page({ name, studentprofile }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchYear, setSearchYear] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
   const [teamNameFilter, setTeamNameFilter] = useState("");
@@ -45,18 +47,6 @@ function Page({ name, studentprofile }: Props) {
     openModal();
   };
 
-  // Handles the search input field
-  // This function updates the searchTerm state whenever the user types into the search input field.
-  const handleSearchInput = (studentprofile) => {
-    setSearchTerm(studentprofile.target.value);
-  };
-
-  const filteredStudentYear = studentprofile.filter((studentprofile) => {
-    const existingYear = `${studentprofile.yrStartedPlaying}`.toLowerCase();
-    const matchesYear = existingYear.includes(searchYear.toLowerCase());
-    console.log(`Year: ${studentprofile.yrStartedPlaying}`);
-    return matchesYear;
-  });
   const handleSearchChange = (studentProfile) => {
     setSearchTerm(studentProfile.target.value);
   };
@@ -88,7 +78,7 @@ function Page({ name, studentprofile }: Props) {
     };
 
     fetchTeams();
-  }, []); // Removing dependencies to ensure this runs only once when the component mounts
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -99,21 +89,35 @@ function Page({ name, studentprofile }: Props) {
 
     fetchData();
   }, []);
-  const filteredStudentProfile = studentprofile.filter((studentProfile) => {
-    console.log("Checking student profile:", studentProfile);
 
+  const getSportName = (teamId) => {
+    const team = teamDetails.find((team) => team.value === teamId);
+    return team && team.sport ? team.sport : "Unknown Sport";
+  };
+
+  const filteredStudentProfile = studentprofile.filter((studentProfile) => {
     const existingFullName =
       `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
     const matchesName = existingFullName.includes(searchTerm.toLowerCase());
     const matchesSport =
       selectedSport === "all" ||
-      studentProfile.sport.toLowerCase() === selectedSport.toLowerCase();
+      studentProfile.teams.some((team) => {
+        const teamInfo = teamDetails.find((t) => t.value === team.id);
+        return (
+          teamInfo &&
+          teamInfo.sport.toLowerCase() === selectedSport.toLowerCase()
+        );
+      });
     const matchesTeam =
       selectedTeam === null ||
       (studentProfile.teams &&
         studentProfile.teams.some((team) => team.id === selectedTeam));
+    const matchesStatus =
+      selectedStatus === "all" ||
+      (selectedStatus === "active" && studentProfile.statusIsActive) ||
+      (selectedStatus === "inactive" && studentProfile.statusIsInactive);
 
-    return matchesName && matchesSport && matchesTeam;
+    return matchesName && matchesSport && matchesTeam && matchesStatus;
   });
 
   useEffect(() => {
@@ -157,6 +161,56 @@ function Page({ name, studentprofile }: Props) {
               textAlign: "left", // align text to the left
             }}
           />
+
+          <select
+            value={selectedSport}
+            onChange={(e) => setSelectedSport(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Sports</option>
+            {Array.from(
+              new Set(
+                studentprofile.map(
+                  (student) => student.sport && student.sport.name
+                )
+              )
+            )
+              .filter((sport) => sport)
+              .map((sport, index) => (
+                <option key={index} value={sport}>
+                  {sport}
+                </option>
+              ))}
+          </select>
+
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+
           <select
             value={selectedTeam || ""}
             onChange={(e) => {
@@ -212,7 +266,7 @@ function Page({ name, studentprofile }: Props) {
                 Year Started Playing
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Second Sport
+                Sports
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 QPI
@@ -245,8 +299,9 @@ function Page({ name, studentprofile }: Props) {
                     {studentProfile.yrStartedPlaying}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {studentProfile.sport.name || studentProfile.sport}{" "}
-                    {/* Adjusted to handle object */}
+                    {studentProfile.teams
+                      .map((team) => getSportName(team.id))
+                      .join(", ")}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     <span
@@ -270,39 +325,39 @@ function Page({ name, studentprofile }: Props) {
                       {studentProfile.statusIsInactive ? "Inactive" : "Active"}
                     </span>
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-base">
+
+                  <td className="px-2 py-2 border-b border-gray-500 text-sm">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-4"
+                      className="p-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedStudent(studentProfile);
                         openModal();
                       }}
                     >
-                      View
+                      <FaEye />
                     </button>
-
                     <button
-                      className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                      className="p-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
                       onClick={() => {
-                        const isConfirmed = window.confirm(
-                          "Are you sure you want to delete this profile?"
-                        );
-                        if (isConfirmed) {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this coach profile?"
+                          )
+                        ) {
                           deleteStudentProfile(studentProfile.id);
                         }
                       }}
                     >
-                      Delete
+                      <FaTrash /> {/* Trash icon for "Delete" */}
                     </button>
-                    {/* Other buttons */}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td
-                  colSpan="5"
+                  colSpan="9"
                   className="px-5 py-5 border-b border-gray-500 text-base text-gray-300"
                 >
                   No student profiles found.
@@ -313,7 +368,6 @@ function Page({ name, studentprofile }: Props) {
         </table>
       </div>
     </StudentStyled>
-    // </div>
   );
 }
 

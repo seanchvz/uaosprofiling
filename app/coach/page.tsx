@@ -7,6 +7,7 @@ import CreateCoachProfile from "../Components/Modals/CreateCoachProfile";
 import CoachModal from "../Components/Modals/CoachModal";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { FaEye, FaTrash } from "react-icons/fa";
 
 interface Props {
   name: string;
@@ -29,6 +30,7 @@ function Page({ name, coachprofile, teams }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
   const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
+  const [selectedRole, setSelectedRole] = useState("all");
 
   useEffect(() => {
     fetchAllCoachProfile();
@@ -57,15 +59,26 @@ function Page({ name, coachprofile, teams }: Props) {
     const matchesName = existingFullName.includes(searchTerm.toLowerCase());
     const matchesSport =
       selectedSport === "all" ||
-      coachProfile.sport.toLowerCase() === selectedSport.toLowerCase();
+      coachProfile.teams.some((team) => {
+        const teamInfo = teams.find((t) => t.id === team.id);
+        return (
+          teamInfo &&
+          teamInfo.sport &&
+          teamInfo.sport.name.toLowerCase() === selectedSport.toLowerCase()
+        );
+      });
     const matchesTeam =
       selectedTeam === null ||
       (coachProfile.teams &&
         coachProfile.teams.some(
           (team: { id: number }) => team.id === selectedTeam
         ));
+    const matchesRole =
+      selectedRole === "all" ||
+      (selectedRole === "full-time" && coachProfile.statusIsFulltime) ||
+      (selectedRole === "part-time" && coachProfile.statusIsParttime);
 
-    return matchesName && matchesSport && matchesTeam;
+    return matchesName && matchesSport && matchesTeam && matchesRole;
   });
 
   return (
@@ -105,6 +118,51 @@ function Page({ name, coachprofile, teams }: Props) {
               textAlign: "left", // align text to the left
             }}
           />
+
+          <select
+            value={selectedSport}
+            onChange={(e) => setSelectedSport(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Sports</option>
+            {Array.from(
+              new Set(teams.map((team) => team.sport && team.sport.name))
+            )
+              .filter((sport) => sport)
+              .map((sport, index) => (
+                <option key={index} value={sport}>
+                  {sport}
+                </option>
+              ))}
+          </select>
+
+          <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Roles</option>
+            <option value="full-time">Full Time</option>
+            <option value="part-time">Part Time</option>
+          </select>
 
           <select
             value={selectedTeam || ""}
@@ -229,17 +287,17 @@ function Page({ name, coachprofile, teams }: Props) {
 
                   <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-4"
+                      className="p-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedCoachProfile(coachProfile);
                         openModal();
                       }}
                     >
-                      Edit
+                      <FaEye /> {/* Eye icon for "View" */}
                     </button>
                     <button
-                      className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                      className="p-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
                       onClick={() => {
                         if (
                           window.confirm(
@@ -250,7 +308,7 @@ function Page({ name, coachprofile, teams }: Props) {
                         }
                       }}
                     >
-                      Delete
+                      <FaTrash /> {/* Trash icon for "Delete" */}
                     </button>
                   </td>
                 </tr>
@@ -307,7 +365,7 @@ const CoachStyled = styled.main`
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    width: 20rem;
+    width: 19.8rem;
     height: 3rem;
     color: ${(props) => props.theme.colorGrey2};
     font-weight: 600;
