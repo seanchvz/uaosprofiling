@@ -147,7 +147,7 @@ function Page({ name, coachprofile, teams }: Props) {
               outline: "none",
             }}
           >
-            <option value="all">All Sports</option>
+            <option value="all">All Team Sports</option>
             {Array.from(
               new Set(teams.map((team) => team.sport && team.sport.name))
             )

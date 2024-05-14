@@ -393,7 +393,7 @@ function CreateTeam(props: Props) {
         {submitState === "create" && (
           <>
             <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-              Tag an Event to Student
+              Add joined events to team
             </h2>
           </>
         )}

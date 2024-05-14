@@ -8,7 +8,7 @@ export default function CoachScreen() {
 
   return (
     <Page
-      name="Coach Profiles"
+      name="All Coach Profiles"
       coachprofile={coachprofile}
       teams={teams}
       sports={sports}

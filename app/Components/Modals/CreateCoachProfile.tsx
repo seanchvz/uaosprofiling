@@ -651,7 +651,7 @@ function CreateCoachProfile(props: Props) {
             value={firstName}
             name="firstName"
             onChange={handleChange}
-            placeholder="e.g. Juan Dela Cruz"
+            placeholder="e.g. Juan"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -663,7 +663,7 @@ function CreateCoachProfile(props: Props) {
             value={middleName}
             name="middleName"
             onChange={handleChange}
-            placeholder="e.g. Buen"
+            placeholder="e.g. Dela"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -678,7 +678,7 @@ function CreateCoachProfile(props: Props) {
             value={lastName}
             name="lastName"
             onChange={handleChange}
-            placeholder="e.g. Dela Cruz"
+            placeholder="e.g. Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -903,7 +903,7 @@ function CreateCoachProfile(props: Props) {
       </div>
       <div className="input-control">
         <label htmlFor="academicYear">
-          Academic Year{" "}
+          Years Employed{" "}
           {!academicYear && <span className="required-asterisk">*</span>}
         </label>
         <input

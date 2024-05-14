@@ -183,7 +183,7 @@ function Page({ name, studentprofile }: Props) {
               outline: "none",
             }}
           >
-            <option value="all">All Years</option>
+            <option value="all">All Years Started Playing</option>
             {Array.from(
               new Set(studentprofile.map((profile) => profile.yrStartedPlaying))
             )
@@ -209,7 +209,7 @@ function Page({ name, studentprofile }: Props) {
               outline: "none",
             }}
           >
-            <option value="all">All Sports</option>
+            <option value="all">All Team Sports</option>
             {Array.from(
               new Set(teams.map((team) => team.sport && team.sport.name))
             )
@@ -295,7 +295,7 @@ function Page({ name, studentprofile }: Props) {
                 Year Started Playing
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Sports
+                Team Sports
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 QPI
