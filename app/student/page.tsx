@@ -368,7 +368,7 @@ function Page({ name, studentprofile }: Props) {
 
                   <td className="px-2 py-2 border-b border-gray-500 text-sm">
                     <button
-                      className="p-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
+                      className="px-4 py-3 bg-gray-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         setModalState("edit"); // Set the modal state to "view"
                         setSelectedStudent(studentProfile);
@@ -379,11 +379,11 @@ function Page({ name, studentprofile }: Props) {
                       <FaEye />
                     </button>
                     <button
-                      className="p-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                      className="px-4 py-3 bg-red-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         if (
                           window.confirm(
-                            "Are you sure you want to delete this coach profile?"
+                            "Are you sure you want to delete this student-athlete profile?"
                           )
                         ) {
                           deleteStudentProfile(studentProfile.id);

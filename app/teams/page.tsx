@@ -53,6 +53,10 @@ function Page({ name, teams }: Props) {
     setSelectedYear(team.target.value);
   };
 
+  const handleSportChange = (team) => {
+    setSelectedSport(team.target.value);
+  };
+
   const uniqueYears = Array.from(
     new Set(teams.map((team) => new Date(team.year).getFullYear()))
   );
@@ -68,7 +72,9 @@ function Page({ name, teams }: Props) {
       .includes(searchTerm.toLowerCase());
     const matchesSport =
       selectedSport === "all" ||
-      team.sport.toLowerCase() === selectedSport.toLowerCase();
+      (team.sport &&
+        getSportName(team.sportId).toLowerCase() ===
+          selectedSport.toLowerCase());
 
     const matchesYear =
       selectedYear === "all" ||
@@ -131,6 +137,31 @@ function Page({ name, teams }: Props) {
                 textAlign: "left", // align text to the left
               }}
             />
+
+            <select
+              value={selectedSport}
+              onChange={handleSportChange}
+              style={{
+                height: "3rem",
+                marginRight: "1rem",
+                border: "1px solid #555",
+                borderRadius: "10px",
+                padding: "0.5rem 1rem",
+                color: "#eee",
+                backgroundColor: "#323232",
+                fontSize: "1rem",
+                fontFamily: "Arial, sans-serif",
+                outline: "none",
+                boxShadow: "none",
+              }}
+            >
+              <option value="all">All Sports</option>
+              {sports.map((sport) => (
+                <option key={sport.id} value={sport.name}>
+                  {sport.name}
+                </option>
+              ))}
+            </select>
 
             <select
               value={selectedYear}
@@ -209,7 +240,7 @@ function Page({ name, teams }: Props) {
 
                   <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="p-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
+                      className="px-4 py-3 bg-gray-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedTeam(team);
@@ -219,7 +250,7 @@ function Page({ name, teams }: Props) {
                       <FaEye />
                     </button>
                     <button
-                      className="p-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                      className="px-4 py-3 bg-red-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         const isConfirmed = window.confirm(
                           "Are you sure you want to delete this team?"

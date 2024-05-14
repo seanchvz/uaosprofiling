@@ -301,7 +301,7 @@ function Page({ name, coachprofile, teams }: Props) {
 
                   <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="p-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
+                      className="px-4 py-3 bg-gray-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedCoachProfile(coachProfile);
@@ -311,7 +311,7 @@ function Page({ name, coachprofile, teams }: Props) {
                       <FaEye /> {/* Eye icon for "View" */}
                     </button>
                     <button
-                      className="p-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                      className="px-4 py-3 bg-red-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         if (
                           window.confirm(

@@ -2,13 +2,12 @@
 import { useGlobalState } from "@/app/context/globalProvider";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import EventItem from "../EventItem/EventItem";
 import { plus } from "@/app/utils/Icons";
 import CreateContent from "../Modals/CreateContent";
 import EventModal from "../Modals/EventModal";
-import { Table } from "react-bootstrap";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { FaEye, FaTrash } from "react-icons/fa";
 
 interface Props {
   name: string;
@@ -16,11 +15,12 @@ interface Props {
 }
 
 function Dashboard({ name, events }: Props) {
-  const { theme, isLoading, openModal, modal, allEvents } = useGlobalState();
+  const { theme, openModal, modal, allEvents, deleteEvent } = useGlobalState();
   const [modalState, setModalState] = useState("create");
   const [selectedEvent, setSelectedEvent] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+  const [selectedYear, setSelectedYear] = useState("all");
   const [Events, setEvents] = useState([]);
   const [teamOptions, setTeamOptions] = useState([]);
   const [selectedTeams, setSelectedTeams] = useState([]);
@@ -50,6 +50,7 @@ function Dashboard({ name, events }: Props) {
             name: e.name,
           })),
         }));
+        setTeams(response.data);
         setTeamOptions(formattedTeams);
         setTeamDetails(formattedTeams);
       } catch (error) {
@@ -61,58 +62,73 @@ function Dashboard({ name, events }: Props) {
     fetchTeams();
   }, []);
 
-  const enhancedEvents = events.map((event) => {
-    const team = teams.find((t) => t.id === event.teamId); // Assuming each event has a teamId
-    return { ...event, teamName: team ? team.name : "No team assigned" };
-  });
-
   useEffect(() => {
     allEvents();
   }, []);
 
-  // Open modal specifically for creating a new event
-  const handleOpenCreateModal = () => {
-    setModalState("create");
-    setSelectedEvent(undefined); // Ensure no event data is passed into the creation form
-    openModal();
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/api/events"); // Adjust API endpoint as needed
-      console.log("Sample student profile data:", response.data[0]); // Log the first profile
-      setEvents(response.data); // Set state with fetched data
+      const response = await axios.get("/api/events");
+      console.log("Sample event data:", response.data);
+      setEvents(response.data);
     }
 
     fetchData();
   }, []);
 
-  const filteredEvents = events.filter((event) => {
-    // Convert event name to lowercase and check if it includes the search term
-    const matchesName = event.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+  // Log data for debugging
+  useEffect(() => {
+    console.log("Teams:", teams);
+    console.log("Events:", events);
+  }, [teams, events]);
 
-    // Check if the selected sport matches the event's sport
-    // Ensure event.sport exists and is a string before calling toLowerCase to prevent errors
-    const matchesSport =
-      selectedSport === "all" ||
-      (event.sport &&
-        event.sport.toLowerCase() === selectedSport.toLowerCase());
+  const getSportName = (teamId) => {
+    const team = teamDetails.find((team) => team.value === teamId);
+    return team && team.sport ? team.sport : "Unknown Sport";
+  };
 
-    // Check if the selected team is associated with the event
-    // Assuming event.teamIds is an array of integers representing team IDs
-    const matchesTeam =
-      selectedTeam === null ||
-      (event.teams && event.teams.some((team) => team.id === selectedTeam));
+  const getTeamYear = (teamId) => {
+    const team = teamDetails.find((team) => team.value === teamId);
+    return team && team.year ? team.year : "Unknown Year";
+  };
 
-    // Return true if name, sport, and team conditions match
-    return matchesName && matchesSport && matchesTeam;
-  });
+  // Filter and sort events based on team.year
+  const filteredEvents = events
+    .map((event) => {
+      const team = teams.find((t) => t.id === event.teamId);
+      return {
+        ...event,
+        teamYear: team ? new Date(team.year).getFullYear() : null,
+      };
+    })
+    .filter((event) => {
+      const matchesName = event.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesSport =
+        selectedSport === "all" ||
+        event.teams.some((team) => {
+          const teamInfo = teams.find((t) => t.id === team.id);
+          return (
+            teamInfo &&
+            teamInfo.sport &&
+            teamInfo.sport.name.toLowerCase() === selectedSport.toLowerCase()
+          );
+        });
+      const matchesTeam =
+        selectedTeam === null ||
+        event.teams.some((team) => team.id === selectedTeam);
+      const matchesYear =
+        selectedYear === "all" ||
+        event.teams.some((team) => {
+          const teamInfo = teams.find((t) => t.id === team.id);
+          return (
+            teamInfo &&
+            new Date(teamInfo.year).getFullYear().toString() === selectedYear
+          );
+        });
+      return matchesName && matchesSport && matchesTeam && matchesYear;
+    });
 
   // Pagination logic
   const indexOfLastEvent = currentPage * itemsPerPage;
@@ -123,6 +139,16 @@ function Dashboard({ name, events }: Props) {
   );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleOpenCreateModal = () => {
+    setModalState("create");
+    setSelectedEvent(undefined);
+    openModal();
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   return (
     <DashboardStyled theme={theme}>
@@ -160,10 +186,66 @@ function Dashboard({ name, events }: Props) {
               fontSize: "1rem",
               fontFamily: "Arial, sans-serif",
               outline: "none",
-              boxShadow: "none", // remove shadow
-              textAlign: "left", // align text to the left
+              boxShadow: "none",
+              textAlign: "left",
             }}
           />
+
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Years</option>
+            {Array.from(
+              new Set(
+                teams.map((team) =>
+                  new Date(team.year).getFullYear().toString()
+                )
+              )
+            )
+              .sort((a, b) => b - a)
+              .map((year, index) => (
+                <option key={index} value={year}>
+                  {year}
+                </option>
+              ))}
+          </select>
+
+          <select
+            value={selectedSport}
+            onChange={(e) => setSelectedSport(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Sports</option>
+            {Array.from(
+              new Set(teams.map((team) => team.sport && team.sport.name))
+            )
+              .filter((sport) => sport)
+              .map((sport, index) => (
+                <option key={index} value={sport}>
+                  {sport}
+                </option>
+              ))}
+          </select>
 
           <select
             value={selectedTeam || ""}
@@ -199,7 +281,7 @@ function Dashboard({ name, events }: Props) {
 
       <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
         <table
-          className="min-w-full leading-normal border-2 border-gray-500" // added border-2 for border weight
+          className="min-w-full leading-normal border-2 border-gray-500"
           style={{ backgroundColor: "#363636" }}
         >
           <thead>
@@ -261,14 +343,27 @@ function Dashboard({ name, events }: Props) {
 
                   <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                      className="px-4 py-3 bg-gray-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedEvent(event);
                         openModal();
                       }}
                     >
-                      View
+                      <FaEye />
+                    </button>
+                    <button
+                      className="px-4 py-3 bg-red-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 mr-2"
+                      onClick={() => {
+                        const isConfirmed = window.confirm(
+                          "Are you sure you want to delete this event?"
+                        );
+                        if (isConfirmed) {
+                          deleteEvent(event.id);
+                        }
+                      }}
+                    >
+                      <FaTrash />
                     </button>
                   </td>
                 </tr>
