@@ -18,10 +18,20 @@ function Page({ name, teams }: Props) {
   const [selectedTeam, setSelectedTeam] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+  const [selectedYear, setSelectedYear] = useState("all");
+  const [sports, setSports] = useState([]);
 
   useEffect(() => {
+    fetchSports();
     fetchTeams();
   }, []);
+
+  const fetchSports = async () => {
+    // Fetch sports from your backend
+    const response = await fetch("/api/sport");
+    const data = await response.json();
+    setSports(data);
+  };
 
   const handleOpenCreateModal = () => {
     setModalState("create");
@@ -33,6 +43,19 @@ function Page({ name, teams }: Props) {
     setSearchTerm(team.target.value);
   };
 
+  const handleYearChange = (team) => {
+    setSelectedYear(team.target.value);
+  };
+
+  const uniqueYears = Array.from(
+    new Set(teams.map((team) => new Date(team.year).getFullYear()))
+  );
+
+  const getSportName = (sportId) => {
+    const sport = sports.find((sport) => sport.id === sportId);
+    return sport ? sport.name : "Unknown Sport";
+  };
+
   const filteredTeams = teams.filter((team) => {
     const matchesName = team.teamName
       .toLowerCase()
@@ -41,10 +64,14 @@ function Page({ name, teams }: Props) {
       selectedSport === "all" ||
       team.sport.toLowerCase() === selectedSport.toLowerCase();
 
+    const matchesYear =
+      selectedYear === "all" ||
+      new Date(team.year).getFullYear() === parseInt(selectedYear);
+
     console.log(
       `Team: ${team.teamName}, Sport: ${team.sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
     );
-    return matchesName && matchesSport;
+    return matchesName && matchesSport && matchesYear;
   });
 
   return (
@@ -67,57 +94,6 @@ function Page({ name, teams }: Props) {
 
         <div className="header">
           <div style={{ display: "flex", alignItems: "center" }}>
-            <select
-              value={selectedSport}
-              onChange={(e) => setSelectedSport(e.target.value)}
-              style={{
-                height: "3rem",
-                marginRight: "1rem",
-                borderRadius: "10px",
-                padding: "0.5rem 1rem",
-                color: "#eee",
-                backgroundColor: "#323232",
-                border: "1px solid #555",
-                outline: "none",
-              }}
-            >
-              <option value="all">All Sports</option>
-              <optgroup label="Basketball">
-                <option value="basketball men">Basketball Men</option>
-                <option value="basketball women 3x3">
-                  Basketball Women (3X3)
-                </option>
-                <option value="basketball women 5x5">
-                  Basketball Women (5X5)
-                </option>
-              </optgroup>
-              <optgroup label="Football">
-                <option value="football men">Football Men</option>
-                <option value="football women">Football Women</option>
-              </optgroup>
-              <optgroup label="Volleyball">
-                <option value="volleyball men">Volleyball Men</option>
-                <option value="volleyball women">Volleyball Women</option>
-              </optgroup>
-              <optgroup label="Badminton">
-                <option value="badminton women">Badminton Women</option>
-                <option value="badminton men">Badminton Men</option>
-              </optgroup>
-              <optgroup label="ESport">
-                <option value="valorant">Valorant</option>
-                <option value="dota">DoTA</option>
-                <option value="mobile legends">Mobile Legends</option>
-              </optgroup>
-              <option value="table tennis">Table Tennis</option>
-              <option value="taekwondo">Taekwondo</option>
-              <option value="chess">Chess</option>
-              <option value="swimming">Swimming Mixed</option>
-              <option value="strength and conditioning">
-                Strength and Conditioning
-              </option>
-              <option value="special projects">Special Projects Mixed</option>
-              {/* Add options as needed */}
-            </select>
             <input
               type="text"
               placeholder="Search Teams..."
@@ -139,6 +115,31 @@ function Page({ name, teams }: Props) {
                 textAlign: "left", // align text to the left
               }}
             />
+
+            <select
+              value={selectedYear}
+              onChange={handleYearChange}
+              style={{
+                height: "3rem",
+                marginRight: "1rem",
+                border: "1px solid #555",
+                borderRadius: "10px",
+                padding: "0.5rem 1rem",
+                color: "#eee",
+                backgroundColor: "#323232",
+                fontSize: "1rem",
+                fontFamily: "Arial, sans-serif",
+                outline: "none",
+                boxShadow: "none",
+              }}
+            >
+              <option value="all">All Years</option>
+              {uniqueYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
             <button className="create-item" onClick={handleOpenCreateModal}>
               {plus}
               Add New Team
@@ -158,11 +159,12 @@ function Page({ name, teams }: Props) {
                 #
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Name
+                Year
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Year Active
+                Name
               </th>
+
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Sport
               </th>
@@ -179,18 +181,19 @@ function Page({ name, teams }: Props) {
                     {index + 1}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {team.teamName}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {new Date(team.year).getFullYear()}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {team.sportId}
+                    {team.teamName}
+                  </td>
+
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {getSportName(team.sportId)}
                   </td>
 
                   <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-4"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedTeam(team);
@@ -210,7 +213,7 @@ function Page({ name, teams }: Props) {
                       View
                     </button> */}
                     <button
-                      className="text-blue-400 hover:text-blue-300 underline mr-4"
+                      className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
                       onClick={() => {
                         const isConfirmed = window.confirm(
                           "Are you sure you want to delete this team?"

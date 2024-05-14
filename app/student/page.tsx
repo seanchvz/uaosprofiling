@@ -15,8 +15,14 @@ interface Props {
   studentprofile: any[];
 }
 function Page({ name, studentprofile }: Props) {
-  const { theme, isLoading, openModal, modal, fetchAllStudentProfile } =
-    useGlobalState();
+  const {
+    theme,
+    isLoading,
+    openModal,
+    modal,
+    fetchAllStudentProfile,
+    deleteStudentProfile,
+  } = useGlobalState();
   const [modalState, setModalState] = useState("create");
   const [selectedStudent, setSelectedStudent] = useState();
   const [searchTerm, setSearchTerm] = useState("");
@@ -266,7 +272,7 @@ function Page({ name, studentprofile }: Props) {
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-4"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedStudent(studentProfile);
@@ -274,6 +280,20 @@ function Page({ name, studentprofile }: Props) {
                       }}
                     >
                       View
+                    </button>
+
+                    <button
+                      className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                      onClick={() => {
+                        const isConfirmed = window.confirm(
+                          "Are you sure you want to delete this profile?"
+                        );
+                        if (isConfirmed) {
+                          deleteStudentProfile(studentProfile.id);
+                        }
+                      }}
+                    >
+                      Delete
                     </button>
                     {/* Other buttons */}
                   </td>

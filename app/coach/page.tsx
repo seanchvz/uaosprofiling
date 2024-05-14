@@ -5,24 +5,17 @@ import { plus } from "../utils/Icons";
 import { useGlobalState } from "../context/globalProvider";
 import CreateCoachProfile from "../Components/Modals/CreateCoachProfile";
 import CoachModal from "../Components/Modals/CoachModal";
-import CoachContent from "../CoachContent/CoachContent";
-import ViewCoachModal from "../Components/Modals/ViewCoachModal";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 interface Props {
   name: string;
   coachprofile: any[];
+  teams: any[];
+  sports: any[];
 }
-/**
- * Renders the page component for displaying coach profiles.
- *
- * @param {Props} props - The component props.
- * @param {string} props.name - The name of the page.
- * @param {CoachProfile[]} props.coachprofile - The array of coach profiles.
- * @returns {JSX.Element} The rendered page component.
- */
-function Page({ name, coachprofile }: Props) {
+
+function Page({ name, coachprofile, teams }: Props) {
   const {
     theme,
     isLoading,
@@ -35,63 +28,28 @@ function Page({ name, coachprofile }: Props) {
   const [selectedCoachProfile, setSelectedCoachProfile] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
-
-  const [coachProfiles, setCoachProfiles] = useState([]);
-
-  const [teamOptions, setTeamOptions] = useState([]);
-  const [selectedTeams, setSelectedTeams] = useState([]);
-  const [teamDetails, setTeamDetails] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
 
-  // Open modal specifically for creating a new event
+  useEffect(() => {
+    fetchAllCoachProfile();
+  }, []);
+
   const handleOpenCreateModal = () => {
     setModalState("create");
-    setSelectedCoachProfile(undefined); // Ensure no event data is passed into the creation form
+    setSelectedCoachProfile(undefined);
     openModal();
   };
 
-  const handleSearchChange = (coachProfile) => {
+  const handleSearchChange = (coachProfile: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setSearchTerm(coachProfile.target.value);
   };
 
-  useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await axios.get("/api/teams");
-        const formattedTeams = response.data.map((team) => ({
-          value: team.id,
-          label: `${team.teamName} - ${new Date(team.year).getFullYear()} - ${
-            team.sport ? team.sport.name : "No Sport"
-          }`,
-          sport: team.sport ? team.sport.name : "No Sport",
-          year: team.year
-            ? new Date(team.year).getFullYear().toString()
-            : "Unknown Year",
-          events: team.events.map((e) => ({
-            id: e.id,
-            name: e.name,
-          })),
-        }));
-        setTeamOptions(formattedTeams);
-        setTeamDetails(formattedTeams);
-      } catch (error) {
-        console.error("Failed to load teams:", error);
-        toast.error("Failed to load teams");
-      }
-    };
-
-    fetchTeams();
-  }, []);
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get("/api/coachProfiling"); // Adjust API endpoint as needed
-      console.log("Sample coach profile data:", response.data[0]); // Log the first profile
-      setCoachProfiles(response.data); // Set state with fetched data
-    }
-
-    fetchData();
-  }, []);
+  const getSportName = (teamId) => {
+    const team = teams.find((team) => team.id === teamId);
+    return team && team.sport ? team.sport.name : "Unknown Sport";
+  };
 
   const filteredCoachProfile = coachprofile.filter((coachProfile) => {
     const existingFullName =
@@ -100,21 +58,16 @@ function Page({ name, coachprofile }: Props) {
     const matchesSport =
       selectedSport === "all" ||
       coachProfile.sport.toLowerCase() === selectedSport.toLowerCase();
-    console.log(
-      `Event: ${coachProfile.sport}, Sport: ${coachProfile.sport}, matchesName: ${matchesName}, matchesSport: ${matchesSport}`
-    ); // Debugging line
     const matchesTeam =
       selectedTeam === null ||
       (coachProfile.teams &&
-        coachProfile.teams.some((team) => team.id === selectedTeam));
+        coachProfile.teams.some(
+          (team: { id: number }) => team.id === selectedTeam
+        ));
 
     return matchesName && matchesSport && matchesTeam;
   });
 
-  useEffect(() => {
-    console.log("Fetch all coach profile");
-    fetchAllCoachProfile();
-  }, []);
   return (
     <CoachStyled theme={theme}>
       {modal && (
@@ -171,9 +124,11 @@ function Page({ name, coachprofile }: Props) {
             }}
           >
             <option value="">Select a Team</option>
-            {teamDetails.map((team) => (
-              <option key={team.value} value={team.value}>
-                {team.label}
+            {teams.map((team) => (
+              <option key={team.id} value={team.id}>
+                {`${team.teamName} - ${new Date(team.year).getFullYear()} - ${
+                  team.sport ? team.sport.name : "No Sport"
+                }`}
               </option>
             ))}
           </select>
@@ -213,6 +168,9 @@ function Page({ name, coachprofile }: Props) {
                 Role
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Team Sport
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -238,6 +196,7 @@ function Page({ name, coachprofile }: Props) {
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {coachProfile.remarks}
                   </td>
+
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     <span
                       className={`inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 ${
@@ -251,9 +210,26 @@ function Page({ name, coachprofile }: Props) {
                         : "Full Time"}
                     </span>
                   </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {coachProfile.teams && coachProfile.teams.length > 0
+                      ? Array.from(
+                          new Set(
+                            coachProfile.teams.map((team: { id: any }) => {
+                              const teamInfo = teams.find(
+                                (t) => String(t.id) === String(team.id)
+                              );
+                              return teamInfo && teamInfo.sport
+                                ? teamInfo.sport.name
+                                : "No Sport Assigned";
+                            })
+                          )
+                        ).join(", ")
+                      : "Not Part of Any Teams"}
+                  </td>
+
                   <td className="px-5 py-5 border-b border-gray-500 text-base">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                      className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-4"
                       onClick={() => {
                         setModalState("edit");
                         setSelectedCoachProfile(coachProfile);
@@ -282,7 +258,7 @@ function Page({ name, coachprofile }: Props) {
             ) : (
               <tr>
                 <td
-                  colSpan="8"
+                  colSpan="9"
                   className="px-5 py-5 border-b border-gray-500 text-base text-gray-300"
                 >
                   No coach profiles found.
@@ -293,7 +269,6 @@ function Page({ name, coachprofile }: Props) {
         </table>
       </div>
     </CoachStyled>
-    // </div>
   );
 }
 
@@ -354,12 +329,3 @@ const CoachStyled = styled.main`
 `;
 
 export default Page;
-
-// export default function PageWithProvider() {
-//   return (
-//     <InventoryGlobalProvider>
-
-//       <Page />
-//     </InventoryGlobalProvider>
-//   );
-// }
