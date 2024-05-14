@@ -44,7 +44,7 @@ const ModalStyled = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-width: 1500px;
+    max-width: 600px;
     width: 35%;
     max-height: 90vh;
     padding: 2rem;

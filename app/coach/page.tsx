@@ -31,6 +31,11 @@ function Page({ name, coachprofile, teams }: Props) {
   const [selectedSport, setSelectedSport] = useState("all");
   const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
   const [selectedRole, setSelectedRole] = useState("all");
+  const [isViewOnly, setIsViewOnly] = useState(false);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Change this value to set the number of items per page
 
   useEffect(() => {
     fetchAllCoachProfile();
@@ -81,6 +86,16 @@ function Page({ name, coachprofile, teams }: Props) {
     return matchesName && matchesSport && matchesTeam && matchesRole;
   });
 
+  // Pagination logic
+  const indexOfLastProfile = currentPage * itemsPerPage;
+  const indexOfFirstProfile = indexOfLastProfile - itemsPerPage;
+  const currentProfiles = filteredCoachProfile.slice(
+    indexOfFirstProfile,
+    indexOfLastProfile
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <CoachStyled theme={theme}>
       {modal && (
@@ -91,11 +106,10 @@ function Page({ name, coachprofile, teams }: Props) {
           />
         </CoachModal>
       )}
-
+      <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
+        {name}
+      </h1>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
-          {name}
-        </h1>
         <div style={{ display: "flex", alignItems: "center" }}>
           <input
             type="text"
@@ -217,7 +231,7 @@ function Page({ name, coachprofile, teams }: Props) {
                 Email Address
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Academic Year
+                Years Employed
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Remarks
@@ -326,9 +340,41 @@ function Page({ name, coachprofile, teams }: Props) {
           </tbody>
         </table>
       </div>
+      <Pagination>
+        {Array.from(
+          { length: Math.ceil(filteredCoachProfile.length / itemsPerPage) },
+          (_, index) => (
+            <button key={index} onClick={() => paginate(index + 1)}>
+              {index + 1}
+            </button>
+          )
+        )}
+      </Pagination>
     </CoachStyled>
   );
 }
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+
+  button {
+    background-color: ${(props) => props.theme.colorBg2};
+    color: ${(props) => props.theme.colorGrey2};
+    border: 1px solid ${(props) => props.theme.borderColor2};
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${(props) => props.theme.colorPrimary};
+      color: ${(props) => props.theme.colorWhite};
+    }
+  }
+`;
 
 const CoachStyled = styled.main`
   padding: 2rem;

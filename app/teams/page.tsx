@@ -21,6 +21,11 @@ function Page({ name, teams }: Props) {
   const [selectedSport, setSelectedSport] = useState("all");
   const [selectedYear, setSelectedYear] = useState("all");
   const [sports, setSports] = useState([]);
+  const [isViewOnly, setIsViewOnly] = useState(false);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Change this value to set the number of items per page
 
   useEffect(() => {
     fetchSports();
@@ -74,6 +79,16 @@ function Page({ name, teams }: Props) {
     );
     return matchesName && matchesSport && matchesYear;
   });
+
+  // Pagination logic
+  const indexOfLastProfile = currentPage * itemsPerPage;
+  const indexOfFirstProfile = indexOfLastProfile - itemsPerPage;
+  const currentProfiles = filteredTeams.slice(
+    indexOfFirstProfile,
+    indexOfLastProfile
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <TeamStyled theme={theme}>
@@ -232,9 +247,41 @@ function Page({ name, teams }: Props) {
           </tbody>
         </table>
       </div>
+      <Pagination>
+        {Array.from(
+          { length: Math.ceil(filteredTeams.length / itemsPerPage) },
+          (_, index) => (
+            <button key={index} onClick={() => paginate(index + 1)}>
+              {index + 1}
+            </button>
+          )
+        )}
+      </Pagination>
     </TeamStyled>
   );
 }
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+
+  button {
+    background-color: ${(props) => props.theme.colorBg2};
+    color: ${(props) => props.theme.colorGrey2};
+    border: 1px solid ${(props) => props.theme.borderColor2};
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${(props) => props.theme.colorPrimary};
+      color: ${(props) => props.theme.colorWhite};
+    }
+  }
+`;
 
 const TeamStyled = styled.main`
   padding: 2rem;

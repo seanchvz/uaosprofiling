@@ -10,12 +10,13 @@ import Select from "react-select";
 
 interface Props {
   studentProfile?: any;
-  submitState: "create" | "edit";
+  submitState: "create" | "edit" | "view";
 }
 
 // Create profile function component
 function CreateProfile(props: Props) {
   const { studentProfile, submitState } = props;
+  const [isViewOnly, setIsViewOnly] = useState(false);
   const [firstName, setfirstName] = useState(
     studentProfile ? studentProfile.firstName : ""
   );
@@ -930,7 +931,9 @@ function CreateProfile(props: Props) {
     <CreatestudentStyled onSubmit={handleSubmit}>
       <div className="mb-8">
         <h1>
-          {submitState === "edit"
+          {submitState === "edit" && !isViewOnly
+            ? "Update Student Profile"
+            : submitState === "view"
             ? "View Student Profile"
             : "Create Student Profile"}
         </h1>
@@ -950,6 +953,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Juan"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="input-control">
@@ -962,6 +966,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Dela"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="input-control">
@@ -977,6 +982,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         {submitState === "edit" && (
@@ -989,17 +995,20 @@ function CreateProfile(props: Props) {
             <h2 style={{ fontSize: "1.2em" }}>Add a Team to Student</h2>
           </>
         )}
-        <Select
-          options={teamDetails}
-          isMulti
-          getOptionLabel={(option) => `${option.label} `}
-          value={teamDetails.filter((option) =>
-            selectedTeams.includes(option.value)
-          )}
-          onChange={handleTeamChange}
-          className="border border-black rounded-md focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
-          classNamePrefix="my-custom-select"
-        />
+        <div className="input-control">
+          <Select
+            options={teamDetails}
+            isMulti
+            getOptionLabel={(option) => `${option.label} `}
+            value={teamDetails.filter((option) =>
+              selectedTeams.includes(option.value)
+            )}
+            onChange={handleTeamChange}
+            className="border border-black rounded-md focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
+            classNamePrefix="my-custom-select"
+            isDisabled={isViewOnly}
+          />
+        </div>
         {/* Displaying the selected teams with their details */}
 
         {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
@@ -1052,6 +1061,7 @@ function CreateProfile(props: Props) {
                 },
               }),
             }}
+            isDisabled={isViewOnly} // Disable input when in view-only mode
           />
         </div>
 
@@ -1068,6 +1078,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. 09121231234"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="input-control">
@@ -1080,6 +1091,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. 2561563"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="input-control">
@@ -1095,6 +1107,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="Enter Birth Date"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1111,6 +1124,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Filipino"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="flex">
@@ -1127,6 +1141,7 @@ function CreateProfile(props: Props) {
               onChange={handleChange}
               placeholder="eg. 45.7"
               className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+              disabled={isViewOnly}
             />
           </div>
           <div className="input-control">
@@ -1142,6 +1157,7 @@ function CreateProfile(props: Props) {
               onChange={handleChange}
               placeholder="eg. 156.3"
               className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+              disabled={isViewOnly}
             />
           </div>
         </div>
@@ -1159,6 +1175,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. O+"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1175,6 +1192,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. 2021-2022"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1191,6 +1209,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. 2021"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <span className="text-white">Sex</span>
@@ -1215,6 +1234,7 @@ function CreateProfile(props: Props) {
                 onChange={handleChange}
                 name="isMale"
                 className="hidden"
+                disabled={isViewOnly}
               />
               <span
                 className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
@@ -1250,6 +1270,7 @@ function CreateProfile(props: Props) {
                 onChange={handleChange}
                 name="isFemale"
                 className="hidden"
+                disabled={isViewOnly}
               />
               <span
                 className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
@@ -1278,6 +1299,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Juanita Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1294,6 +1316,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Jose Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="input-control">
@@ -1306,6 +1329,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Bella Delos Santos"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="input-control">
@@ -1321,6 +1345,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. IT3A"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1339,6 +1364,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. 09876543212"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1357,6 +1383,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Juanita Dela Cruz"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1373,6 +1400,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="juan@gmail.com"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
         <div className="input-control">
@@ -1388,6 +1416,7 @@ function CreateProfile(props: Props) {
             onChange={handleChange}
             placeholder="e.g. Davao City"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
         </div>
 
@@ -1413,6 +1442,7 @@ function CreateProfile(props: Props) {
                 onChange={handleChange}
                 name="statusIsActive"
                 className="hidden"
+                disabled={isViewOnly}
               />
               <span
                 className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
@@ -1448,6 +1478,7 @@ function CreateProfile(props: Props) {
                 onChange={handleChange}
                 name="statusIsInactive"
                 className="hidden"
+                disabled={isViewOnly}
               />
               <span
                 className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
@@ -1475,7 +1506,17 @@ function CreateProfile(props: Props) {
             onChange={handleGradeChange}
             placeholder="e.g. 2"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
+            disabled={isViewOnly}
           />
+          <div>
+            {hasDeficiency && (
+              <div
+                style={{ color: "red", marginTop: "10px", fontWeight: "bold" }}
+              >
+                Warning: This student is not eligible to play due to a low QPI.
+              </div>
+            )}
+          </div>
         </div>
         <label htmlFor="remarks"> Remarks </label>
         <textarea
@@ -1486,23 +1527,28 @@ function CreateProfile(props: Props) {
           placeholder="e.g. Has history of heart problems"
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           rows={4}
+          disabled={isViewOnly}
         ></textarea>
-      </div>
-      <div>
-        {hasDeficiency && (
-          <div style={{ color: "red", marginTop: "10px", fontWeight: "bold" }}>
-            Warning: This student is not eligible to play due to a low QPI.
-          </div>
-        )}
       </div>
 
       <div className="submit-btn mt-4 flex justify-center">
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
-        >
-          {submitState === "edit" ? "Update Profile" : "Create Profile"}
-        </button>
+        {submitState !== "view" && !isViewOnly && (
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
+          >
+            {submitState === "edit" ? "Update Profile" : "Create Profile"}
+          </button>
+        )}
+        {submitState === "edit" && (
+          <button
+            type="button"
+            onClick={() => setIsViewOnly(!isViewOnly)} // Toggle view-only mode
+            className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out ml-4"
+          >
+            {isViewOnly ? "Edit" : "View Only"}
+          </button>
+        )}
       </div>
     </CreatestudentStyled>
   );
@@ -1544,45 +1590,42 @@ const Label = styled.span`
   font-weight: normal;
   color: #bbb;
 `;
-
 const CreatestudentStyled = styled.form`
-display: flex;
-flex-direction: column;
-align-items: flex-start;
-justify-content: space-around; // Change from 'space-between' to 'space-around' for more even spacing
-width: 100%; 
-height: 100%;
-padding: 20px; 
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around; // Change from 'space-between' to 'space-around' for more even spacing
+  width: 100%; // Make the form narrower
+  height: 100%;
+  padding: 20px;
 
-h1 {
-  font-size: clamp(1.2rem, 5vw, 1.6rem);
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
+  h1 {
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
 
-> * {
-  width: 100%; 
-  margin-bottom: 30px; // Increase the bottom margin for more space between elements
-}
+  > * {
+    width: 100%;
+    margin-bottom: 30px; // Increase the bottom margin for more space between elements
+  }
 
-> h1 {
-  font-size: clamp(1.2rem, 5vw, 1.6rem);
-  font-weight: 600;
-  margin-bottom: 50px; // Increase the margin-bottom for the title
-}
+  > h1 {
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    font-weight: 600;
+    margin-bottom: 50px; // Increase the margin-bottom for the title
+  }
 
-.required-asterisk {
-  color: red;
-}
+  .required-asterisk {
+    color: red;
+  }
 
+  color: ${(props) => props.theme.colorGrey1};
 
-color: ${(props) => props.theme.colorGrey1};
-
-.input-control {
-  position: relative;
-  font-weight: 500;
-  padding: 10px 0; // Add vertical padding to input controls
-}
+  .input-control {
+    position: relative;
+    font-weight: 500;
+    padding: 10px 0; // Add vertical padding to input controls
 
     label {
       margin-bottom: 0.5rem;
@@ -1598,34 +1641,40 @@ color: ${(props) => props.theme.colorGrey1};
     textarea {
       width: 100%;
       padding: 1rem;
-
       resize: none;
       background-color: ${(props) => props.theme.colorGreyDark};
       color: ${(props) => props.theme.colorGrey2};
       border-radius: 0.5rem;
     }
   }
+
   .submit-btn button {
     background-color: #002b88;
     color: #edf2f7;
     border: none;
     border-radius: 1rem;
-    padding: 20px 40px; 
+    padding: 20px 40px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 20px; 
+    font-size: 20px;
     margin: 4px 2px;
     transition-duration: 0.4s;
     cursor: pointer;
-  }
-  
-  .submit-btn button:hover {
-    background-color: #0043d5;
-    color: white;
+
+    &:hover {
+      background-color: #0043d5;
+      color: white;
+    }
   }
 
-  input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[name="weight"], input[name="height"], textarea {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"],
+  input[name="weight"],
+  input[name="height"],
+  textarea {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -1633,12 +1682,12 @@ color: ${(props) => props.theme.colorGrey1};
     border: 2px solid #4a4a4a;
     box-sizing: border-box;
     border-radius: 15px;
+
+    &:focus {
+      border: 1px solid #718096;
+    }
   }
 
-  input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus, input[name="weight"]:focus, input[name="height"]:focus, textarea:focus {
-    border: 1px solid #718096;
-  }
-  
   input[type="checkbox"] {
     width: 30px;
     height: 30px;
@@ -1650,16 +1699,15 @@ color: ${(props) => props.theme.colorGrey1};
     outline: none;
     cursor: pointer;
     margin: 10px;
-  }
-  
-  input[type="checkbox"]:checked {
-    background-color: #ffffff; // Change this to match the border color
-    border: 1px solid #718096;
+
+    &:checked {
+      background-color: #ffffff; // Change this to match the border color
+      border: 1px solid #718096;
+    }
   }
 
-    i {
-      color: ${(props) => props.theme.colorGrey0};
-    }
+  i {
+    color: ${(props) => props.theme.colorGrey0};
 
     &:hover {
       background: ${(props) => props.theme.colorPrimaryGreen};
@@ -1667,4 +1715,5 @@ color: ${(props) => props.theme.colorGrey1};
     }
   }
 `;
+
 export default CreateProfile;

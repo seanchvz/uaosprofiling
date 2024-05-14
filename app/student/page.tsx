@@ -3,10 +3,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { plus } from "../utils/Icons";
 import { useGlobalState } from "../context/globalProvider";
-import StudentProfileContent from "../StudentContent/StudentContent";
 import CreateProfile from "../Components/Modals/CreateProfile";
 import StudentModal from "../Components/Modals/StudentModal";
-import ViewStudentModal from "../Components/Modals/ViewStudentProfile";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaEye, FaTrash } from "react-icons/fa";
@@ -14,7 +12,10 @@ import { FaEye, FaTrash } from "react-icons/fa";
 interface Props {
   name: string;
   studentprofile: any[];
+  teams: any[];
+  sports: any[];
 }
+
 function Page({ name, studentprofile }: Props) {
   const {
     theme,
@@ -27,19 +28,18 @@ function Page({ name, studentprofile }: Props) {
   const [modalState, setModalState] = useState("create");
   const [selectedStudent, setSelectedStudent] = useState();
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchYear, setSearchYear] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [isViewOnly, setIsViewOnly] = useState(false);
 
-  const [teamNameFilter, setTeamNameFilter] = useState("");
-  const [teamYearFilter, setTeamYearFilter] = useState("");
-  const [studentProfiles, setStudentProfiles] = useState([]);
-
-  const [teamOptions, setTeamOptions] = useState([]);
-  const [selectedTeams, setSelectedTeams] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [teamDetails, setTeamDetails] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState("all");
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Change this value to set the number of items per page
 
   const handleOpenCreateModal = () => {
     setModalState("create");
@@ -69,7 +69,7 @@ function Page({ name, studentprofile }: Props) {
             name: e.name,
           })),
         }));
-        setTeamOptions(formattedTeams);
+        setTeams(response.data);
         setTeamDetails(formattedTeams);
       } catch (error) {
         console.error("Failed to load teams:", error);
@@ -81,20 +81,14 @@ function Page({ name, studentprofile }: Props) {
   }, []);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get("/api/studentProfiling"); // Adjust API endpoint as needed
-      console.log("Sample student profile data:", response.data[0]); // Log the first profile
-      setStudentProfiles(response.data); // Set state with fetched data
-    }
-
-    fetchData();
+    console.log("Fetch all student profile");
+    fetchAllStudentProfile();
   }, []);
 
   const getSportName = (teamId) => {
     const team = teamDetails.find((team) => team.value === teamId);
     return team && team.sport ? team.sport : "Unknown Sport";
   };
-
   const filteredStudentProfile = studentprofile.filter((studentProfile) => {
     const existingFullName =
       `${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`.toLowerCase();
@@ -102,10 +96,11 @@ function Page({ name, studentprofile }: Props) {
     const matchesSport =
       selectedSport === "all" ||
       studentProfile.teams.some((team) => {
-        const teamInfo = teamDetails.find((t) => t.value === team.id);
+        const teamInfo = teams.find((t) => t.id === team.id);
         return (
           teamInfo &&
-          teamInfo.sport.toLowerCase() === selectedSport.toLowerCase()
+          teamInfo.sport &&
+          teamInfo.sport.name.toLowerCase() === selectedSport.toLowerCase()
         );
       });
     const matchesTeam =
@@ -116,14 +111,25 @@ function Page({ name, studentprofile }: Props) {
       selectedStatus === "all" ||
       (selectedStatus === "active" && studentProfile.statusIsActive) ||
       (selectedStatus === "inactive" && studentProfile.statusIsInactive);
+    const matchesYear =
+      selectedYear === "all" ||
+      new Date(studentProfile.yrStartedPlaying).getFullYear() ===
+        parseInt(selectedYear);
 
-    return matchesName && matchesSport && matchesTeam && matchesStatus;
+    return (
+      matchesName && matchesSport && matchesTeam && matchesStatus && matchesYear
+    );
   });
 
-  useEffect(() => {
-    console.log("Fetch all student profile");
-    fetchAllStudentProfile();
-  }, []);
+  // Pagination logic
+  const indexOfLastProfile = currentPage * itemsPerPage;
+  const indexOfFirstProfile = indexOfLastProfile - itemsPerPage;
+  const currentProfiles = filteredStudentProfile.slice(
+    indexOfFirstProfile,
+    indexOfLastProfile
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <StudentStyled theme={theme}>
@@ -132,13 +138,15 @@ function Page({ name, studentprofile }: Props) {
           <CreateProfile
             submitState={modalState}
             studentProfile={selectedStudent}
+            isViewOnly={modalState === "view" || isViewOnly} // Set view-only mode based on the modal state
+            setIsViewOnly={setIsViewOnly}
           />
         </StudentModal>
       )}
+      <h1 style={{ fontSize: "clamp(1.5rem, 1.5vw, 2rem)", fontWeight: 800 }}>
+        {name}
+      </h1>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1 style={{ fontSize: "clamp(1.5rem, 1.5vw, 2rem)", fontWeight: 800 }}>
-          {name}
-        </h1>
         <div style={{ display: "flex", alignItems: "center" }}>
           <input
             type="text"
@@ -161,6 +169,31 @@ function Page({ name, studentprofile }: Props) {
               textAlign: "left", // align text to the left
             }}
           />
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            style={{
+              height: "3rem",
+              marginRight: "1rem",
+              borderRadius: "10px",
+              padding: "0.5rem 1rem",
+              color: "#eee",
+              backgroundColor: "#323232",
+              border: "1px solid #555",
+              outline: "none",
+            }}
+          >
+            <option value="all">All Years</option>
+            {Array.from(
+              new Set(studentprofile.map((profile) => profile.yrStartedPlaying))
+            )
+              .sort()
+              .map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+          </select>
 
           <select
             value={selectedSport}
@@ -178,11 +211,7 @@ function Page({ name, studentprofile }: Props) {
           >
             <option value="all">All Sports</option>
             {Array.from(
-              new Set(
-                studentprofile.map(
-                  (student) => student.sport && student.sport.name
-                )
-              )
+              new Set(teams.map((team) => team.sport && team.sport.name))
             )
               .filter((sport) => sport)
               .map((sport, index) => (
@@ -280,11 +309,11 @@ function Page({ name, studentprofile }: Props) {
             </tr>
           </thead>
           <tbody>
-            {filteredStudentProfile.length > 0 ? (
-              filteredStudentProfile.map((studentProfile, index) => (
+            {currentProfiles.length > 0 ? (
+              currentProfiles.map((studentProfile, index) => (
                 <tr key={studentProfile.id}>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {index + 1}
+                    {indexOfFirstProfile + index + 1}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {`${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`}
@@ -299,9 +328,20 @@ function Page({ name, studentprofile }: Props) {
                     {studentProfile.yrStartedPlaying}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {studentProfile.teams
-                      .map((team) => getSportName(team.id))
-                      .join(", ")}
+                    {studentProfile.teams && studentProfile.teams.length > 0
+                      ? Array.from(
+                          new Set(
+                            studentProfile.teams.map((team) => {
+                              const teamInfo = teamDetails.find(
+                                (t) => String(t.value) === String(team.id)
+                              );
+                              return teamInfo && teamInfo.sport
+                                ? teamInfo.sport
+                                : "Unknown Sport";
+                            })
+                          )
+                        ).join(", ")
+                      : "Not Part of Any Sport"}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     <span
@@ -330,8 +370,9 @@ function Page({ name, studentprofile }: Props) {
                     <button
                       className="p-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mr-2"
                       onClick={() => {
-                        setModalState("edit");
+                        setModalState("edit"); // Set the modal state to "view"
                         setSelectedStudent(studentProfile);
+                        setIsViewOnly(true); // Set view-only mode to true
                         openModal();
                       }}
                     >
@@ -367,9 +408,42 @@ function Page({ name, studentprofile }: Props) {
           </tbody>
         </table>
       </div>
+
+      <Pagination>
+        {Array.from(
+          { length: Math.ceil(filteredStudentProfile.length / itemsPerPage) },
+          (_, index) => (
+            <button key={index} onClick={() => paginate(index + 1)}>
+              {index + 1}
+            </button>
+          )
+        )}
+      </Pagination>
     </StudentStyled>
   );
 }
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+
+  button {
+    background-color: ${(props) => props.theme.colorBg2};
+    color: ${(props) => props.theme.colorGrey2};
+    border: 1px solid ${(props) => props.theme.borderColor2};
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${(props) => props.theme.colorPrimary};
+      color: ${(props) => props.theme.colorWhite};
+    }
+  }
+`;
 
 const StudentStyled = styled.main`
   padding: 2rem;

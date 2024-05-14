@@ -26,8 +26,11 @@ function Dashboard({ name, events }: Props) {
   const [selectedTeams, setSelectedTeams] = useState([]);
   const [teamDetails, setTeamDetails] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
-
   const [teams, setTeams] = useState([]);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -107,14 +110,19 @@ function Dashboard({ name, events }: Props) {
       selectedTeam === null ||
       (event.teams && event.teams.some((team) => team.id === selectedTeam));
 
-    // Log detailed debugging information to understand the filter process better
-    console.log(
-      `Event: ${event.name}, Sport: ${event.sport}, Team IDs: ${event.teamIds}, matchesName: ${matchesName}, matchesSport: ${matchesSport}, matchesTeam: ${matchesTeam}`
-    ); // Debugging line
-
     // Return true if name, sport, and team conditions match
     return matchesName && matchesSport && matchesTeam;
   });
+
+  // Pagination logic
+  const indexOfLastEvent = currentPage * itemsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - itemsPerPage;
+  const currentEvents = filteredEvents.slice(
+    indexOfFirstEvent,
+    indexOfLastEvent
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <DashboardStyled theme={theme}>
@@ -220,8 +228,8 @@ function Dashboard({ name, events }: Props) {
             </tr>
           </thead>
           <tbody>
-            {filteredEvents.length > 0 ? (
-              filteredEvents.map((event, index) => (
+            {currentEvents.length > 0 ? (
+              currentEvents.map((event, index) => (
                 <tr key={event.id}>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {index + 1}
@@ -278,6 +286,17 @@ function Dashboard({ name, events }: Props) {
           </tbody>
         </table>
       </div>
+
+      <Pagination>
+        {Array.from(
+          { length: Math.ceil(filteredEvents.length / itemsPerPage) },
+          (_, index) => (
+            <button key={index} onClick={() => paginate(index + 1)}>
+              {index + 1}
+            </button>
+          )
+        )}
+      </Pagination>
     </DashboardStyled>
   );
 }
@@ -334,6 +353,28 @@ const DashboardStyled = styled.main`
     &:hover {
       background-color: ${(props) => props.theme.colorGrey5};
       color: ${(props) => props.theme.colorGrey0};
+    }
+  }
+`;
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+
+  button {
+    background-color: ${(props) => props.theme.colorBg2};
+    color: ${(props) => props.theme.colorGrey2};
+    border: 1px solid ${(props) => props.theme.borderColor2};
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${(props) => props.theme.colorPrimary};
+      color: ${(props) => props.theme.colorWhite};
     }
   }
 `;
