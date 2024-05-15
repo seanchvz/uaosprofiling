@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useGlobalState } from "@/app/context/globalProvider";
 import Select from "react-select";
+import { format } from "date-fns";
 
 // props avaialable
 interface Props {
@@ -36,6 +37,13 @@ function CreateContent(props: Props) {
   const [userId, setUserId] = useState(event ? event.userId : "");
   const [id, setId] = useState(event ? event.id : "");
   const { allEvents, closeModal } = useGlobalState();
+
+  const UpdatedAt = event ? event.UpdatedAt : null;
+
+  // Format the date
+  const formattedUpdatedAt = UpdatedAt
+    ? format(new Date(UpdatedAt), "PPpp")
+    : "";
 
   // Specify the type for useState to be an array of numbers
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
@@ -130,13 +138,14 @@ function CreateContent(props: Props) {
     const { name, value, type, checked } = e.target;
 
     switch (name) {
-      case "isExternal":
-        setIsExternal(checked);
-        if (checked) setIsInternal(false); // Uncheck internal if external is checked
-        break;
-      case "isInternal":
-        setIsInternal(checked);
-        if (checked) setIsExternal(false); // Uncheck external if internal is checked
+      case "teamType":
+        if (value === "internal") {
+          setIsInternal(true);
+          setIsExternal(false);
+        } else if (value === "external") {
+          setIsInternal(false);
+          setIsExternal(true);
+        }
         break;
       case "name":
         setName(value);
@@ -330,6 +339,7 @@ function CreateContent(props: Props) {
       userId, // Assuming this is the ID of the user creating or editing the event
       studentIds: selectedStudents, // Include selected student IDs
       teamIds: selectedTeams, // Include selected team IDs
+      UpdatedAt: new Date().toISOString(),
     };
 
     console.log("Selected Events on submit:", selectedTeams);
@@ -353,7 +363,23 @@ function CreateContent(props: Props) {
           `/api/events/${id}`,
           formattedEvent
         );
-        toast.success("Event updated successfully!");
+
+        // Display last modification date
+        const formattedUpdatedAt = event.UpdatedAt
+          ? format(new Date(event.UpdatedAt), "PPpp")
+          : "";
+        if (formattedUpdatedAt) {
+          toast.success(
+            `Event ${
+              submitState === "edit" ? "updated" : "created"
+            } successfully. Last modified on ${formattedUpdatedAt}`
+          );
+        }
+
+        // Fetch the updated list of student profiles
+        allEvents();
+
+        // toast.success("Event updated successfully!");
         console.log("Update response:", updateResponse.data);
       } else {
         // Handle 'create' state
@@ -445,6 +471,16 @@ function CreateContent(props: Props) {
       <div className="mb-8">
         {" "}
         <h1>{submitState === "edit" ? "View Event" : "Create Event"}</h1>
+        {submitState === "create" && (
+          <span className="text-sm text-red-500 mt-1">
+            Marked * inputs are required
+          </span>
+        )}
+        {formattedUpdatedAt && (
+          <div className="text-sm text-gray-500 mt-1">
+            <p>Last modified on {formattedUpdatedAt}</p>
+          </div>
+        )}
       </div>
       {submitState === "edit" && (
         <>
@@ -454,7 +490,7 @@ function CreateContent(props: Props) {
       {submitState === "create" && (
         <>
           <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-            Tag a Team to Event
+            Add a Team to Event
           </h2>
         </>
       )}
@@ -522,54 +558,7 @@ className="my-custom-select text-black bg-dark-700"
             />
           </div>
         </div>
-        {/* <div className="input-control">
-          <label htmlFor="Sport" className="block">
-            Sport
-          </label>
-          <select
-            id="Sport"
-            name="Sport"
-            value={Sport}
-            onChange={handleChange}
-            className="border border-black rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full text-gray-900"
-          >
-            <option value="">Select Sport</option>
-            <optgroup label="Basketball">
-              <option value="basketball men">Basketball Men</option>
-              <option value="basketball women 3x3">
-                Basketball Women (3X3)
-              </option>
-              <option value="basketball women 5x5">
-                Basketball Women (5X5)
-              </option>
-            </optgroup>
-            <optgroup label="Football">
-              <option value="football men">Football Men</option>
-              <option value="football women">Football Women</option>
-            </optgroup>
-            <optgroup label="Volleyball">
-              <option value="volleyball men">Volleyball Men</option>
-              <option value="volleyball women">Volleyball Women</option>
-            </optgroup>
-            <optgroup label="Badminton">
-              <option value="badminton women">Badminton Women</option>
-              <option value="badminton men">Badminton Men</option>
-            </optgroup>
-            <optgroup label="ESport">
-              <option value="valorant">Valorant</option>
-              <option value="dota">DoTA</option>
-              <option value="mobile legends">Mobile Legends</option>
-            </optgroup>
-            <option value="table tennis">Table Tennis</option>
-            <option value="taekwondo">Taekwondo</option>
-            <option value="chess">Chess</option>
-            <option value="swimming">Swimming Mixed</option>
-            <option value="strength and conditioning">
-              Strength and Conditioning
-            </option>
-            <option value="special projects">Special Projects Mixed</option>
-          </select>
-        </div> */}
+
         <div className="input-control">
           <label htmlFor="eventDetails">
             Event Details{" "}
@@ -585,72 +574,79 @@ className="my-custom-select text-black bg-dark-700"
             rows={4}
           ></textarea>
         </div>
-        <div className="input-control flex justify-between">
-          <label
-            htmlFor="isExternal"
-            className={`flex items-center cursor-pointer ${
-              !isExternal && !isInternal ? "warning-border" : ""
-            }`}
-          >
-            <span className="mr-2 text-white">
-              Is External{" "}
-              {!isExternal && !isInternal && (
-                <span className="required-asterisk">*</span>
-              )}
-            </span>
-            <input
-              id="isExternal"
-              type="checkbox"
-              checked={isExternal}
-              onChange={handleChange}
-              name="isExternal"
-              className="hidden"
-            />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                isExternal ? "bg-red-500" : ""
-              }`}
-            >
-              <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  isExternal ? "translate-x-5" : ""
+        <div className="flex flex-col items-center">
+          <label className="text-white mb-4">Event Type</label>
+          <div className="flex">
+            <div className="input-control flex justify-between mb-4">
+              <label
+                htmlFor="isExternal"
+                className={`flex items-center cursor-pointer ${
+                  !isExternal && !isInternal ? "border-red-500" : ""
                 }`}
-              />
-            </span>
-          </label>
+              >
+                <span className="mr-2 text-white">
+                  External{" "}
+                  {!isExternal && !isInternal && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </span>
+                <input
+                  id="isExternal"
+                  type="radio"
+                  checked={isExternal}
+                  onChange={() => {
+                    setIsExternal(true);
+                    setIsInternal(false);
+                  }}
+                  value="external"
+                  name="teamType"
+                  className="hidden"
+                />
+                <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
+                  <span
+                    className={`w-4 h-4 rounded-full ${
+                      isExternal ? "bg-red-500" : ""
+                    }`}
+                  ></span>
+                </span>
+              </label>
+            </div>
 
-          <label
-            htmlFor="isInternal"
-            className={`flex items-center cursor-pointer ${
-              !isExternal && !isInternal ? "warning-border" : ""
-            }`}
-          >
-            <span className="mr-2 text-white">
-              Is Internal{" "}
-              {!isExternal && !isInternal && (
-                <span className="required-asterisk">*</span>
-              )}
-            </span>
-            <input
-              id="isInternal"
-              type="checkbox"
-              checked={isInternal}
-              onChange={handleChange}
-              name="isInternal"
-              className="hidden"
-            />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                isInternal ? "bg-green-500" : ""
-              }`}
-            >
-              <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  isInternal ? "translate-x-5" : ""
+            <div className="input-control flex justify-between mb-4">
+              <label
+                htmlFor="isInternal"
+                className={`flex items-center cursor-pointer ${
+                  !isExternal && !isInternal ? "border-red-500" : ""
                 }`}
-              />
-            </span>
-          </label>
+              >
+                <span className="mr-2 text-white">
+                  Internal{" "}
+                  {!isExternal && !isInternal && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </span>
+                <input
+                  id="isInternal"
+                  type="radio"
+                  checked={isInternal}
+                  onChange={() => {
+                    setIsInternal(true);
+                    setIsExternal(false);
+                  }}
+                  value="internal"
+                  name="teamType"
+                  className="hidden"
+                />
+                <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
+                  <span
+                    className={`w-4 h-4 rounded-full ${
+                      isInternal ? "bg-green-500" : ""
+                    }`}
+                  ></span>
+                </span>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
       <div className="submit-btn mt-4 flex justify-center">

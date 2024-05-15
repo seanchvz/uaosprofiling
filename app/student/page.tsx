@@ -272,7 +272,7 @@ function Page({ name, studentprofile }: Props) {
         </div>
       </div>
 
-      <div className="min-w-full shadow-md rounded-lg overflow-hidden mt-4">
+      <div className="min-w-full shadow-md rounded-lg overflow-auto mt-4">
         <table
           className="min-w-full leading-normal border-2 border-gray-500"
           style={{ backgroundColor: "#363636" }}

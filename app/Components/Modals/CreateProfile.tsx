@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useGlobalState } from "@/app/context/globalProvider";
 import StudentProfileContent from "../StudentContent/StudentContent";
 import Select from "react-select";
+import { format } from "date-fns";
 
 interface Props {
   studentProfile?: any;
@@ -89,6 +90,12 @@ function CreateProfile(props: Props) {
     studentProfile ? studentProfile.Remarks : ""
   );
   const [QPI, setQPI] = useState(studentProfile ? studentProfile.QPI : "");
+  const UpdatedAt = studentProfile ? studentProfile.UpdatedAt : null;
+
+  // Format the date
+  const formattedUpdatedAt = UpdatedAt
+    ? format(new Date(UpdatedAt), "PPpp")
+    : "";
 
   const [hasDeficiency, setHasDeficiency] = useState(false);
   const [isMale, setIsMale] = useState(false);
@@ -339,21 +346,23 @@ function CreateProfile(props: Props) {
     const { name, value, type, checked } = e.target;
 
     switch (name) {
-      case "isMale":
-        setIsMale(checked);
-        if (checked) setIsFemale(false); // Uncheck female if male is checked
+      case "gender":
+        if (value === "male") {
+          setIsMale(true);
+          setIsFemale(false);
+        } else {
+          setIsMale(false);
+          setIsFemale(true);
+        }
         break;
-      case "isFemale":
-        setIsFemale(checked);
-        if (checked) setIsMale(false); // Uncheck male if female is checked
-        break;
-      case "statusIsActive":
-        setStatusIsActive(checked);
-        if (checked) setStatusIsInactive(false);
-        break;
-      case "statusIsInactive":
-        setStatusIsInactive(checked);
-        if (checked) setStatusIsActive(false);
+      case "status":
+        if (value === "active") {
+          setStatusIsActive(true);
+          setStatusIsInactive(false);
+        } else {
+          setStatusIsActive(false);
+          setStatusIsInactive(true);
+        }
         break;
       case "firstName":
         setfirstName(value);
@@ -732,6 +741,7 @@ function CreateProfile(props: Props) {
       id,
       teamIds: selectedTeams,
       eventIds: selectedEventIds,
+      UpdatedAt: new Date().toISOString(),
     };
 
     console.log("Selected Events on submit:", selectedTeams);
@@ -758,8 +768,24 @@ function CreateProfile(props: Props) {
           `/api/studentProfiling/${studentProfile.id}/`,
           studentProfile
         );
+
+        // Display last modification date
+        const formattedUpdatedAt = studentProfile.UpdatedAt
+          ? format(new Date(studentProfile.UpdatedAt), "PPpp")
+          : "";
+        if (formattedUpdatedAt) {
+          toast.success(
+            `Profile ${
+              submitState === "edit" ? "updated" : "created"
+            } successfully. Last modified on ${formattedUpdatedAt}`
+          );
+        }
+
+        // Fetch the updated list of student profiles
+        fetchAllStudentProfile();
+
         console.log("Server response:", response.data);
-        toast.success("Profile updated successfully!");
+        // toast.success("Profile updated successfully!");
         fetchAllStudentProfile();
       } catch (error) {
         console.error("Failed to update the studentProfile:", error);
@@ -937,6 +963,16 @@ function CreateProfile(props: Props) {
             ? "View Student Profile"
             : "Create Student Profile"}
         </h1>
+        {submitState === "create" && (
+          <span className="text-sm text-red-500 mt-1">
+            Marked * inputs are required
+          </span>
+        )}
+        {formattedUpdatedAt && (
+          <div className="text-sm text-gray-500 mt-1">
+            <p>Last modified on {formattedUpdatedAt}</p>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
@@ -1181,7 +1217,7 @@ function CreateProfile(props: Props) {
 
         <div className="input-control">
           <label htmlFor="academicYear">
-            Academic Year{" "}
+            Academic Year Joined{" "}
             {!academicYear && <span className="required-asterisk">*</span>}
           </label>
           <input
@@ -1198,7 +1234,7 @@ function CreateProfile(props: Props) {
 
         <div className="input-control">
           <label htmlFor="yrStartedPlaying">
-            Year started playing:{" "}
+            Year started playing for AdDU:{" "}
             {!yrStartedPlaying && <span className="required-asterisk">*</span>}
           </label>
           <input
@@ -1212,76 +1248,70 @@ function CreateProfile(props: Props) {
             disabled={isViewOnly}
           />
         </div>
-        <span className="text-white">Sex</span>
+        <label className="text-white">Sex</label>
         <div className="flex">
-          <div className="input-control flex justify-between">
+          <div className="input-control flex justify-between mb-4">
             <label
               htmlFor="isMale"
               className={`flex items-center cursor-pointer ${
-                !isMale && !isFemale ? "warning-border" : ""
+                !isMale && !isFemale ? "border-red-500" : ""
               }`}
             >
-              <span className="mr-10 text-white">
-                Male{" "}
+              <span className="mr-2 text-white">
+                Male
                 {!isMale && !isFemale && (
-                  <span className="required-asterisk">*</span>
+                  <span className="text-red-500">*</span>
                 )}
               </span>
               <input
-                type="checkbox"
+                type="radio"
                 id="isMale"
+                value="male"
                 checked={isMale}
                 onChange={handleChange}
-                name="isMale"
+                name="gender"
                 className="hidden"
                 disabled={isViewOnly}
               />
-              <span
-                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                  isMale ? "bg-blue-500" : ""
-                }`}
-              >
+              <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
                 <span
-                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                    isMale ? "translate-x-5" : ""
+                  className={`w-4 h-4 rounded-full ${
+                    isMale ? "bg-blue-500" : ""
                   }`}
-                />
+                ></span>
               </span>
             </label>
           </div>
 
-          <div className="input-control flex justify-between">
+          <div className="input-control flex justify-between mb-4">
             <label
               htmlFor="isFemale"
               className={`flex items-center cursor-pointer ${
-                !isMale && !isFemale ? "warning-border" : ""
+                !isMale && !isFemale ? "border-red-500" : ""
               }`}
             >
               <span className="mr-2 text-white">
-                Female{" "}
+                Female
                 {!isMale && !isFemale && (
-                  <span className="required-asterisk">*</span>
+                  <span className="text-red-500">*</span>
                 )}
               </span>
               <input
-                type="checkbox"
+                type="radio"
                 id="isFemale"
+                value="female"
                 checked={isFemale}
                 onChange={handleChange}
-                name="isFemale"
+                name="gender"
                 className="hidden"
                 disabled={isViewOnly}
               />
-              <span
-                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                  isFemale ? "bg-red-500" : ""
-                }`}
-              >
+              <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
                 <span
-                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                    isFemale ? "translate-x-5" : ""
+                  className={`w-4 h-4 rounded-full ${
+                    isFemale ? "bg-pink-500" : ""
                   }`}
-                />
+                ></span>
               </span>
             </label>
           </div>
@@ -1422,80 +1452,74 @@ function CreateProfile(props: Props) {
 
         <span className="text-white">Status</span>
         <div className="flex">
-          <div className="input-control flex justify-between mr-4">
+          <div className="input-control flex justify-between mb-4">
             <label
               htmlFor="statusIsActive"
               className={`flex items-center cursor-pointer ${
-                !statusIsActive && !statusIsInactive ? "warning-border" : ""
+                !statusIsActive && !statusIsInactive ? "border-red-500" : ""
               }`}
             >
               <span className="mr-2 text-white">
                 Active
                 {!statusIsActive && !statusIsInactive && (
-                  <span className="required-asterisk">*</span>
+                  <span className="text-red-500">*</span>
                 )}
               </span>
               <input
-                type="checkbox"
+                type="radio"
                 id="statusIsActive"
+                value="active"
                 checked={statusIsActive}
                 onChange={handleChange}
-                name="statusIsActive"
+                name="status"
                 className="hidden"
                 disabled={isViewOnly}
               />
-              <span
-                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                  statusIsActive ? "bg-green-500" : ""
-                }`}
-              >
+              <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
                 <span
-                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                    statusIsActive ? "translate-x-5" : ""
+                  className={`w-4 h-4 rounded-full ${
+                    statusIsActive ? "bg-green-500" : ""
                   }`}
-                />
+                ></span>
               </span>
             </label>
           </div>
 
-          <div className="input-control flex justify-between ml-4">
+          <div className="input-control flex justify-between mb-4">
             <label
               htmlFor="statusIsInactive"
               className={`flex items-center cursor-pointer ${
-                !statusIsActive && !statusIsInactive ? "warning-border" : ""
+                !statusIsActive && !statusIsInactive ? "border-red-500" : ""
               }`}
             >
               <span className="mr-2 text-white">
                 Inactive
                 {!statusIsActive && !statusIsInactive && (
-                  <span className="required-asterisk">*</span>
+                  <span className="text-red-500">*</span>
                 )}
               </span>
               <input
-                type="checkbox"
+                type="radio"
                 id="statusIsInactive"
+                value="inactive"
                 checked={statusIsInactive}
                 onChange={handleChange}
-                name="statusIsInactive"
+                name="status"
                 className="hidden"
                 disabled={isViewOnly}
               />
-              <span
-                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                  statusIsInactive ? "bg-red-500" : ""
-                }`}
-              >
+              <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
                 <span
-                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                    statusIsInactive ? "translate-x-5" : ""
+                  className={`w-4 h-4 rounded-full ${
+                    statusIsInactive ? "bg-red-500" : ""
                   }`}
-                />
+                ></span>
               </span>
             </label>
           </div>
         </div>
         <div className="input-control">
-          <label htmlFor="homeAddress">
+          <label htmlFor="QPI">
             QPI {!QPI && <span className="required-asterisk">*</span>}
           </label>
           <input
@@ -1508,6 +1532,11 @@ function CreateProfile(props: Props) {
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
             disabled={isViewOnly}
           />
+          {formattedUpdatedAt && (
+            <p className="text-sm text-gray-500 mt-1">
+              QPI last modified on {formattedUpdatedAt}
+            </p>
+          )}
           <div>
             {hasDeficiency && (
               <div

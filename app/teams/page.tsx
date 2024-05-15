@@ -25,7 +25,7 @@ function Page({ name, teams }: Props) {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Change this value to set the number of items per page
+  const [itemsPerPage] = useState(9); // Change this value to set the number of items per page
 
   useEffect(() => {
     fetchSports();
@@ -89,7 +89,7 @@ function Page({ name, teams }: Props) {
   // Pagination logic
   const indexOfLastProfile = currentPage * itemsPerPage;
   const indexOfFirstProfile = indexOfLastProfile - itemsPerPage;
-  const currentProfiles = filteredTeams.slice(
+  const currentTeams = filteredTeams.slice(
     indexOfFirstProfile,
     indexOfLastProfile
   );
@@ -206,7 +206,7 @@ function Page({ name, teams }: Props) {
                 #
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Year
+                Year Formed
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Name
@@ -221,8 +221,8 @@ function Page({ name, teams }: Props) {
             </tr>
           </thead>
           <tbody>
-            {filteredTeams.length > 0 ? (
-              filteredTeams.map((team, index) => (
+            {currentTeams.length > 0 ? (
+              currentTeams.map((team, index) => (
                 <tr key={team.id}>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {index + 1}

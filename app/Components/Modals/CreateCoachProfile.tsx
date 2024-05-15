@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useGlobalState } from "@/app/context/globalProvider";
 import StudentProfileContent from "../StudentContent/StudentContent";
 import Select from "react-select";
+import { format } from "date-fns";
 
 interface Props {
   coachProfile?: any;
@@ -66,9 +67,11 @@ function CreateCoachProfile(props: Props) {
   const [statusIsParttime, setStatusIsParttime] = useState(
     coachProfile ? coachProfile.statusIsParttime : false
   );
-  // const [resumeUrl, setResumeUrl] = useState(
-  //   coachProfile ? coachProfile.resumeUrl : ""
-  // );
+  const UpdatedAt = coachProfile ? coachProfile.UpdatedAt : null;
+  // Format the date
+  const formattedUpdatedAt = UpdatedAt
+    ? format(new Date(UpdatedAt), "PPpp")
+    : "";
   const [email, setEmail] = useState(coachProfile ? coachProfile.email : "");
   const [remarks, setRemarks] = useState(
     coachProfile ? coachProfile.remarks : ""
@@ -164,84 +167,80 @@ function CreateCoachProfile(props: Props) {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    if (type === "checkbox") {
-      switch (name) {
-        case "isMale":
-          setIsMale(checked);
-          if (checked) setIsFemale(false); // Uncheck female if male is checked
-          break;
-        case "isFemale":
-          setIsFemale(checked);
-          if (checked) setIsMale(false); // Uncheck male if female is checked
-          break;
-        case "statusIsFulltime":
-          setStatusIsFulltime(checked);
-          if (checked) setStatusIsParttime(false); // Uncheck part-time if full-time is checked
-          break;
-        case "statusIsParttime":
-          setStatusIsParttime(checked);
-          if (checked) setStatusIsFulltime(false); // Uncheck full-time if part-time is checked
-          break;
-      }
-    } else {
-      // For input type "text" or others, handling numeric and text inputs
-      switch (name) {
-        case "weight":
-        case "height":
-          const floatValue = parseFloat(value);
-          if (!isNaN(floatValue)) {
-            if (name === "weight") setWeight(floatValue);
-            if (name === "height") setHeight(floatValue);
-          }
-          break;
-        case "firstName":
-          setfirstName(value);
-          break;
-        case "middleName":
-          setMiddleName(value);
-          break;
-        case "lastName":
-          setLastName(value);
-          break;
-        case "contactNumber":
-          setContactNumber(value);
-          break;
-        case "landLineNumber":
-          setLandLineNumber(value);
-          break;
-        // case "permanentTeam":
-        //   setPermanentTeam(value);
-        //   break;
-        case "emergencyContact":
-          setEmergencyContact(value);
-          break;
-        case "emergencyContactPerson":
-          setEmergencyContactPerson(value);
-          break;
-        case "birthDate":
-          setBirthDate(value);
-          break;
-        case "nationality":
-          setNationality(value);
-          break;
-        case "bloodType":
-          setBloodType(value);
-          break;
-        case "academicYear":
-          setAcademicYear(value);
-          break;
-        case "resumeUrl":
-          setResumeUrl(value);
-          break;
-        case "email":
-          setEmail(value);
-          break;
-        case "remarks":
-          setRemarks(value);
-          break;
-        default:
-          console.log("Unhandled field: ", name);
-      }
+    switch (name) {
+      case "gender":
+        if (value === "male") {
+          setIsMale(true);
+          setIsFemale(false);
+        } else {
+          setIsMale(false);
+          setIsFemale(true);
+        }
+        break;
+      case "status":
+        if (value === "active") {
+          setStatusIsFulltime(true);
+          setStatusIsParttime(false);
+        } else {
+          setStatusIsFulltime(false);
+          setStatusIsParttime(true);
+        }
+        break;
+      case "weight":
+      case "height":
+        const floatValue = parseFloat(value);
+        if (!isNaN(floatValue)) {
+          if (name === "weight") setWeight(floatValue);
+          if (name === "height") setHeight(floatValue);
+        }
+        break;
+      case "firstName":
+        setfirstName(value);
+        break;
+      case "middleName":
+        setMiddleName(value);
+        break;
+      case "lastName":
+        setLastName(value);
+        break;
+      case "contactNumber":
+        setContactNumber(value);
+        break;
+      case "landLineNumber":
+        setLandLineNumber(value);
+        break;
+      // case "permanentTeam":
+      //   setPermanentTeam(value);
+      //   break;
+      case "emergencyContact":
+        setEmergencyContact(value);
+        break;
+      case "emergencyContactPerson":
+        setEmergencyContactPerson(value);
+        break;
+      case "birthDate":
+        setBirthDate(value);
+        break;
+      case "nationality":
+        setNationality(value);
+        break;
+      case "bloodType":
+        setBloodType(value);
+        break;
+      case "academicYear":
+        setAcademicYear(value);
+        break;
+      case "resumeUrl":
+        setResumeUrl(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "remarks":
+        setRemarks(value);
+        break;
+      default:
+        console.log("Unhandled field: ", name);
     }
   };
 
@@ -473,6 +472,7 @@ function CreateCoachProfile(props: Props) {
       remarks,
       userId,
       teamIds: selectedTeams,
+      UpdatedAt: new Date().toISOString(),
     };
 
     console.log("Selected teams on submit:", selectedTeams);
@@ -492,8 +492,22 @@ function CreateCoachProfile(props: Props) {
           coachProfile
         );
 
+        // Display last modification date
+        const formattedUpdatedAt = coachProfile.UpdatedAt
+          ? format(new Date(coachProfile.UpdatedAt), "PPpp")
+          : "";
+        if (formattedUpdatedAt) {
+          toast.success(
+            `Profile ${
+              submitState === "edit" ? "updated" : "created"
+            } successfully. Last modified on ${formattedUpdatedAt}`
+          );
+        }
+
+        fetchAllCoachProfile();
+
         console.log("Server response:", response.data);
-        toast.success("Profile updated successfully!");
+        // toast.success("Profile updated successfully!");
         fetchAllCoachProfile();
       } catch (error) {
         handleAxiosError(error);
@@ -638,6 +652,16 @@ function CreateCoachProfile(props: Props) {
             ? "View Coach Profile"
             : "Create Coach Profile"}
         </h1>
+        {submitState === "create" && (
+          <span className="text-sm text-red-500 mt-1">
+            Marked * inputs are required
+          </span>
+        )}
+        {formattedUpdatedAt && (
+          <div className="text-sm text-gray-500 mt-1">
+            <p>Last modified on {formattedUpdatedAt}</p>
+          </div>
+        )}
       </div>
       <div className="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div className="input-control">
@@ -749,73 +773,68 @@ function CreateCoachProfile(props: Props) {
           />
         </div>
 
+        <label className="text-white">Sex</label>
         <div className="flex">
-          <div className="input-control flex justify-between">
+          <div className="input-control flex justify-between mb-4">
             <label
               htmlFor="isMale"
               className={`flex items-center cursor-pointer ${
-                !isMale && !isFemale ? "warning-border" : ""
+                !isMale && !isFemale ? "border-red-500" : ""
               }`}
             >
-              <span className="mr-10 text-white">
-                Male{" "}
+              <span className="mr-2 text-white">
+                Male
                 {!isMale && !isFemale && (
-                  <span className="required-asterisk">*</span>
+                  <span className="text-red-500">*</span>
                 )}
               </span>
               <input
-                type="checkbox"
+                type="radio"
                 id="isMale"
+                value="male"
                 checked={isMale}
                 onChange={handleChange}
-                name="isMale"
+                name="gender"
                 className="hidden"
               />
-              <span
-                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                  isMale ? "bg-blue-500" : ""
-                }`}
-              >
+              <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
                 <span
-                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                    isMale ? "translate-x-5" : ""
+                  className={`w-4 h-4 rounded-full ${
+                    isMale ? "bg-blue-500" : ""
                   }`}
-                />
+                ></span>
               </span>
             </label>
           </div>
 
-          <div className="input-control flex justify-between">
+          <div className="input-control flex justify-between mb-4">
             <label
               htmlFor="isFemale"
               className={`flex items-center cursor-pointer ${
-                !isMale && !isFemale ? "warning-border" : ""
+                !isMale && !isFemale ? "border-red-500" : ""
               }`}
             >
               <span className="mr-2 text-white">
-                Female{" "}
+                Female
                 {!isMale && !isFemale && (
-                  <span className="required-asterisk">*</span>
+                  <span className="text-red-500">*</span>
                 )}
               </span>
               <input
-                type="checkbox"
+                type="radio"
                 id="isFemale"
+                value="female"
                 checked={isFemale}
                 onChange={handleChange}
-                name="isFemale"
+                name="gender"
                 className="hidden"
               />
-              <span
-                className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                  isFemale ? "bg-red-500" : ""
-                }`}
-              >
+              <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
                 <span
-                  className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                    isFemale ? "translate-x-5" : ""
+                  className={`w-4 h-4 rounded-full ${
+                    isFemale ? "bg-pink-500" : ""
                   }`}
-                />
+                ></span>
               </span>
             </label>
           </div>
@@ -916,73 +935,68 @@ function CreateCoachProfile(props: Props) {
           className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
+      <label className="text-white">Employment Type</label>
       <div className="flex">
-        <div className="input-control flex justify-between mr-4">
+        <div className="input-control flex justify-between mb-4">
           <label
             htmlFor="statusIsFulltime"
             className={`flex items-center cursor-pointer ${
-              !statusIsFulltime && !statusIsParttime ? "warning-border" : ""
+              !statusIsFulltime && !statusIsParttime ? "border-red-500" : ""
             }`}
           >
             <span className="mr-2 text-white">
-              Full-time{" "}
+              Full Time
               {!statusIsFulltime && !statusIsParttime && (
-                <span className="required-asterisk">*</span>
+                <span className="text-red-500">*</span>
               )}
             </span>
             <input
-              type="checkbox"
+              type="radio"
               id="statusIsFulltime"
+              value="active"
               checked={statusIsFulltime}
               onChange={handleChange}
-              name="statusIsFulltime"
+              name="status"
               className="hidden"
             />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                statusIsFulltime ? "bg-green-500" : ""
-              }`}
-            >
+            <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
               <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  statusIsFulltime ? "translate-x-5" : ""
+                className={`w-4 h-4 rounded-full ${
+                  statusIsFulltime ? "bg-green-500" : ""
                 }`}
-              />
+              ></span>
             </span>
           </label>
         </div>
 
-        <div className="input-control flex justify-between ml-4">
+        <div className="input-control flex justify-between mb-4">
           <label
             htmlFor="statusIsParttime"
             className={`flex items-center cursor-pointer ${
-              !statusIsFulltime && !statusIsParttime ? "warning-border" : ""
+              !statusIsFulltime && !statusIsParttime ? "border-red-500" : ""
             }`}
           >
             <span className="mr-2 text-white">
-              Part-time{" "}
+              Part Time
               {!statusIsFulltime && !statusIsParttime && (
-                <span className="required-asterisk">*</span>
+                <span className="text-red-500">*</span>
               )}
             </span>
             <input
-              type="checkbox"
+              type="radio"
               id="statusIsParttime"
+              value="inactive"
               checked={statusIsParttime}
               onChange={handleChange}
-              name="statusIsParttime"
+              name="status"
               className="hidden"
             />
-            <span
-              className={`w-10 h-5 border border-white rounded-full shadow-inner flex items-center transition-colors duration-300 ${
-                statusIsParttime ? "bg-red-500" : ""
-              }`}
-            >
+            <span className="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center">
               <span
-                className={`block w-5 h-5 rounded-full bg-white shadow-md transform duration-300 ${
-                  statusIsParttime ? "translate-x-5" : ""
+                className={`w-4 h-4 rounded-full ${
+                  statusIsParttime ? "bg-yellow-500" : ""
                 }`}
-              />
+              ></span>
             </span>
           </label>
         </div>

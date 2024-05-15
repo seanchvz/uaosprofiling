@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
 
 // Props definition
 interface Props {
@@ -43,6 +44,12 @@ function CreateTeam(props: Props) {
   const [eventOptions, setEventOptions] = useState<
     { value: number; label: string }[]
   >([]);
+
+  const updatedAt = team ? team.updatedAt : null;
+  // Format the date
+  const formattedUpdatedAt = updatedAt
+    ? format(new Date(updatedAt), "PPpp")
+    : "";
 
   const [teamsList, setTeamsList] = useState([]);
   const [id, setId] = useState(team ? team.id : "");
@@ -285,9 +292,22 @@ function CreateTeam(props: Props) {
     }
   };
   // Formatting the year as ISO string
+  const checkDuplicateTeam = (name: string, year: number | null) => {
+    return teamsList.some((team) => {
+      // Parse the team year only if it's not null
+      const teamYear = team.year ? new Date(team.year).getFullYear() : null;
+      return team.teamName === name && teamYear === year;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // if (submitState === "create" && checkDuplicateTeam(teamName, year)) {
+    //   toast.error("A team with the same name and year already exists.");
+    //   return;
+    // }
+
     const formattedYear = year ? `${year}-01-01T00:00:00.000Z` : null;
 
     // Ensure that we are using sportId which should be a number or null
@@ -299,6 +319,7 @@ function CreateTeam(props: Props) {
       studentIds: selectedStudents,
       eventIds: selectedEventIds,
       coachIds: selectedCoaches,
+      updatedAt: new Date().toISOString(),
     };
 
     console.log("Selected Events on submit:", selectedEventIds);
@@ -328,7 +349,21 @@ function CreateTeam(props: Props) {
           `/api/teams/${team.id}`,
           formattedTeam
         );
-        toast.success("Team updated successfully!");
+
+        // Display last modification date
+        const formattedUpdatedAt = team.updatedAt
+          ? format(new Date(team.updatedAt), "PPpp")
+          : "";
+        if (formattedUpdatedAt) {
+          toast.success(
+            `Team ${
+              submitState === "edit" ? "updated" : "created"
+            } successfully. Last modified on ${formattedUpdatedAt}`
+          );
+        }
+
+        fetchTeams();
+
         console.log("Update response:", updateResponse.data);
       } else {
         const createResponse = await axios.post("/api/teams", formattedTeam);
@@ -382,6 +417,7 @@ function CreateTeam(props: Props) {
   return (
     <CreateTeamStyled onSubmit={handleSubmit}>
       <h1>{submitState === "edit" ? "View Team" : "Create Team"}</h1>
+
       <div>
         {submitState === "edit" && (
           <>
@@ -396,6 +432,11 @@ function CreateTeam(props: Props) {
               Add joined events to team
             </h2>
           </>
+        )}
+        {formattedUpdatedAt && (
+          <div className="text-sm text-gray-500 mt-1">
+            <p>Last modified on {formattedUpdatedAt}</p>
+          </div>
         )}
         <Select
           options={eventOptions}

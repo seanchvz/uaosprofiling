@@ -30,7 +30,7 @@ function Dashboard({ name, events }: Props) {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
+  const [itemsPerPage] = useState(9);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -302,7 +302,7 @@ function Dashboard({ name, events }: Props) {
                 Event Details
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Status
+                Event Type
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Actions
