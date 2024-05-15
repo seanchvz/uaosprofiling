@@ -45,10 +45,6 @@ function Page({ name, teams }: Props) {
     openModal();
   };
 
-  const handleSearchChange = (team) => {
-    setSearchTerm(team.target.value);
-  };
-
   const handleYearChange = (team) => {
     setSelectedYear(team.target.value);
   };
@@ -95,7 +91,9 @@ function Page({ name, teams }: Props) {
   );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
+  const handleSearchChange = (team) => {
+    setSearchTerm(team.target.value);
+  };
   return (
     <TeamStyled theme={theme}>
       {modal && (
