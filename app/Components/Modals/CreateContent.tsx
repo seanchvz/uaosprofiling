@@ -523,7 +523,7 @@ className="my-custom-select text-black bg-dark-700"
             value={name}
             name="name"
             onChange={handleChange}
-            placeholder="Enter event name"
+            placeholder="e.g DACS Basketball Men AdDU vs. SPC 2024"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
           />
         </div>
@@ -569,7 +569,7 @@ className="my-custom-select text-black bg-dark-700"
             value={eventDetails}
             name="eventDetails"
             onChange={handleChange}
-            placeholder="Enter event details"
+            placeholder="e.g. AdDU Wins"
             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
             rows={4}
           ></textarea>

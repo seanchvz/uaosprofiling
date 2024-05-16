@@ -50,8 +50,7 @@ function CreateTeam(props: Props) {
   const formattedUpdatedAt = updatedAt
     ? format(new Date(updatedAt), "PPpp")
     : "";
-
-  const [teamsList, setTeamsList] = useState([]);
+  const [teamsList, setTeamsList] = useState<any[]>([]);
   const [id, setId] = useState(team ? team.id : "");
   const { fetchTeams, closeModal } = useGlobalState(); // Assume similar functions exist in your global context
 
@@ -291,22 +290,36 @@ function CreateTeam(props: Props) {
       setYear(date.getFullYear()); // Correctly storing the year as an integer
     }
   };
-  // Formatting the year as ISO string
-  const checkDuplicateTeam = (name: string, year: number | null) => {
-    return teamsList.some((team) => {
-      // Parse the team year only if it's not null
-      const teamYear = team.year ? new Date(team.year).getFullYear() : null;
-      return team.teamName === name && teamYear === year;
-    });
+  // Fetch existing teams to check for duplicates
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("/api/teams");
+        setTeamsList(response.data);
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+        toast.error("Failed to load teams data.");
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  // Function to check for duplicate teams
+  const checkForDuplicateTeams = () => {
+    return teamsList.some(
+      (existingTeam) =>
+        existingTeam.teamName === teamName &&
+        new Date(existingTeam.year).getFullYear() === year
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // if (submitState === "create" && checkDuplicateTeam(teamName, year)) {
-    //   toast.error("A team with the same name and year already exists.");
-    //   return;
-    // }
+    if (submitState === "create" && checkForDuplicateTeams()) {
+      toast.error("A team with the same name and year already exists.");
+      return;
+    }
 
     const formattedYear = year ? `${year}-01-01T00:00:00.000Z` : null;
 
@@ -429,7 +442,7 @@ function CreateTeam(props: Props) {
         {submitState === "create" && (
           <>
             <h2 style={{ fontSize: "1.2em", marginBottom: "0.5em" }}>
-              Add joined events to team
+              Add events to team
             </h2>
           </>
         )}
@@ -438,20 +451,22 @@ function CreateTeam(props: Props) {
             <p>Last modified on {formattedUpdatedAt}</p>
           </div>
         )}
-        <Select
-          options={eventOptions}
-          isMulti
-          value={eventOptions.filter((option) =>
-            selectedEventIds.includes(option.value)
-          )}
-          onChange={(options) =>
-            setSelectedEventIds(
-              options ? options.map((option) => option.value) : []
-            )
-          }
-          className="my-custom-select text-black bg-dark-700"
-          classNamePrefix="my-custom-select"
-        />
+      </div>
+      <Select
+        options={eventOptions}
+        isMulti
+        value={eventOptions.filter((option) =>
+          selectedEventIds.includes(option.value)
+        )}
+        onChange={(options) =>
+          setSelectedEventIds(
+            options ? options.map((option) => option.value) : []
+          )
+        }
+        className="my-custom-select text-black bg-dark-700"
+        classNamePrefix="my-custom-select"
+      />
+      <div className="input-control">
         <label htmlFor="teamName">Team Name:</label>
         <input
           type="text"
@@ -459,7 +474,9 @@ function CreateTeam(props: Props) {
           name="teamName"
           value={teamName}
           onChange={handleChange}
+          placeholder="e.g. DACS Basketball Men"
           required
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 w-full"
         />
       </div>
       <div>
