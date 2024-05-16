@@ -286,6 +286,9 @@ function Page({ name, studentprofile }: Props) {
                 Name
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Team Sport
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Contact Number
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
@@ -294,9 +297,7 @@ function Page({ name, studentprofile }: Props) {
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Year Started Playing
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Team Sports
-              </th>
+
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 QPI
               </th>
@@ -319,15 +320,6 @@ function Page({ name, studentprofile }: Props) {
                     {`${studentProfile.firstName} ${studentProfile.middleName} ${studentProfile.lastName}`}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {studentProfile.contactNumber}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {studentProfile.email}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {studentProfile.yrStartedPlaying}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {studentProfile.teams && studentProfile.teams.length > 0
                       ? Array.from(
                           new Set(
@@ -343,6 +335,16 @@ function Page({ name, studentprofile }: Props) {
                         ).join(", ")
                       : "Not Part of Any Sport"}
                   </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {studentProfile.contactNumber}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {studentProfile.email}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {studentProfile.yrStartedPlaying}
+                  </td>
+
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     <span
                       className={`inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 ${

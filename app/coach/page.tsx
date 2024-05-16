@@ -225,6 +225,9 @@ function Page({ name, coachprofile, teams }: Props) {
                 Name
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Team Sport
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Contact Number
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
@@ -239,9 +242,7 @@ function Page({ name, coachprofile, teams }: Props) {
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Role
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
-                Team Sport
-              </th>
+
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Actions
               </th>
@@ -255,6 +256,22 @@ function Page({ name, coachprofile, teams }: Props) {
                     {index + 1}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">{`${coachProfile.firstName} ${coachProfile.middleName} ${coachProfile.lastName}`}</td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {coachProfile.teams && coachProfile.teams.length > 0
+                      ? Array.from(
+                          new Set(
+                            coachProfile.teams.map((team: { id: any }) => {
+                              const teamInfo = teams.find(
+                                (t) => String(t.id) === String(team.id)
+                              );
+                              return teamInfo && teamInfo.sport
+                                ? teamInfo.sport.name
+                                : "No Sport Assigned";
+                            })
+                          )
+                        ).join(", ")
+                      : "Not Part of Any Teams"}
+                  </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {coachProfile.contactNumber}
                   </td>
@@ -281,22 +298,6 @@ function Page({ name, coachprofile, teams }: Props) {
                         ? "Part Time"
                         : "Full Time"}
                     </span>
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
-                    {coachProfile.teams && coachProfile.teams.length > 0
-                      ? Array.from(
-                          new Set(
-                            coachProfile.teams.map((team: { id: any }) => {
-                              const teamInfo = teams.find(
-                                (t) => String(t.id) === String(team.id)
-                              );
-                              return teamInfo && teamInfo.sport
-                                ? teamInfo.sport.name
-                                : "No Sport Assigned";
-                            })
-                          )
-                        ).join(", ")
-                      : "Not Part of Any Teams"}
                   </td>
 
                   <td className="px-5 py-5 border-b border-gray-500 text-base">

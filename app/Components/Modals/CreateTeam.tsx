@@ -150,6 +150,17 @@ function CreateTeam(props: Props) {
   const addNewSport = async () => {
     const sportName = prompt("Enter the name of the new sport:");
     if (!sportName) return;
+
+    // Check for duplicate names
+    if (
+      sportsOptions.some(
+        (option) => option.label.toLowerCase() === sportName.toLowerCase()
+      )
+    ) {
+      toast.error("Sport name already exists.");
+      return;
+    }
+
     try {
       const response = await axios.post("/api/sport", { name: sportName });
       if (response.data) {
@@ -173,6 +184,12 @@ function CreateTeam(props: Props) {
       toast.error("No sport selected to remove.");
       return;
     }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to remove this sport?"
+    );
+    if (!confirmDelete) return;
+
     try {
       await axios.delete(`/api/sport/${sportToRemove}`);
       setSportsOptions(
@@ -197,6 +214,23 @@ function CreateTeam(props: Props) {
       sportsOptions.find((option) => option.value === sportToUpdate)?.label
     );
     if (!newName) return; // User cancelled or didn't input a name
+
+    // Check for duplicate names
+    if (
+      sportsOptions.some(
+        (option) =>
+          option.label.toLowerCase() === newName.toLowerCase() &&
+          option.value !== sportToUpdate
+      )
+    ) {
+      toast.error("Sport name already exists.");
+      return;
+    }
+
+    const confirmUpdate = window.confirm(
+      "Are you sure you want to update this sport's name?"
+    );
+    if (!confirmUpdate) return;
 
     try {
       await axios.patch(`/api/sport/${sportToUpdate}`, { name: newName });

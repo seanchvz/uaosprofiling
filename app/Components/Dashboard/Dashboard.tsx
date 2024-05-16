@@ -12,6 +12,8 @@ import { FaEye, FaTrash } from "react-icons/fa";
 interface Props {
   name: string;
   events: any[];
+  teams: any[];
+  sports: any[];
 }
 
 function Dashboard({ name, events }: Props) {
@@ -293,6 +295,9 @@ function Dashboard({ name, events }: Props) {
                 Name
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
+                Team Sport
+              </th>
+              <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
                 Start Date
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-500 text-left text-base font-semibold text-gray-200 uppercase tracking-wider">
@@ -318,6 +323,22 @@ function Dashboard({ name, events }: Props) {
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {event.name}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
+                    {event.teams && event.teams.length > 0
+                      ? Array.from(
+                          new Set(
+                            event.teams.map((team) => {
+                              const teamInfo = teamDetails.find(
+                                (t) => String(t.value) === String(team.id)
+                              );
+                              return teamInfo && teamInfo.sport
+                                ? teamInfo.sport
+                                : "Unknown Sport";
+                            })
+                          )
+                        ).join(", ")
+                      : "Not Part of Any Sport"}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {new Date(event.startDate).toLocaleDateString("en-US")}

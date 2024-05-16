@@ -117,6 +117,8 @@ function CreateProfile(props: Props) {
   const [selectedTeams, setSelectedTeams] = useState([]);
   const [teamDetails, setTeamDetails] = useState([]);
 
+  const defaultSportOption = { value: 0, label: "No Sport" }; // Assuming the value 0 is used for "No Sport"
+
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -273,6 +275,17 @@ function CreateProfile(props: Props) {
   const addNewSport = async () => {
     const sportName = prompt("Enter the name of the new sport:");
     if (!sportName) return;
+
+    // Check for duplicate names
+    if (
+      sportsOptions.some(
+        (option) => option.label.toLowerCase() === sportName.toLowerCase()
+      )
+    ) {
+      toast.error("Sport name already exists.");
+      return;
+    }
+
     try {
       const response = await axios.post("/api/sport", { name: sportName });
       if (response.data) {
@@ -296,6 +309,12 @@ function CreateProfile(props: Props) {
       toast.error("No sport selected to remove.");
       return;
     }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to remove this sport?"
+    );
+    if (!confirmDelete) return;
+
     try {
       await axios.delete(`/api/sport/${sportToRemove}`);
       setSportsOptions(
@@ -320,6 +339,23 @@ function CreateProfile(props: Props) {
       sportsOptions.find((option) => option.value === sportToUpdate)?.label
     );
     if (!newName) return; // User cancelled or didn't input a name
+
+    // Check for duplicate names
+    if (
+      sportsOptions.some(
+        (option) =>
+          option.label.toLowerCase() === newName.toLowerCase() &&
+          option.value !== sportToUpdate
+      )
+    ) {
+      toast.error("Sport name already exists.");
+      return;
+    }
+
+    const confirmUpdate = window.confirm(
+      "Are you sure you want to update this sport's name?"
+    );
+    if (!confirmUpdate) return;
 
     try {
       await axios.patch(`/api/sport/${sportToUpdate}`, { name: newName });
@@ -1060,11 +1096,12 @@ function CreateProfile(props: Props) {
             id="sport"
             name="sport"
             value={
-              sportsOptions.find((option) => option.value === sportId) || null
+              sportsOptions.find((option) => option.value === sportId) ||
+              defaultSportOption
             }
             onChange={(option) => {
               if (!option) {
-                setSportId(null);
+                setSportId(defaultSportOption.value);
               } else if (option.value === "add_new") {
                 addNewSport();
               } else if (option.value === "remove_sport") {
@@ -1079,6 +1116,7 @@ function CreateProfile(props: Props) {
               }
             }}
             options={[
+              defaultSportOption, // Include "No Sport" as a default option
               { value: "add_new", label: "+ Add New Sport" },
               { value: "remove_sport", label: "- Remove Selected Sport" },
               { value: "update_sport", label: "* Update Selected Sport" },
