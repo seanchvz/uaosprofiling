@@ -270,7 +270,7 @@ function Page({ name, coachprofile, teams }: Props) {
                             })
                           )
                         ).join(", ")
-                      : "Not Part of Any Teams"}
+                      : "Not Part of Any Sport"}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-500 text-base text-gray-300">
                     {coachProfile.contactNumber}
