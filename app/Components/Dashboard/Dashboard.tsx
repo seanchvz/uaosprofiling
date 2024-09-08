@@ -153,24 +153,39 @@ function Dashboard({ name, events }: Props) {
   };
 
   return (
-    <DashboardStyled theme={theme}>
+    <DashboardStyled theme={theme} className="w-full overflow-x-hidden">
       {modal && (
         <EventModal>
           <CreateContent submitState={modalState} event={selectedEvent} />
         </EventModal>
       )}
 
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-extrabold">{name}</h1>
+        <button
+          className="create-item flex items-center"
+          onClick={handleOpenCreateModal}
+        >
+          {plus}
+          Add New Event
+        </button>
+      </div>
+
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
-        <h1 style={{ fontSize: "clamp(1.5rem, 2vw, 2rem)", fontWeight: 800 }}>
-          {name}
-        </h1>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            width: "100%",
+          }}
+        >
           <input
             type="text"
             placeholder="Search Events..."
@@ -273,11 +288,6 @@ function Dashboard({ name, events }: Props) {
               </option>
             ))}
           </select>
-
-          <button className="create-item" onClick={handleOpenCreateModal}>
-            {plus}
-            Add New Event
-          </button>
         </div>
       </div>
 

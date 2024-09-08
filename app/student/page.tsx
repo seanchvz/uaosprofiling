@@ -132,31 +132,54 @@ function Page({ name, studentprofile }: Props) {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <StudentStyled theme={theme}>
+    <StudentStyled theme={theme} className="w-full overflow-x-hidden">
       {modal && (
         <StudentModal>
           <CreateProfile
             submitState={modalState}
             studentProfile={selectedStudent}
-            isViewOnly={modalState === "view" || isViewOnly} // Set view-only mode based on the modal state
+            isViewOnly={modalState === "view" || isViewOnly}
             setIsViewOnly={setIsViewOnly}
           />
         </StudentModal>
       )}
-      <h1 style={{ fontSize: "clamp(1.5rem, 1.5vw, 2rem)", fontWeight: 800 }}>
-        {name}
-      </h1>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-extrabold">{name}</h1>
+        <button
+          className="create-item flex items-center"
+          onClick={handleOpenCreateModal}
+        >
+          {plus}
+          Add New Student
+        </button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            width: "100%",
+          }}
+        >
+          {/* Search input */}
           <input
             type="text"
             placeholder="Search Profiles..."
             value={searchTerm}
             onChange={handleSearchChange}
             style={{
-              height: "3rem",
-              width: "20rem",
+              flex: "1 1 auto", // flexible width
+              minWidth: "12rem", // ensure it doesn't shrink too much
+              maxWidth: "20rem", // limit the width
               marginRight: "1rem",
+              height: "3rem",
               border: "1px solid #555",
               borderRadius: "10px",
               padding: "0.5rem 1rem",
@@ -165,16 +188,17 @@ function Page({ name, studentprofile }: Props) {
               fontSize: "1rem",
               fontFamily: "Arial, sans-serif",
               outline: "none",
-              boxShadow: "none", // remove shadow
-              textAlign: "left", // align text to the left
+              boxShadow: "none",
             }}
           />
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
             style={{
-              height: "3rem",
+              flex: "1 1 auto",
+              minWidth: "10rem",
               marginRight: "1rem",
+              height: "3rem",
               borderRadius: "10px",
               padding: "0.5rem 1rem",
               color: "#eee",
@@ -264,11 +288,6 @@ function Page({ name, studentprofile }: Props) {
               </option>
             ))}
           </select>
-
-          <button className="create-item" onClick={handleOpenCreateModal}>
-            {plus}
-            Add New Student
-          </button>
         </div>
       </div>
 
